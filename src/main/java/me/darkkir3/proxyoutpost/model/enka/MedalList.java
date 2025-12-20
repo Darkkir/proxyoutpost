@@ -1,8 +1,8 @@
-package me.darkkir3.proxyoutpost.model.json;
+package me.darkkir3.proxyoutpost.model.enka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MedalList {
+public class MedalList implements EnkaData {
    @JsonProperty("JNJGABNIHMA")
    public boolean jNJGABNIHMA;
    @JsonProperty("Value")

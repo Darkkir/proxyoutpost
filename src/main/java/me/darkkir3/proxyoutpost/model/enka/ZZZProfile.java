@@ -1,8 +1,8 @@
-package me.darkkir3.proxyoutpost.model.json;
+package me.darkkir3.proxyoutpost.model.enka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ZZZProfile {
+public class ZZZProfile implements EnkaData {
    @JsonProperty("PlayerInfo")
    public PlayerInfo playerInfo;
    public String uid;

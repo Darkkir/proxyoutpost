@@ -1,20 +1,12 @@
-package me.darkkir3.proxyoutpost.model.json;
+package me.darkkir3.proxyoutpost.model.enka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
-public class Equipment {
-    @JsonProperty("RandomPropertyList")
-    public List<RandomPropertyList> randomPropertyList;
-    @JsonProperty("MainPropertyList")
-    public List<MainPropertyList> mainPropertyList;
+public class Weapon implements EnkaData {
     @JsonProperty("IsAvailable")
     public boolean isAvailable;
     @JsonProperty("IsLocked")
     public boolean isLocked;
-    @JsonProperty("IsTrash")
-    public boolean isTrash;
     @JsonProperty("Id")
     public int id;
     @JsonProperty("Level")
@@ -25,4 +17,6 @@ public class Equipment {
     public int breakLevel;
     @JsonProperty("Exp")
     public int exp;
-    }
+    @JsonProperty("UpgradeLevel")
+    public int upgradeLevel;
+}

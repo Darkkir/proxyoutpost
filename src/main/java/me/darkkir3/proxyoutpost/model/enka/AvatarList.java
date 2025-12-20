@@ -1,10 +1,10 @@
-package me.darkkir3.proxyoutpost.model.json;
+package me.darkkir3.proxyoutpost.model.enka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class AvatarList {
+public class AvatarList implements EnkaData {
    @JsonProperty("EquippedList")
    public List<EquippedList> equippedList;
    @JsonProperty("SkillLevelList")
