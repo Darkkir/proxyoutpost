@@ -1,10 +1,11 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import jakarta.persistence.*;
+import me.darkkir3.proxyoutpost.model.enka.MedalList;
 
 @Entity
 @Table(name="medals")
-public class Medal {
+public class Medal implements EnkaToDBMapping<MedalList> {
 
     /**
      * primary key of medal
@@ -46,6 +47,12 @@ public class Medal {
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
     private Profile profile;
 
+    public Medal(){}
+
+    public Medal(MedalPk medalPk) {
+        this.medalPk = medalPk;
+    }
+
     public int getValue() {
         return value;
     }
@@ -84,5 +91,15 @@ public class Medal {
 
     public Profile getProfile() {
         return profile;
+    }
+
+    @Override
+    public void mapEnkaDataToDB(MedalList enkaData) {
+        if(this.medalPk != null && enkaData != null) {
+            this.setValue(enkaData.value);
+            this.setMedalScore(enkaData.medalScore);
+            this.setMedalIcon(enkaData.medalIcon);
+            this.setMedalType(enkaData.medalType);
+        }
     }
 }

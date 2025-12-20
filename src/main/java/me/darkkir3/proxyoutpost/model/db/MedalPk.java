@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class MedalPk {
+
     /**
      * the profile uid this medal belongs to
      */

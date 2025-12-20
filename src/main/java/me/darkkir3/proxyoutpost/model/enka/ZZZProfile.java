@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ZZZProfile implements EnkaData {
    @JsonProperty("PlayerInfo")
    public PlayerInfo playerInfo;
-   public String uid;
+   public long uid;
    public int ttl;
 }

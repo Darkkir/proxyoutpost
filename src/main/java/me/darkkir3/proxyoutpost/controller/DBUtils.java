@@ -1,8 +1,11 @@
 package me.darkkir3.proxyoutpost.controller;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 public final class DBUtils {
     private static final String FIELD_DELIMITER = ",";
@@ -53,17 +56,20 @@ public final class DBUtils {
      * @param values the values to convert
      * @return a delimiter separated string with the passed values
      */
-    public static String convertListToField(List<?> values)
-    {
+    public static String convertListToField(List<?> values) {
         StringBuilder result = new StringBuilder();
         String delimiter = "";
-        for(Object value : values)
-        {
+        for(Object value : values) {
             result.append(delimiter);
             delimiter = FIELD_DELIMITER;
             result.append(String.valueOf(value));
         }
 
         return result.toString();
+    }
+
+    public static LocalDateTime localDateTimeFromJson(Long value) {
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(value),
+                TimeZone.getDefault().toZoneId());
     }
 }

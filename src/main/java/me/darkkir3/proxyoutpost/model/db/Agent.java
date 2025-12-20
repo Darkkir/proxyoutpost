@@ -2,13 +2,15 @@ package me.darkkir3.proxyoutpost.model.db;
 
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.controller.DBUtils;
+import me.darkkir3.proxyoutpost.model.enka.AvatarList;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="agents")
-public class Agent {
+public class Agent implements EnkaToDBMapping<AvatarList> {
 
     /**
      * primary key of agent
@@ -74,12 +76,6 @@ public class Agent {
     private int coreSkillEnhancement;
 
     /**
-     * id of the weapon equipped on this character
-     */
-    @Column(name="weaponUid")
-    private Long weaponUid;
-
-    /**
      * w-engine signature special effect state [0: None, 1: OFF, 2: ON]
      */
     @Column(name="weaponEffectState")
@@ -111,14 +107,124 @@ public class Agent {
     /**
      * list of skills with their associated level for this agent
      */
-    @OneToMany(mappedBy = "agent")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
     private List<SkillLevel> skillLevelList;
 
     /**
      * the currently equipped weapon on this agent
      */
-    @OneToOne(mappedBy = "agent")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "agent")
     private Weapon weapon;
+
+    public Agent() {}
+
+    public Agent(AgentPk agentPk) {
+        this.agentPk = agentPk;
+    }
+
+    public int getAgentLevel() {
+        return agentLevel;
+    }
+
+    public void setAgentLevel(int agentLevel) {
+        this.agentLevel = agentLevel;
+    }
+
+    public int getAgentPromotionLevel() {
+        return agentPromotionLevel;
+    }
+
+    public void setAgentPromotionLevel(int agentPromotionLevel) {
+        this.agentPromotionLevel = agentPromotionLevel;
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    public Long getSkinId() {
+        return skinId;
+    }
+
+    public void setSkinId(Long skinId) {
+        this.skinId = skinId;
+    }
+
+    public int getMindscapeLevel() {
+        return mindscapeLevel;
+    }
+
+    public void setMindscapeLevel(int mindscapeLevel) {
+        this.mindscapeLevel = mindscapeLevel;
+    }
+
+    public Long getUpgradeId() {
+        return upgradeId;
+    }
+
+    public void setUpgradeId(Long upgradeId) {
+        this.upgradeId = upgradeId;
+    }
+
+    public int getCoreSkillEnhancement() {
+        return coreSkillEnhancement;
+    }
+
+    public void setCoreSkillEnhancement(int coreSkillEnhancement) {
+        this.coreSkillEnhancement = coreSkillEnhancement;
+    }
+
+    public int getWeaponEffectState() {
+        return weaponEffectState;
+    }
+
+    public void setWeaponEffectState(int weaponEffectState) {
+        this.weaponEffectState = weaponEffectState;
+    }
+
+    public LocalDateTime getObtainmentTimestamp() {
+        return obtainmentTimestamp;
+    }
+
+    public void setObtainmentTimestamp(LocalDateTime obtainmentTimestamp) {
+        this.obtainmentTimestamp = obtainmentTimestamp;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public boolean isUpgradeUnlocked() {
+        return isUpgradeUnlocked;
+    }
+
+    public void setUpgradeUnlocked(boolean upgradeUnlocked) {
+        isUpgradeUnlocked = upgradeUnlocked;
+    }
+
+    public List<SkillLevel> getSkillLevelList() {
+        return skillLevelList;
+    }
+
+    public void setSkillLevelList(List<SkillLevel> skillLevelList) {
+        this.skillLevelList = skillLevelList;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
 
     public List<Boolean> getMindscapeToggleList() {
         return DBUtils.convertStringToBooleanList(this.mindscapeToggleList);
@@ -134,5 +240,56 @@ public class Agent {
 
     public void setClaimedRewardList(List<Integer> values) {
         this.claimedRewardList = DBUtils.convertListToField(values);
+    }
+
+    public AgentPk getAgentPk() {
+        return agentPk;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    @Override
+    public void mapEnkaDataToDB(AvatarList enkaData) {
+        if(this.agentPk != null && enkaData != null) {
+            this.setAgentLevel(enkaData.level);
+            this.setAgentPromotionLevel(enkaData.promotionLevel);
+            this.setExp(enkaData.exp);
+            this.setSkinId(enkaData.skinId);
+            this.setMindscapeLevel(enkaData.talentLevel);
+            this.setMindscapeToggleList(enkaData.talentToggleList);
+            this.setUpgradeId(enkaData.upgradeId);
+            this.setCoreSkillEnhancement(enkaData.coreSkillEnhancement);
+            this.setWeaponEffectState(enkaData.weaponEffectState);
+            this.setObtainmentTimestamp(DBUtils.localDateTimeFromJson(enkaData.obtainmentTimestamp));
+            this.setFavorite(enkaData.isFavorite);
+            this.setUpgradeUnlocked(enkaData.isUpgradeUnlocked);
+            this.setClaimedRewardList(enkaData.claimedRewardList);
+
+            if(enkaData.weapon != null) {
+                Weapon weaponFromEnka = new Weapon(
+                        new WeaponPk(
+                                this.agentPk.getProfileUid(),
+                                this.agentPk.getAgentId(),
+                                enkaData.weaponUid));
+                weaponFromEnka.mapEnkaDataToDB(enkaData.weapon);
+                this.setWeapon(weaponFromEnka);
+            }
+
+            if(enkaData.skillLevelList != null) {
+                List<SkillLevel> skillLevels = new ArrayList<>();
+                enkaData.skillLevelList.forEach(t -> {
+                    SkillLevel level = new SkillLevel(
+                            new SkillLevelPk(
+                                    this.agentPk.getProfileUid(),
+                                    this.agentPk.getAgentId(),
+                                    t.index));
+                    level.mapEnkaDataToDB(t);
+                    skillLevels.add(level);
+                });
+                this.setSkillLevelList(skillLevels);
+            }
+        }
     }
 }

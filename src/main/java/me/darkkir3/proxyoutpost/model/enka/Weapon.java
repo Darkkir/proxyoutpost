@@ -8,11 +8,11 @@ public class Weapon implements EnkaData {
     @JsonProperty("IsLocked")
     public boolean isLocked;
     @JsonProperty("Id")
-    public int id;
+    public long id;
     @JsonProperty("Level")
     public int level;
     @JsonProperty("Uid")
-    public int uid;
+    public long uid;
     @JsonProperty("BreakLevel")
     public int breakLevel;
     @JsonProperty("Exp")

@@ -7,11 +7,13 @@ import java.io.Serializable;
 
 @Embeddable
 public class AgentPk implements Serializable {
+
     /**
      * the uid of the profile this belongs to
      */
     @Column(name="profileUid", nullable = false)
     private Long profileUid;
+
     /**
      * agent id in avatars.json
      */

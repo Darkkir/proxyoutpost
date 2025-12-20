@@ -5,8 +5,16 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class TitleArgsPk {
+
+    /**
+     * the uid of the profile this title argument belongs to
+     */
     @Column(name="profileUid", nullable = false)
     private Long profileUid;
+
+    /**
+     * the index of this argument in the argument list
+     */
     @Column(name="argumentIndex", nullable = false)
     private int argumentIndex;
 

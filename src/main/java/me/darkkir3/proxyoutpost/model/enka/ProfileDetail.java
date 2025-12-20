@@ -8,17 +8,17 @@ public class ProfileDetail implements EnkaData {
    @JsonProperty("Nickname")
    public String nickname;
    @JsonProperty("AvatarId")
-   public int avatarId;
+   public long avatarId;
    @JsonProperty("Level")
    public int level;
    @JsonProperty("Uid")
    public int uid;
    @JsonProperty("Title")
-   public int title;
+   public long title;
    @JsonProperty("ProfileId")
-   public int profileId;
+   public long profileId;
    @JsonProperty("PlatformType")
    public int platformType;
    @JsonProperty("CallingCardId")
-   public int callingCardId;
+   public long callingCardId;
 }

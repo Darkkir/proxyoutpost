@@ -20,7 +20,7 @@ public class AvatarList implements EnkaData {
    @JsonProperty("IsUpgradeUnlocked")
    public boolean isUpgradeUnlocked;
    @JsonProperty("Id")
-   public int id;
+   public long id;
    @JsonProperty("Level")
    public int level;
    @JsonProperty("PromotionLevel")
@@ -28,17 +28,17 @@ public class AvatarList implements EnkaData {
    @JsonProperty("Exp")
    public int exp;
    @JsonProperty("SkinId")
-   public int skinId;
+   public long skinId;
    @JsonProperty("TalentLevel")
    public int talentLevel;
    @JsonProperty("UpgradeId")
-   public int upgradeId;
+   public long upgradeId;
    @JsonProperty("CoreSkillEnhancement")
    public int coreSkillEnhancement;
    @JsonProperty("WeaponUid")
-   public int weaponUid;
+   public long weaponUid;
    @JsonProperty("ObtainmentTimestamp")
-   public int obtainmentTimestamp;
+   public long obtainmentTimestamp;
    @JsonProperty("Weapon")
    public Weapon weapon;
 }

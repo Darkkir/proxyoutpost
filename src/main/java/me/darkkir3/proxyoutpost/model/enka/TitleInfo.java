@@ -8,7 +8,7 @@ public class TitleInfo implements EnkaData {
     @JsonProperty("Args")
     public List<String> args;
     @JsonProperty("Title")
-    public int title;
+    public long title;
     @JsonProperty("FullTitle")
-    public int fullTitle;
+    public long fullTitle;
 }

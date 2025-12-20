@@ -1,13 +1,15 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import jakarta.persistence.*;
-import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
+import me.darkkir3.proxyoutpost.model.enka.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "profiles")
 public class Profile implements EnkaToDBMapping<ZZZProfile> {
+
     @Id
     @Column(name="profileUid", nullable = false)
     private Long profileUid;
@@ -51,7 +53,7 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
     /**
      * the title arguments for the currently set title
      */
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<TitleArgs> titleArgs;
 
     /**
@@ -72,25 +74,199 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
     @Column(name="platformType")
     private int platformType;
 
-    @OneToMany(mappedBy = "profile")
+    /**
+     * a list with all agents associated with this profile
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<Agent> agentsList;
 
-    @OneToMany(mappedBy = "profile")
+    /**
+     * a list with all medals associated with this profile
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<Medal> medalList;
+
+    public Profile() {}
+
+    public Profile(Long profileUid) {
+        this.profileUid = profileUid;
+    }
 
     public Long getProfileUid() {
         return profileUid;
     }
 
-    public void setProfileUid(Long profileUid) {
-        this.profileUid = profileUid;
+    public String getDescription() {
+        return description;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public Long getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(Long avatarId) {
+        this.avatarId = avatarId;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public Long getTitle() {
+        return title;
+    }
+
+    public void setTitle(Long title) {
+        this.title = title;
+    }
+
+    public Long getFullTitle() {
+        return fullTitle;
+    }
+
+    public void setFullTitle(Long fullTitle) {
+        this.fullTitle = fullTitle;
+    }
+
+    public List<TitleArgs> getTitleArgs() {
+        return titleArgs;
+    }
+
+    public void setTitleArgs(List<TitleArgs> titleArgs) {
+        this.titleArgs = titleArgs;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
+    }
+
+    public Long getCallingCardId() {
+        return callingCardId;
+    }
+
+    public void setCallingCardId(Long callingCardId) {
+        this.callingCardId = callingCardId;
+    }
+
+    public int getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(int platformType) {
+        this.platformType = platformType;
+    }
+
+    public List<Agent> getAgentsList() {
+        return agentsList;
+    }
+
+    public void setAgentsList(List<Agent> agentsList) {
+        this.agentsList = agentsList;
+    }
+
+    public List<Medal> getMedalList() {
+        return medalList;
+    }
+
+    public void setMedalList(List<Medal> medalList) {
+        this.medalList = medalList;
+    }
+
+
 
     @Override
     public void mapEnkaDataToDB(ZZZProfile enkaData) {
         if(enkaData != null) {
-            this.profileUid = Long.valueOf(enkaData.uid);
+            this.profileUid = enkaData.uid;
+            if(enkaData.playerInfo != null) {
+                PlayerInfo playerInfo = enkaData.playerInfo;
+                this.convertSocialDetail(playerInfo);
+                this.convertShowcaseDetail(playerInfo);
+            }
+        }
+    }
 
+    private void convertShowcaseDetail(PlayerInfo playerInfo) {
+        if(playerInfo.showcaseDetail != null) {
+            List<AvatarList> avatarList = playerInfo.showcaseDetail.avatarList;;
+            if(avatarList != null) {
+                List<Agent> agents = new ArrayList<>();
+                avatarList.forEach(t -> {
+                    Agent agent = new Agent(new AgentPk(this.getProfileUid(), t.id));
+                    agent.mapEnkaDataToDB(t);
+                    agents.add(agent);
+                });
+                this.setAgentsList(agents);
+            }
+        }
+    }
+
+    private void convertSocialDetail(PlayerInfo playerInfo) {
+        if(playerInfo.socialDetail != null) {
+            SocialDetail socialDetail = playerInfo.socialDetail;
+            this.setDescription(socialDetail.desc);
+            if(socialDetail.medalList != null) {
+                List<Medal> medals = new ArrayList<>();
+                for(int i = 0; i < socialDetail.medalList.size(); i++) {
+                    MedalList jsonMedal = socialDetail.medalList.get(i);
+                    Medal medal = new Medal(new MedalPk(this.getProfileUid(), i));
+                    medal.mapEnkaDataToDB(jsonMedal);
+                    medals.add(medal);
+                }
+                this.setMedalList(medals);
+            }
+            this.convertProfileDetail(socialDetail);
+        }
+    }
+
+    private void convertProfileDetail(SocialDetail socialDetail) {
+        if(socialDetail.profileDetail != null) {
+            ProfileDetail profileDetail = socialDetail.profileDetail;
+            this.setNickname(profileDetail.nickname);
+            this.setAvatarId(profileDetail.avatarId);
+            this.setLevel(profileDetail.level);
+            this.setTitle(profileDetail.title);
+            this.setProfileId(profileDetail.profileId);
+            this.setPlatformType(profileDetail.platformType);
+            this.setCallingCardId(profileDetail.callingCardId);
+            this.convertTitleInfo(profileDetail);
+        }
+    }
+
+    private void convertTitleInfo(ProfileDetail profileDetail) {
+        if(profileDetail.titleInfo != null) {
+            TitleInfo titleInfo = profileDetail.titleInfo;
+            this.setTitle(titleInfo.title);
+            this.setFullTitle(titleInfo.fullTitle);
+            if(titleInfo.args != null && !titleInfo.args.isEmpty()) {
+                List<TitleArgs> titleInfoArgs = new ArrayList<>();
+                for (int i = 0; i < titleInfo.args.size(); i++) {
+                    TitleArgs newArg = new TitleArgs(new TitleArgsPk(this.profileUid, i));
+                    newArg.mapEnkaDataToDB(titleInfo);
+                    titleInfoArgs.add(newArg);
+                }
+                this.setTitleArgs(titleInfoArgs);
+            }
         }
     }
 }
