@@ -1,4 +1,4 @@
-package me.darkkir3.proxyoutpost.properties;
+package me.darkkir3.proxyoutpost.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -8,5 +8,15 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:enka-api.properties")
 public class EnkaAPIConfiguration {
     @Value("${enka.user-agent}")
-    public String userAgent;
+    private String userAgent;
+    @Value("${enka.api-url}")
+    private String apiUrl;
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
 }
