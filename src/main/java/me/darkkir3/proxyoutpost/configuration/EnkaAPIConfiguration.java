@@ -11,6 +11,8 @@ public class EnkaAPIConfiguration {
     private String userAgent;
     @Value("${enka.api-url}")
     private String apiUrl;
+    @Value("${enka.uid-endpoint}")
+    private String uidEndpoint;
 
     public String getUserAgent() {
         return userAgent;
@@ -18,5 +20,9 @@ public class EnkaAPIConfiguration {
 
     public String getApiUrl() {
         return apiUrl;
+    }
+
+    public String getUidEndpoint() {
+        return uidEndpoint;
     }
 }

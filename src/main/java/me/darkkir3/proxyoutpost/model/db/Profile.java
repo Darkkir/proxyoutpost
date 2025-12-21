@@ -3,6 +3,7 @@ package me.darkkir3.proxyoutpost.model.db;
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.model.enka.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +76,18 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
     private int platformType;
 
     /**
+     * a timestamp of when we created this db entry
+     */
+    @Column(name="tsCreation")
+    private LocalDateTime tsCreation;
+
+    /**
+     * the time to live in seconds for this profile (fetched from api)
+     */
+    @Column(name="ttl")
+    private Long ttl;
+
+    /**
      * a list with all agents associated with this profile
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
@@ -86,10 +99,13 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<Medal> medalList;
 
-    public Profile() {}
+    public Profile() {
+        this.tsCreation = LocalDateTime.now();
+    }
 
     public Profile(Long profileUid) {
         this.profileUid = profileUid;
+        this();
     }
 
     public Long getProfileUid() {
@@ -192,7 +208,30 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
         this.medalList = medalList;
     }
 
+    public LocalDateTime getTsCreation() {
+        return tsCreation;
+    }
 
+    public void setTsCreation(LocalDateTime tsCreation) {
+        this.tsCreation = tsCreation;
+    }
+
+    public Long getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(Long ttl) {
+        this.ttl = ttl;
+    }
+
+    /**
+     * @return a flag that indicates whether this object exceeded the ttl
+     */
+    public boolean isExpired() {
+        return this.tsCreation != null
+                && this.ttl != null
+                && this.tsCreation.plusSeconds(this.ttl).isAfter(LocalDateTime.now());
+    }
 
     @Override
     public void mapEnkaDataToDB(ZZZProfile enkaData) {
