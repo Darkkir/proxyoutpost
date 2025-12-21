@@ -23,10 +23,8 @@ public class SkillLevel implements EnkaToDBMapping<SkillLevelList> {
      * the agent this skill belongs to
      */
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false),
-            @JoinColumn(name="agentId", referencedColumnName = "agentId", insertable = false, updatable = false),
-    })
+    @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
+    @JoinColumn(name="agentId", referencedColumnName = "agentId", insertable = false, updatable = false)
     private Agent agent;
 
     public SkillLevel() {}

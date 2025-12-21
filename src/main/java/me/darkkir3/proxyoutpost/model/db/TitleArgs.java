@@ -22,9 +22,7 @@ public class TitleArgs implements EnkaToDBMapping<TitleInfo> {
      * The profile this title argument belongs to
      */
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false),
-    })
+    @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
     private Profile profile;
 
     public TitleArgs() {}

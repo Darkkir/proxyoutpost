@@ -22,9 +22,7 @@ public class Agent implements EnkaToDBMapping<AvatarList> {
      * the profile this agent belongs to
      */
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false),
-    })
+    @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
     private Profile profile;
 
     /**

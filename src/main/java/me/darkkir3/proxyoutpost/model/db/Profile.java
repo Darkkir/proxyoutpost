@@ -238,7 +238,7 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
     public boolean isExpired(int minTtl) {
         return this.tsCreation != null
                 && this.ttl != null
-                && this.tsCreation.plusSeconds(Math.max(this.ttl, minTtl)).isAfter(LocalDateTime.now());
+                && LocalDateTime.now().isAfter(this.tsCreation.plusSeconds(Math.max(this.ttl, minTtl)));
     }
 
     @Override
@@ -255,7 +255,7 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
 
     private void convertShowcaseDetail(PlayerInfo playerInfo) {
         if(playerInfo.showcaseDetail != null) {
-            List<AvatarList> avatarList = playerInfo.showcaseDetail.avatarList;;
+            List<AvatarList> avatarList = playerInfo.showcaseDetail.avatarList;
             if(avatarList != null) {
                 List<Agent> agents = new ArrayList<>();
                 avatarList.forEach(t -> {
