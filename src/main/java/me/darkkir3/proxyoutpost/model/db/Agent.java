@@ -1,7 +1,7 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import jakarta.persistence.*;
-import me.darkkir3.proxyoutpost.controller.DBUtils;
+import me.darkkir3.proxyoutpost.utils.DBUtils;
 import me.darkkir3.proxyoutpost.model.enka.AvatarList;
 
 import java.time.LocalDateTime;

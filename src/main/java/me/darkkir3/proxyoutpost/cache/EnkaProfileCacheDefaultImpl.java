@@ -1,9 +1,11 @@
-package me.darkkir3.proxyoutpost.controller;
+package me.darkkir3.proxyoutpost.cache;
 
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.Profile;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
 import me.darkkir3.proxyoutpost.rep.ProfileRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -11,8 +13,9 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @Component
-public class EnkaCacheImpl implements EnkaCache {
+public class EnkaProfileCacheDefaultImpl implements EnkaProfileCache {
 
+    private static final Logger log = LoggerFactory.getLogger(EnkaProfileCacheDefaultImpl.class);
     /**
      * maps profile uids to the actual profile for caching
      */
@@ -33,7 +36,9 @@ public class EnkaCacheImpl implements EnkaCache {
      */
     private final RestClient restClient;
 
-    public EnkaCacheImpl(ProfileRepository profileRepository, EnkaAPIConfiguration enkaAPIConfiguration) {
+    private long timeSinceLastCacheUpdate;
+
+    public EnkaProfileCacheDefaultImpl(ProfileRepository profileRepository, EnkaAPIConfiguration enkaAPIConfiguration) {
         this.profileRepository = profileRepository;
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.restClient = RestClient.builder()
@@ -42,19 +47,31 @@ public class EnkaCacheImpl implements EnkaCache {
         profileCache = new HashMap<>();
     }
 
-    /**Try to get a entity either from cache or directly from api
+    /**Try to get an entity either from cache/db or directly from api
      * @param uid the uid of the profile
-     * @return
+     * @return the profile
      */
     @Override
     public Profile getProfileByUid(Long uid) {
+        long currentTime = System.nanoTime();
+        double elapsedTimeInSeconds = (currentTime - timeSinceLastCacheUpdate) / 1_000_000_000.0;
+        if(elapsedTimeInSeconds > this.enkaAPIConfiguration.getCacheTimeInSeconds()) {
+            this.removeExpiredProfiles();
+            this.timeSinceLastCacheUpdate = currentTime;
+        }
+
         Profile cachedProfile = this.profileCache.get(uid);
-        if(cachedProfile == null || cachedProfile.isExpired()) {
+        if(cachedProfile == null || cachedProfile.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
             cachedProfile = this.fetchNewEnkaProfile(uid);
             this.profileCache.put(uid, cachedProfile);
         }
 
         return cachedProfile;
+    }
+
+    private void removeExpiredProfiles() {
+        this.profileCache.entrySet().removeIf(
+                t -> t.getValue().isExpired(enkaAPIConfiguration.getMinTtlInSeconds()));
     }
 
     /**
@@ -64,14 +81,17 @@ public class EnkaCacheImpl implements EnkaCache {
      * @return the db entity
      */
     private Profile fetchNewEnkaProfile(Long uid) {
+        log.info("Trying to fetch a new enka profile: {}", uid);
         Optional<Profile> existingProfile = profileRepository.findById(uid);
 
         if(existingProfile.isPresent()) {
             Profile p = existingProfile.get();
-            if(!p.isExpired()) {
+            if(!p.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
+                log.info("Returning enka profile with uid {} from db", uid);
                 return p;
             }
             else {
+                log.info("Found expired profile for uid {}, deleting from database...", uid);
                 profileRepository.delete(p);
             }
         }
@@ -81,6 +101,7 @@ public class EnkaCacheImpl implements EnkaCache {
         Profile dbProfile = new Profile();
         dbProfile.mapEnkaDataToDB(jsonProfile);
         profileRepository.save(dbProfile);
+        log.info("Saving profile with uid {} to db...", uid);
 
         return dbProfile;
     }

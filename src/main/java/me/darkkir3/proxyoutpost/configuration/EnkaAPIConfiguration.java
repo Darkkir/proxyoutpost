@@ -7,22 +7,86 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:enka-api.properties")
 public class EnkaAPIConfiguration {
+
     @Value("${enka.user-agent}")
     private String userAgent;
     @Value("${enka.api-url}")
     private String apiUrl;
     @Value("${enka.uid-endpoint}")
     private String uidEndpoint;
+    @Value("${enka.min-ttl}")
+    private int minTtlInSeconds;
+    @Value("${enka.cache-time}")
+    private int cacheTimeInSeconds;
+    @Value("${enka.config.locs.url}")
+    private String locsUrl;
+    @Value("${enka.config.locs.name}")
+    private String locsName;
+    @Value("${enka.config.refresh-time}")
+    private int refreshTimeInHours;
+    @Value("${enka.config.path}")
+    private String configurationPath;
 
+    /**
+     * @return the user-agent to use when making api calls to enka
+     */
     public String getUserAgent() {
         return userAgent;
     }
 
+    /**
+     * @return the base url for api endcalls
+     */
     public String getApiUrl() {
         return apiUrl;
     }
 
+    /**
+     * @return the specific endpoint to fetch profile data
+     */
     public String getUidEndpoint() {
         return uidEndpoint;
+    }
+
+    /**
+     * @return how much time in seconds we add to each profiles ttl manually
+     */
+    public int getMinTtlInSeconds() {
+        return minTtlInSeconds;
+    }
+
+    /**
+     * @return how often we refresh json configs from github
+     */
+    public int getRefreshTimeInHours() {
+        return refreshTimeInHours;
+    }
+
+    /**
+     * @return the url to the locs.json file
+     */
+    public String getLocsUrl() {
+        return locsUrl;
+    }
+
+    /**
+     * @return name of the locs file when downloading
+     */
+    public String getLocsName() {
+        return locsName;
+    }
+
+    /**
+     * @return base path for all downloaded configuration files
+     */
+    public String getConfigurationPath() {
+        return configurationPath;
+    }
+
+    /**
+     * @return profile cache time in seconds (how often we check for expired profiles)
+     */
+    public int getCacheTimeInSeconds() {
+        return cacheTimeInSeconds;
     }
 }

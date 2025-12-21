@@ -1,4 +1,4 @@
-package me.darkkir3.proxyoutpost.controller;
+package me.darkkir3.proxyoutpost.utils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

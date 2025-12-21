@@ -228,9 +228,17 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
      * @return a flag that indicates whether this object exceeded the ttl
      */
     public boolean isExpired() {
+        return this.isExpired(0);
+    }
+
+    /**
+     * @param minTtl the minimum amount of time in seconds this object is considered not expired
+     * @return a flag that indicates whether this object exceeded the ttl
+     */
+    public boolean isExpired(int minTtl) {
         return this.tsCreation != null
                 && this.ttl != null
-                && this.tsCreation.plusSeconds(this.ttl).isAfter(LocalDateTime.now());
+                && this.tsCreation.plusSeconds(Math.max(this.ttl, minTtl)).isAfter(LocalDateTime.now());
     }
 
     @Override
