@@ -23,8 +23,20 @@ import java.util.Locale;
 public class EnkaLocalizationDefaultImpl implements EnkaLocalization {
 
     private static final Logger log = LoggerFactory.getLogger(EnkaLocalizationDefaultImpl.class);
+
+    /**
+     * last time we grabbed the locs.JSON from GitHub
+     */
     private LocalDateTime lastFetchTime;
+
+    /**
+     * root node of the locs.JSON file
+     */
     private JsonNode rootNode;
+
+    /**
+     * the enka configuration
+     */
     private final EnkaAPIConfiguration enkaAPIConfiguration;
 
     public EnkaLocalizationDefaultImpl(EnkaAPIConfiguration enkaAPIConfiguration) {
