@@ -1,5 +1,6 @@
-package me.darkkir3.proxyoutpost.cache;
+package me.darkkir3.proxyoutpost.cache.impl;
 
+import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.Profile;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
@@ -13,9 +14,9 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @Component
-public class EnkaProfileCacheDefaultImpl implements EnkaProfileCache {
+public class DefaultEnkaProfileCache implements EnkaProfileCache {
 
-    private static final Logger log = LoggerFactory.getLogger(EnkaProfileCacheDefaultImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultEnkaProfileCache.class);
     /**
      * maps profile uids to the actual profile for caching
      */
@@ -38,7 +39,7 @@ public class EnkaProfileCacheDefaultImpl implements EnkaProfileCache {
 
     private long timeSinceLastCacheUpdate;
 
-    public EnkaProfileCacheDefaultImpl(ProfileRepository profileRepository, EnkaAPIConfiguration enkaAPIConfiguration) {
+    public DefaultEnkaProfileCache(ProfileRepository profileRepository, EnkaAPIConfiguration enkaAPIConfiguration) {
         this.profileRepository = profileRepository;
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.restClient = RestClient.builder()
@@ -91,7 +92,7 @@ public class EnkaProfileCacheDefaultImpl implements EnkaProfileCache {
                 return p;
             }
             else {
-                log.info("Found expired profile for uid {}, deleting from database...", uid);
+                log.info("Found expired profile for uid {}, deleting from database", uid);
                 profileRepository.delete(p);
             }
         }
@@ -101,7 +102,7 @@ public class EnkaProfileCacheDefaultImpl implements EnkaProfileCache {
         Profile dbProfile = new Profile();
         dbProfile.mapEnkaDataToDB(jsonProfile);
         profileRepository.save(dbProfile);
-        log.info("Saving profile with uid {} to db...", uid);
+        log.info("Saving profile with uid {} to db", uid);
 
         return dbProfile;
     }

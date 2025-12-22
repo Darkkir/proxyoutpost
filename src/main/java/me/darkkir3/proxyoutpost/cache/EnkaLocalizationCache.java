@@ -1,6 +1,9 @@
 package me.darkkir3.proxyoutpost.cache;
 
-public interface EnkaLocalization {
+/**
+ * Caches enka localization data (translations)
+ */
+public interface EnkaLocalizationCache {
 
     /**
      * @return the default language to use

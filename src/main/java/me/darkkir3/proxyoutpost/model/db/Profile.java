@@ -245,6 +245,7 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
     public void mapEnkaDataToDB(ZZZProfile enkaData) {
         if(enkaData != null) {
             this.profileUid = enkaData.uid;
+            this.setTtl(enkaData.ttl);
             if(enkaData.playerInfo != null) {
                 PlayerInfo playerInfo = enkaData.playerInfo;
                 this.convertSocialDetail(playerInfo);

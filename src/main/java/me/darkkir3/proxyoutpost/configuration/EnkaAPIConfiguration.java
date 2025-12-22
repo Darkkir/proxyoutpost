@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import java.util.Map;
+
 @Configuration
 @PropertySource("classpath:enka-api.properties")
 public class EnkaAPIConfiguration {
@@ -26,6 +28,8 @@ public class EnkaAPIConfiguration {
     private int refreshTimeInHours;
     @Value("${enka.config.path}")
     private String configurationPath;
+    @Value("#{${enka.config.stores}}")
+    private Map<String, String> storesMap;
 
     /**
      * @return the user-agent to use when making api calls to enka
@@ -88,5 +92,12 @@ public class EnkaAPIConfiguration {
      */
     public int getCacheTimeInSeconds() {
         return cacheTimeInSeconds;
+    }
+
+    /**
+     * @return a map of all enka-api store files including their url
+     */
+    public Map<String, String> getStoresMap() {
+        return storesMap;
     }
 }

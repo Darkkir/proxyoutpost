@@ -6,5 +6,5 @@ public class ZZZProfile implements EnkaData {
    @JsonProperty("PlayerInfo")
    public PlayerInfo playerInfo;
    public long uid;
-   public int ttl;
+   public long ttl;
 }
