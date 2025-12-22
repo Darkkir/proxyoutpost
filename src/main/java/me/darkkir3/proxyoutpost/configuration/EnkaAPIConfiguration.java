@@ -20,10 +20,6 @@ public class EnkaAPIConfiguration {
     private int minTtlInSeconds;
     @Value("${enka.cache-time}")
     private int cacheTimeInSeconds;
-    @Value("${enka.config.locs.url}")
-    private String locsUrl;
-    @Value("${enka.config.locs.name}")
-    private String locsName;
     @Value("${enka.config.refresh-time}")
     private int refreshTimeInHours;
     @Value("${enka.config.path}")
@@ -64,20 +60,6 @@ public class EnkaAPIConfiguration {
      */
     public int getRefreshTimeInHours() {
         return refreshTimeInHours;
-    }
-
-    /**
-     * @return the url to the locs.json file
-     */
-    public String getLocsUrl() {
-        return locsUrl;
-    }
-
-    /**
-     * @return name of the locs file when downloading
-     */
-    public String getLocsName() {
-        return locsName;
     }
 
     /**
