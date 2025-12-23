@@ -54,10 +54,8 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
     private int exp;
 
     @OneToOne
-    @JoinColumns({
-            @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false),
-            @JoinColumn(name="agentId", referencedColumnName = "agentId", insertable = false, updatable = false),
-    })
+    @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
+    @JoinColumn(name="agentId", referencedColumnName = "agentId", insertable = false, updatable = false)
     private PlayerAgent playerAgent;
 
     public PlayerWeapon() {}
