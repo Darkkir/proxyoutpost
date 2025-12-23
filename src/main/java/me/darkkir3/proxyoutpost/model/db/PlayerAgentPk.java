@@ -6,29 +6,25 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class WeaponPk implements Serializable {
+public class PlayerAgentPk implements Serializable {
+
     /**
      * the uid of the profile this belongs to
      */
     @Column(name="profileUid", nullable = false)
     private Long profileUid;
+
     /**
-     * id of the agent this weapon belongs to
+     * agent id in avatars.json
      */
     @Column(name="agentId", nullable = false)
     private Long agentId;
-    /**
-     * the unique weapon id
-     */
-    @Column(name="weaponUid", nullable = false)
-    private Long weaponUid;
 
-    public WeaponPk() {}
+    public PlayerAgentPk() {}
 
-    public WeaponPk(Long profileUid, Long agentId, Long weaponUid) {
+    public PlayerAgentPk(Long profileUid, Long agentId) {
         this.profileUid = profileUid;
         this.agentId = agentId;
-        this.weaponUid = weaponUid;
     }
 
     public Long getProfileUid() {
@@ -37,9 +33,5 @@ public class WeaponPk implements Serializable {
 
     public Long getAgentId() {
         return agentId;
-    }
-
-    public Long getWeaponUid() {
-        return weaponUid;
     }
 }

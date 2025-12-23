@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class MedalPk {
+public class PlayerMedalPk {
 
     /**
      * the profile uid this medal belongs to
@@ -17,9 +17,9 @@ public class MedalPk {
     @Column(name="medalIndex", nullable = false)
     private int medalIndex;
 
-    public MedalPk() {}
+    public PlayerMedalPk() {}
 
-    public MedalPk(Long profileUid, int medalIndex) {
+    public PlayerMedalPk(Long profileUid, int medalIndex) {
         this.profileUid = profileUid;
         this.medalIndex = medalIndex;
     }

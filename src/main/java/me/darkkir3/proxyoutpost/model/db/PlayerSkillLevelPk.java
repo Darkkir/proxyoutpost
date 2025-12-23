@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class SkillLevelPk {
+public class PlayerSkillLevelPk {
 
     /**
      * the uid of the profile this skill and agent belongs to
@@ -30,9 +30,9 @@ public class SkillLevelPk {
     @Column(name="skillIndex", nullable = false)
     private int skillIndex;
 
-    public SkillLevelPk() {}
+    public PlayerSkillLevelPk() {}
 
-    public SkillLevelPk(Long profileUid, Long agentId, int skillIndex) {
+    public PlayerSkillLevelPk(Long profileUid, Long agentId, int skillIndex) {
         this.profileUid = profileUid;
         this.agentId = agentId;
         this.skillIndex = skillIndex;

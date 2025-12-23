@@ -5,13 +5,13 @@ import me.darkkir3.proxyoutpost.model.enka.SkillLevelList;
 
 @Entity
 @Table(name="skill_levels")
-public class SkillLevel implements EnkaToDBMapping<SkillLevelList> {
+public class PlayerSkillLevel implements EnkaToDBMapping<SkillLevelList> {
 
     /**
      * primary key of skill level
      */
     @EmbeddedId
-    private SkillLevelPk skillLevelPk;
+    private PlayerSkillLevelPk playerSkillLevelPk;
 
     /**
      * the actual level of the skill
@@ -20,21 +20,21 @@ public class SkillLevel implements EnkaToDBMapping<SkillLevelList> {
     private int level;
 
     /**
-     * the agent this skill belongs to
+     * the playerAgent this skill belongs to
      */
     @ManyToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
     @JoinColumn(name="agentId", referencedColumnName = "agentId", insertable = false, updatable = false)
-    private Agent agent;
+    private PlayerAgent playerAgent;
 
-    public SkillLevel() {}
+    public PlayerSkillLevel() {}
 
-    public SkillLevel(SkillLevelPk skillLevelPk) {
-        this.skillLevelPk = skillLevelPk;
+    public PlayerSkillLevel(PlayerSkillLevelPk playerSkillLevelPk) {
+        this.playerSkillLevelPk = playerSkillLevelPk;
     }
 
-    public SkillLevelPk getSkillLevelPk() {
-        return skillLevelPk;
+    public PlayerSkillLevelPk getSkillLevelPk() {
+        return playerSkillLevelPk;
     }
 
     public int getLevel() {
@@ -45,13 +45,13 @@ public class SkillLevel implements EnkaToDBMapping<SkillLevelList> {
         this.level = level;
     }
 
-    public Agent getAgent() {
-        return agent;
+    public PlayerAgent getAgent() {
+        return playerAgent;
     }
 
     @Override
     public void mapEnkaDataToDB(SkillLevelList enkaData) {
-        if(this.skillLevelPk != null && enkaData != null) {
+        if(this.playerSkillLevelPk != null && enkaData != null) {
             this.level = enkaData.level;
         }
     }

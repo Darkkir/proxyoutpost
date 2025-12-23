@@ -12,5 +12,5 @@ public interface EnkaAgentCache {
      * @param id the id of the agent to fetch
      * @return an AgentOutput instance
      */
-    public AgentOutput getAgentById(Long id);
+    public AgentOutput getAgentById(String language, Long id);
 }

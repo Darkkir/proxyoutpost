@@ -10,20 +10,20 @@ import java.util.List;
 
 @Entity
 @Table(name="agents")
-public class Agent implements EnkaToDBMapping<AvatarList> {
+public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
 
     /**
      * primary key of agent
      */
     @EmbeddedId
-    AgentPk agentPk;
+    PlayerAgentPk playerAgentPk;
 
     /**
-     * the profile this agent belongs to
+     * the playerProfile this agent belongs to
      */
     @ManyToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
-    private Profile profile;
+    private PlayerProfile playerProfile;
 
     /**
      * agent level
@@ -106,18 +106,18 @@ public class Agent implements EnkaToDBMapping<AvatarList> {
      * list of skills with their associated level for this agent
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
-    private List<SkillLevel> skillLevelList;
+    private List<PlayerSkillLevel> playerSkillLevelList;
 
     /**
-     * the currently equipped weapon on this agent
+     * the currently equipped playerWeapon on this agent
      */
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "agent")
-    private Weapon weapon;
+    private PlayerWeapon playerWeapon;
 
-    public Agent() {}
+    public PlayerAgent() {}
 
-    public Agent(AgentPk agentPk) {
-        this.agentPk = agentPk;
+    public PlayerAgent(PlayerAgentPk playerAgentPk) {
+        this.playerAgentPk = playerAgentPk;
     }
 
     public int getAgentLevel() {
@@ -208,20 +208,20 @@ public class Agent implements EnkaToDBMapping<AvatarList> {
         isUpgradeUnlocked = upgradeUnlocked;
     }
 
-    public List<SkillLevel> getSkillLevelList() {
-        return skillLevelList;
+    public List<PlayerSkillLevel> getSkillLevelList() {
+        return playerSkillLevelList;
     }
 
-    public void setSkillLevelList(List<SkillLevel> skillLevelList) {
-        this.skillLevelList = skillLevelList;
+    public void setSkillLevelList(List<PlayerSkillLevel> playerSkillLevelList) {
+        this.playerSkillLevelList = playerSkillLevelList;
     }
 
-    public Weapon getWeapon() {
-        return weapon;
+    public PlayerWeapon getWeapon() {
+        return playerWeapon;
     }
 
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
+    public void setWeapon(PlayerWeapon playerWeapon) {
+        this.playerWeapon = playerWeapon;
     }
 
     public List<Boolean> getMindscapeToggleList() {
@@ -240,17 +240,17 @@ public class Agent implements EnkaToDBMapping<AvatarList> {
         this.claimedRewardList = DBUtils.convertListToField(values);
     }
 
-    public AgentPk getAgentPk() {
-        return agentPk;
+    public PlayerAgentPk getAgentPk() {
+        return playerAgentPk;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public PlayerProfile getProfile() {
+        return playerProfile;
     }
 
     @Override
     public void mapEnkaDataToDB(AvatarList enkaData) {
-        if(this.agentPk != null && enkaData != null) {
+        if(this.playerAgentPk != null && enkaData != null) {
             this.setAgentLevel(enkaData.level);
             this.setAgentPromotionLevel(enkaData.promotionLevel);
             this.setExp(enkaData.exp);
@@ -266,27 +266,27 @@ public class Agent implements EnkaToDBMapping<AvatarList> {
             this.setClaimedRewardList(enkaData.claimedRewardList);
 
             if(enkaData.weapon != null) {
-                Weapon weaponFromEnka = new Weapon(
-                        new WeaponPk(
-                                this.agentPk.getProfileUid(),
-                                this.agentPk.getAgentId(),
+                PlayerWeapon playerWeaponFromEnka = new PlayerWeapon(
+                        new PlayerWeaponPk(
+                                this.playerAgentPk.getProfileUid(),
+                                this.playerAgentPk.getAgentId(),
                                 enkaData.weaponUid));
-                weaponFromEnka.mapEnkaDataToDB(enkaData.weapon);
-                this.setWeapon(weaponFromEnka);
+                playerWeaponFromEnka.mapEnkaDataToDB(enkaData.weapon);
+                this.setWeapon(playerWeaponFromEnka);
             }
 
             if(enkaData.skillLevelList != null) {
-                List<SkillLevel> skillLevels = new ArrayList<>();
+                List<PlayerSkillLevel> playerSkillLevels = new ArrayList<>();
                 enkaData.skillLevelList.forEach(t -> {
-                    SkillLevel level = new SkillLevel(
-                            new SkillLevelPk(
-                                    this.agentPk.getProfileUid(),
-                                    this.agentPk.getAgentId(),
+                    PlayerSkillLevel level = new PlayerSkillLevel(
+                            new PlayerSkillLevelPk(
+                                    this.playerAgentPk.getProfileUid(),
+                                    this.playerAgentPk.getAgentId(),
                                     t.index));
                     level.mapEnkaDataToDB(t);
-                    skillLevels.add(level);
+                    playerSkillLevels.add(level);
                 });
-                this.setSkillLevelList(skillLevels);
+                this.setSkillLevelList(playerSkillLevels);
             }
         }
     }

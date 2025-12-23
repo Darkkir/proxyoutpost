@@ -14,6 +14,8 @@ public class EnkaAPIConfiguration {
     private String userAgent;
     @Value("${enka.api-url}")
     private String apiUrl;
+    @Value("${enka.base-url}")
+    private String baseUrl;
     @Value("${enka.uid-endpoint}")
     private String uidEndpoint;
     @Value("${enka.min-ttl}")
@@ -39,6 +41,13 @@ public class EnkaAPIConfiguration {
      */
     public String getApiUrl() {
         return apiUrl;
+    }
+
+    /**
+     * @return the base url of enka
+     */
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
     /**

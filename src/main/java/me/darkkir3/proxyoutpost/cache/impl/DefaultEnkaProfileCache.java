@@ -2,7 +2,7 @@ package me.darkkir3.proxyoutpost.cache.impl;
 
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
-import me.darkkir3.proxyoutpost.model.db.Profile;
+import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
 import me.darkkir3.proxyoutpost.rep.ProfileRepository;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     /**
      * maps profile uids to the actual profile for caching
      */
-    private final HashMap<Long, Profile> profileCache;
+    private final HashMap<Long, PlayerProfile> profileCache;
 
     /**
      * profile repository
@@ -44,7 +44,7 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
-                .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
+                .defaultHeader("User-PlayerAgent", this.enkaAPIConfiguration.getUserAgent()).build();
         profileCache = new HashMap<>();
     }
 
@@ -53,7 +53,7 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
      * @return the profile
      */
     @Override
-    public Profile getProfileByUid(Long uid) {
+    public PlayerProfile getProfileByUid(Long uid) {
         long currentTime = System.nanoTime();
         double elapsedTimeInSeconds = (currentTime - timeSinceLastCacheUpdate) / 1_000_000_000.0;
         if(elapsedTimeInSeconds > this.enkaAPIConfiguration.getCacheTimeInSeconds()) {
@@ -61,13 +61,13 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
             this.timeSinceLastCacheUpdate = currentTime;
         }
 
-        Profile cachedProfile = this.profileCache.get(uid);
-        if(cachedProfile == null || cachedProfile.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
-            cachedProfile = this.fetchNewEnkaProfile(uid);
-            this.profileCache.put(uid, cachedProfile);
+        PlayerProfile cachedPlayerProfile = this.profileCache.get(uid);
+        if(cachedPlayerProfile == null || cachedPlayerProfile.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
+            cachedPlayerProfile = this.fetchNewEnkaProfile(uid);
+            this.profileCache.put(uid, cachedPlayerProfile);
         }
 
-        return cachedProfile;
+        return cachedPlayerProfile;
     }
 
     private void removeExpiredProfiles() {
@@ -81,12 +81,12 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
      * @param uid the uid of the profile
      * @return the db entity
      */
-    private Profile fetchNewEnkaProfile(Long uid) {
+    private PlayerProfile fetchNewEnkaProfile(Long uid) {
         log.info("Trying to fetch a new enka profile: {}", uid);
-        Optional<Profile> existingProfile = profileRepository.findById(uid);
+        Optional<PlayerProfile> existingProfile = profileRepository.findById(uid);
 
         if(existingProfile.isPresent()) {
-            Profile p = existingProfile.get();
+            PlayerProfile p = existingProfile.get();
             if(!p.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
                 log.info("Returning enka profile with uid {} from db", uid);
                 return p;
@@ -99,11 +99,11 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
 
         ZZZProfile jsonProfile = restClient.get().uri(String.valueOf(uid)).retrieve().body(ZZZProfile.class);
 
-        Profile dbProfile = new Profile();
-        dbProfile.mapEnkaDataToDB(jsonProfile);
-        profileRepository.save(dbProfile);
+        PlayerProfile dbPlayerProfile = new PlayerProfile();
+        dbPlayerProfile.mapEnkaDataToDB(jsonProfile);
+        profileRepository.save(dbPlayerProfile);
         log.info("Saving profile with uid {} to db", uid);
 
-        return dbProfile;
+        return dbPlayerProfile;
     }
 }

@@ -14,6 +14,12 @@ public class AgentOutput {
     public String name;
 
     /**
+     *  the agent id
+     */
+    @JsonProperty("AgentId")
+    public Long agentId;
+
+    /**
      * the rarity of the agent
      * <br>3 = A-rank
      * <br>4 = S-rank

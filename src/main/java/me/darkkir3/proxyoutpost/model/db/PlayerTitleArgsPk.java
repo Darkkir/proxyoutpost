@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class TitleArgsPk {
+public class PlayerTitleArgsPk {
 
     /**
      * the uid of the profile this title argument belongs to
@@ -18,9 +18,9 @@ public class TitleArgsPk {
     @Column(name="argumentIndex", nullable = false)
     private int argumentIndex;
 
-    public TitleArgsPk() {}
+    public PlayerTitleArgsPk() {}
 
-    public TitleArgsPk(Long profileUid, int argumentIndex) {
+    public PlayerTitleArgsPk(Long profileUid, int argumentIndex) {
         this.profileUid = profileUid;
         this.argumentIndex = argumentIndex;
     }

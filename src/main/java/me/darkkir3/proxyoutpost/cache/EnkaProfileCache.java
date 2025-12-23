@@ -1,6 +1,6 @@
 package me.darkkir3.proxyoutpost.cache;
 
-import me.darkkir3.proxyoutpost.model.db.Profile;
+import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 
 /**
  * Caches player profile requests by uid
@@ -12,5 +12,5 @@ public interface EnkaProfileCache {
      * @param uid the uid of the profile
      * @return a valid profile instance
      */
-    public Profile getProfileByUid(Long uid);
+    public PlayerProfile getProfileByUid(Long uid);
 }

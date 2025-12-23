@@ -5,12 +5,12 @@ import me.darkkir3.proxyoutpost.model.enka.TitleInfo;
 
 @Entity
 @Table(name="title_arguments")
-public class TitleArgs implements EnkaToDBMapping<TitleInfo> {
+public class PlayerTitleArgs implements EnkaToDBMapping<TitleInfo> {
     /**
      * primary key of this argument
      */
     @EmbeddedId
-    private TitleArgsPk titleArgsPk;
+    private PlayerTitleArgsPk playerTitleArgsPk;
 
     /**
      * the actual value of this argument
@@ -19,20 +19,20 @@ public class TitleArgs implements EnkaToDBMapping<TitleInfo> {
     private String argument;
 
     /**
-     * The profile this title argument belongs to
+     * The playerProfile this title argument belongs to
      */
     @ManyToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
-    private Profile profile;
+    private PlayerProfile playerProfile;
 
-    public TitleArgs() {}
+    public PlayerTitleArgs() {}
 
-    public TitleArgs(TitleArgsPk titleArgsPk) {
-        this.titleArgsPk = titleArgsPk;
+    public PlayerTitleArgs(PlayerTitleArgsPk playerTitleArgsPk) {
+        this.playerTitleArgsPk = playerTitleArgsPk;
     }
 
-    public TitleArgsPk getTitleArgsPk() {
-        return titleArgsPk;
+    public PlayerTitleArgsPk getTitleArgsPk() {
+        return playerTitleArgsPk;
     }
 
     public String getArgument() {
@@ -43,14 +43,14 @@ public class TitleArgs implements EnkaToDBMapping<TitleInfo> {
         this.argument = argument;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public PlayerProfile getProfile() {
+        return playerProfile;
     }
 
     @Override
     public void mapEnkaDataToDB(TitleInfo enkaData) {
-        if(this.titleArgsPk != null && enkaData != null) {
-            int argsIndex = this.titleArgsPk.getArgumentIndex();
+        if(this.playerTitleArgsPk != null && enkaData != null) {
+            int argsIndex = this.playerTitleArgsPk.getArgumentIndex();
             if(enkaData.args != null && argsIndex < enkaData.args.size()) {
                 this.argument = enkaData.args.get(argsIndex);
             }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "profiles")
-public class Profile implements EnkaToDBMapping<ZZZProfile> {
+public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
 
     @Id
     @Column(name="profileUid", nullable = false)
@@ -55,7 +55,7 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
      * the title arguments for the currently set title
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
-    private List<TitleArgs> titleArgs;
+    private List<PlayerTitleArgs> playerTitleArgs;
 
     /**
      * image id of the profile picture
@@ -91,19 +91,19 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
      * a list with all agents associated with this profile
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
-    private List<Agent> agentsList;
+    private List<PlayerAgent> agentsList;
 
     /**
      * a list with all medals associated with this profile
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
-    private List<Medal> medalList;
+    private List<PlayerMedal> playerMedalList;
 
-    public Profile() {
+    public PlayerProfile() {
         this.tsCreation = LocalDateTime.now();
     }
 
-    public Profile(Long profileUid) {
+    public PlayerProfile(Long profileUid) {
         this.profileUid = profileUid;
         this();
     }
@@ -160,12 +160,12 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
         this.fullTitle = fullTitle;
     }
 
-    public List<TitleArgs> getTitleArgs() {
-        return titleArgs;
+    public List<PlayerTitleArgs> getTitleArgs() {
+        return playerTitleArgs;
     }
 
-    public void setTitleArgs(List<TitleArgs> titleArgs) {
-        this.titleArgs = titleArgs;
+    public void setTitleArgs(List<PlayerTitleArgs> playerTitleArgs) {
+        this.playerTitleArgs = playerTitleArgs;
     }
 
     public Long getProfileId() {
@@ -192,20 +192,20 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
         this.platformType = platformType;
     }
 
-    public List<Agent> getAgentsList() {
+    public List<PlayerAgent> getAgentsList() {
         return agentsList;
     }
 
-    public void setAgentsList(List<Agent> agentsList) {
+    public void setAgentsList(List<PlayerAgent> agentsList) {
         this.agentsList = agentsList;
     }
 
-    public List<Medal> getMedalList() {
-        return medalList;
+    public List<PlayerMedal> getMedalList() {
+        return playerMedalList;
     }
 
-    public void setMedalList(List<Medal> medalList) {
-        this.medalList = medalList;
+    public void setMedalList(List<PlayerMedal> playerMedalList) {
+        this.playerMedalList = playerMedalList;
     }
 
     public LocalDateTime getTsCreation() {
@@ -258,13 +258,13 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
         if(playerInfo.showcaseDetail != null) {
             List<AvatarList> avatarList = playerInfo.showcaseDetail.avatarList;
             if(avatarList != null) {
-                List<Agent> agents = new ArrayList<>();
+                List<PlayerAgent> playerAgents = new ArrayList<>();
                 avatarList.forEach(t -> {
-                    Agent agent = new Agent(new AgentPk(this.getProfileUid(), t.id));
-                    agent.mapEnkaDataToDB(t);
-                    agents.add(agent);
+                    PlayerAgent playerAgent = new PlayerAgent(new PlayerAgentPk(this.getProfileUid(), t.id));
+                    playerAgent.mapEnkaDataToDB(t);
+                    playerAgents.add(playerAgent);
                 });
-                this.setAgentsList(agents);
+                this.setAgentsList(playerAgents);
             }
         }
     }
@@ -274,14 +274,14 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
             SocialDetail socialDetail = playerInfo.socialDetail;
             this.setDescription(socialDetail.desc);
             if(socialDetail.medalList != null) {
-                List<Medal> medals = new ArrayList<>();
+                List<PlayerMedal> playerMedals = new ArrayList<>();
                 for(int i = 0; i < socialDetail.medalList.size(); i++) {
                     MedalList jsonMedal = socialDetail.medalList.get(i);
-                    Medal medal = new Medal(new MedalPk(this.getProfileUid(), i));
-                    medal.mapEnkaDataToDB(jsonMedal);
-                    medals.add(medal);
+                    PlayerMedal playerMedal = new PlayerMedal(new PlayerMedalPk(this.getProfileUid(), i));
+                    playerMedal.mapEnkaDataToDB(jsonMedal);
+                    playerMedals.add(playerMedal);
                 }
-                this.setMedalList(medals);
+                this.setMedalList(playerMedals);
             }
             this.convertProfileDetail(socialDetail);
         }
@@ -307,9 +307,9 @@ public class Profile implements EnkaToDBMapping<ZZZProfile> {
             this.setTitle(titleInfo.title);
             this.setFullTitle(titleInfo.fullTitle);
             if(titleInfo.args != null && !titleInfo.args.isEmpty()) {
-                List<TitleArgs> titleInfoArgs = new ArrayList<>();
+                List<PlayerTitleArgs> titleInfoArgs = new ArrayList<>();
                 for (int i = 0; i < titleInfo.args.size(); i++) {
-                    TitleArgs newArg = new TitleArgs(new TitleArgsPk(this.profileUid, i));
+                    PlayerTitleArgs newArg = new PlayerTitleArgs(new PlayerTitleArgsPk(this.profileUid, i));
                     newArg.mapEnkaDataToDB(titleInfo);
                     titleInfoArgs.add(newArg);
                 }

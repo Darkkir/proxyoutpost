@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="weapons")
-public class Weapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.model.enka.Weapon> {
+public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.model.enka.Weapon> {
 
     /**
      * primary key of weapon
      */
     @EmbeddedId
-    private WeaponPk weaponPk;
+    private PlayerWeaponPk playerWeaponPk;
 
     /**
      * not sure what this field does
@@ -58,12 +58,12 @@ public class Weapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.model.en
             @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false),
             @JoinColumn(name="agentId", referencedColumnName = "agentId", insertable = false, updatable = false),
     })
-    private Agent agent;
+    private PlayerAgent playerAgent;
 
-    public Weapon() {}
+    public PlayerWeapon() {}
 
-    public Weapon(WeaponPk weaponPk) {
-        this.weaponPk = weaponPk;
+    public PlayerWeapon(PlayerWeaponPk playerWeaponPk) {
+        this.playerWeaponPk = playerWeaponPk;
     }
 
     public boolean isAvailable() {
@@ -122,13 +122,13 @@ public class Weapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.model.en
         this.exp = exp;
     }
 
-    public Agent getAgent() {
-        return agent;
+    public PlayerAgent getAgent() {
+        return playerAgent;
     }
 
     @Override
     public void mapEnkaDataToDB(me.darkkir3.proxyoutpost.model.enka.Weapon enkaData) {
-        if(this.weaponPk != null && enkaData != null) {
+        if(this.playerWeaponPk != null && enkaData != null) {
             this.setAvailable(enkaData.isAvailable);
             this.setLocked(enkaData.isLocked);
             this.setWeaponId(enkaData.id);

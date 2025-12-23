@@ -4,8 +4,8 @@ import me.darkkir3.proxyoutpost.cache.EnkaAgentCache;
 import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
-import me.darkkir3.proxyoutpost.model.db.Agent;
-import me.darkkir3.proxyoutpost.model.db.Profile;
+import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
+import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,13 +33,13 @@ public class MainController {
     @GetMapping("/profile/{id}")
     public List<AgentOutput> printProfile(@PathVariable("id") Long userId) {
         //https://enka.network/api/zzz/uid/1501331084
-        Profile profile = enkaProfileCache.getProfileByUid(userId);
-        if(profile != null) {
-            List<Agent> agentsOfProfile = profile.getAgentsList();
+        PlayerProfile playerProfile = enkaProfileCache.getProfileByUid(userId);
+        if(playerProfile != null) {
+            List<PlayerAgent> agentsOfProfile = playerProfile.getAgentsList();
             if(agentsOfProfile != null) {
                 List<AgentOutput> outputList = new ArrayList<>();
                 agentsOfProfile.forEach(t ->
-                        outputList.add(enkaAgentCache.getAgentById(t.getAgentPk().getAgentId())));
+                        outputList.add(enkaAgentCache.getAgentById(enkaLocalizationCache.getDefaultLanguage(), t.getAgentPk().getAgentId())));
                 return outputList;
             }
         }

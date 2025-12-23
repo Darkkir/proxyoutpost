@@ -5,13 +5,13 @@ import me.darkkir3.proxyoutpost.model.enka.MedalList;
 
 @Entity
 @Table(name="medals")
-public class Medal implements EnkaToDBMapping<MedalList> {
+public class PlayerMedal implements EnkaToDBMapping<MedalList> {
 
     /**
      * primary key of medal
      */
     @EmbeddedId
-    private MedalPk medalPk;
+    private PlayerMedalPk playerMedalPk;
 
     /**
      * the progress value of this medal (seems to be a duplicate of medal score?)
@@ -45,12 +45,12 @@ public class Medal implements EnkaToDBMapping<MedalList> {
 
     @ManyToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
-    private Profile profile;
+    private PlayerProfile playerProfile;
 
-    public Medal(){}
+    public PlayerMedal(){}
 
-    public Medal(MedalPk medalPk) {
-        this.medalPk = medalPk;
+    public PlayerMedal(PlayerMedalPk playerMedalPk) {
+        this.playerMedalPk = playerMedalPk;
     }
 
     public int getValue() {
@@ -85,17 +85,17 @@ public class Medal implements EnkaToDBMapping<MedalList> {
         this.medalType = medalType;
     }
 
-    public MedalPk getMedalPk() {
-        return medalPk;
+    public PlayerMedalPk getMedalPk() {
+        return playerMedalPk;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public PlayerProfile getProfile() {
+        return playerProfile;
     }
 
     @Override
     public void mapEnkaDataToDB(MedalList enkaData) {
-        if(this.medalPk != null && enkaData != null) {
+        if(this.playerMedalPk != null && enkaData != null) {
             this.setValue(enkaData.value);
             this.setMedalScore(enkaData.medalScore);
             this.setMedalIcon(enkaData.medalIcon);

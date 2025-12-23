@@ -39,6 +39,6 @@ public class AvatarList implements EnkaData {
    public long weaponUid;
    @JsonProperty("ObtainmentTimestamp")
    public long obtainmentTimestamp;
-   @JsonProperty("Weapon")
+   @JsonProperty("PlayerWeapon")
    public Weapon weapon;
 }

@@ -49,6 +49,7 @@ public abstract class AbstractEnkaFileCache {
     protected AbstractEnkaFileCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.cacheManager = cacheManager;
+        this.lastFetchTime = LocalDateTime.MIN;
     }
 
     /**
