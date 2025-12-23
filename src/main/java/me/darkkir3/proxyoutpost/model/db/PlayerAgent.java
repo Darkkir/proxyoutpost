@@ -1,8 +1,13 @@
 package me.darkkir3.proxyoutpost.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
-import me.darkkir3.proxyoutpost.utils.DBUtils;
 import me.darkkir3.proxyoutpost.model.enka.AvatarList;
+import me.darkkir3.proxyoutpost.model.output.AgentOutput;
+import me.darkkir3.proxyoutpost.utils.DBUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +21,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
      * primary key of agent
      */
     @EmbeddedId
-    PlayerAgentPk playerAgentPk;
+    private PlayerAgentPk playerAgentPk;
 
     /**
      * the playerProfile this agent belongs to
@@ -28,7 +33,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
     /**
      * agent level
      */
-    @Column(name="agentLevel")
+    @Column(name="AgentLevel")
     private int agentLevel;
 
     /**
@@ -115,12 +120,21 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playerAgent")
     private PlayerWeapon playerWeapon;
 
+    /**
+     * the generic agent data to include with this agent
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped
+    @Transient
+    private AgentOutput agentOutput;
+
     public PlayerAgent() {}
 
     public PlayerAgent(PlayerAgentPk playerAgentPk) {
         this.playerAgentPk = playerAgentPk;
     }
 
+    @JsonProperty("Level")
     public int getAgentLevel() {
         return agentLevel;
     }
@@ -129,6 +143,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.agentLevel = agentLevel;
     }
 
+    @JsonProperty("PromotionLevel")
     public int getAgentPromotionLevel() {
         return agentPromotionLevel;
     }
@@ -137,6 +152,8 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.agentPromotionLevel = agentPromotionLevel;
     }
 
+    @JsonIgnore
+    @JsonProperty("Exp")
     public int getExp() {
         return exp;
     }
@@ -145,6 +162,8 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.exp = exp;
     }
 
+    @JsonIgnore
+    @JsonProperty("SkinId")
     public Long getSkinId() {
         return skinId;
     }
@@ -153,6 +172,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.skinId = skinId;
     }
 
+    @JsonProperty("MindscapeLevel")
     public int getMindscapeLevel() {
         return mindscapeLevel;
     }
@@ -161,6 +181,8 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.mindscapeLevel = mindscapeLevel;
     }
 
+    @JsonIgnore
+    @JsonProperty("UpgradeId")
     public Long getUpgradeId() {
         return upgradeId;
     }
@@ -169,6 +191,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.upgradeId = upgradeId;
     }
 
+    @JsonProperty("CoreSkillEnhancement")
     public int getCoreSkillEnhancement() {
         return coreSkillEnhancement;
     }
@@ -177,6 +200,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.coreSkillEnhancement = coreSkillEnhancement;
     }
 
+    @JsonProperty("WeaponEffectState")
     public int getWeaponEffectState() {
         return weaponEffectState;
     }
@@ -185,6 +209,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.weaponEffectState = weaponEffectState;
     }
 
+    @JsonProperty("ObtainmentTimestamp")
     public LocalDateTime getObtainmentTimestamp() {
         return obtainmentTimestamp;
     }
@@ -193,6 +218,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.obtainmentTimestamp = obtainmentTimestamp;
     }
 
+    @JsonProperty("IsFavorite")
     public boolean isFavorite() {
         return isFavorite;
     }
@@ -201,6 +227,8 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         isFavorite = favorite;
     }
 
+    @JsonIgnore
+    @JsonProperty("IsUpgradeUnlocked")
     public boolean isUpgradeUnlocked() {
         return isUpgradeUnlocked;
     }
@@ -209,6 +237,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         isUpgradeUnlocked = upgradeUnlocked;
     }
 
+    @JsonProperty("SkillLevelList")
     public List<PlayerSkillLevel> getSkillLevelList() {
         return playerSkillLevelList;
     }
@@ -217,6 +246,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.playerSkillLevelList = playerSkillLevelList;
     }
 
+    @JsonProperty("Weapon")
     public PlayerWeapon getWeapon() {
         return playerWeapon;
     }
@@ -225,6 +255,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.playerWeapon = playerWeapon;
     }
 
+    @JsonProperty("MindscapeToggleList")
     public List<Boolean> getMindscapeToggleList() {
         return DBUtils.convertStringToBooleanList(this.mindscapeToggleList);
     }
@@ -233,6 +264,8 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.mindscapeToggleList = DBUtils.convertListToField(values);
     }
 
+    @JsonIgnore
+    @JsonProperty("ClaimedRewardList")
     public List<Integer> getClaimedRewardList() {
         return DBUtils.convertStringToIntegerList(this.claimedRewardList);
     }
@@ -241,12 +274,22 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         this.claimedRewardList = DBUtils.convertListToField(values);
     }
 
+    @JsonIgnore
     public PlayerAgentPk getAgentPk() {
         return playerAgentPk;
     }
 
+    @JsonIgnore
     public PlayerProfile getProfile() {
         return playerProfile;
+    }
+
+    public AgentOutput getAgentOutput() {
+        return agentOutput;
+    }
+
+    public void setAgentOutput(AgentOutput agentOutput) {
+        this.agentOutput = agentOutput;
     }
 
     @Override

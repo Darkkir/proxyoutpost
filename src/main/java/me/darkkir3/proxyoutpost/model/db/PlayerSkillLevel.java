@@ -1,5 +1,7 @@
 package me.darkkir3.proxyoutpost.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.model.enka.SkillLevelList;
 
@@ -22,6 +24,7 @@ public class PlayerSkillLevel implements EnkaToDBMapping<SkillLevelList> {
     /**
      * the playerAgent this skill belongs to
      */
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
     @JoinColumn(name="agentId", referencedColumnName = "agentId", insertable = false, updatable = false)
@@ -33,6 +36,7 @@ public class PlayerSkillLevel implements EnkaToDBMapping<SkillLevelList> {
         this.playerSkillLevelPk = playerSkillLevelPk;
     }
 
+    @JsonUnwrapped
     public PlayerSkillLevelPk getSkillLevelPk() {
         return playerSkillLevelPk;
     }
@@ -45,6 +49,7 @@ public class PlayerSkillLevel implements EnkaToDBMapping<SkillLevelList> {
         this.level = level;
     }
 
+    @JsonIgnore
     public PlayerAgent getAgent() {
         return playerAgent;
     }

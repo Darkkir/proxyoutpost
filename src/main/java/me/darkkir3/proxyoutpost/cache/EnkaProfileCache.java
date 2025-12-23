@@ -12,5 +12,5 @@ public interface EnkaProfileCache {
      * @param uid the uid of the profile
      * @return a valid profile instance
      */
-    public PlayerProfile getProfileByUid(Long uid);
+    public PlayerProfile getProfileByUid(String language, Long uid);
 }

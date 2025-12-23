@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,16 +30,18 @@ public class MainController {
     }
 
     @GetMapping("/profile/{id}")
-    public List<AgentOutput> printProfile(@PathVariable("id") Long userId) {
+    public List<PlayerAgent> printProfile(@PathVariable("id") Long userId) {
+        String languageToUse = enkaLocalizationCache.getDefaultLanguage();
         //https://enka.network/api/zzz/uid/1501331084
-        PlayerProfile playerProfile = enkaProfileCache.getProfileByUid(userId);
+        PlayerProfile playerProfile = enkaProfileCache.getProfileByUid(languageToUse, userId);
         if(playerProfile != null) {
             List<PlayerAgent> agentsOfProfile = playerProfile.getAgentsList();
             if(agentsOfProfile != null) {
-                List<AgentOutput> outputList = new ArrayList<>();
-                agentsOfProfile.forEach(t ->
-                        outputList.add(enkaAgentCache.getAgentById(enkaLocalizationCache.getDefaultLanguage(), t.getAgentPk().getAgentId())));
-                return outputList;
+                agentsOfProfile.forEach(t -> {
+                            AgentOutput output = enkaAgentCache.getAgentById(languageToUse, t.getAgentPk().getAgentId());
+                            t.setAgentOutput(output);
+                        });
+                return agentsOfProfile;
             }
         }
 

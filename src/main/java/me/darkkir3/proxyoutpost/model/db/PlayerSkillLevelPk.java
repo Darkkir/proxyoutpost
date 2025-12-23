@@ -1,7 +1,13 @@
 package me.darkkir3.proxyoutpost.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 
 @Embeddable
 public class PlayerSkillLevelPk {
@@ -9,12 +15,14 @@ public class PlayerSkillLevelPk {
     /**
      * the uid of the profile this skill and agent belongs to
      */
+    @JsonIgnore
     @Column(name="profileUid", nullable = false)
     private Long profileUid;
 
     /**
      * the agent id this belongs to
      */
+    @JsonIgnore
     @Column(name="agentId", nullable = false)
     private Long agentId;
 
@@ -46,7 +54,17 @@ public class PlayerSkillLevelPk {
         return agentId;
     }
 
+    @JsonIgnore
     public int getSkillIndex() {
         return skillIndex;
+    }
+
+    @JsonProperty("Type")
+    public String getSkillType() {
+        Optional<SkillType> skillType = Arrays.stream(SkillType.values()).filter(t ->
+                Objects.equals(this.getSkillIndex(), t.getIndex())).findFirst();
+
+        return skillType.map(Enum::name).orElse(null);
+
     }
 }

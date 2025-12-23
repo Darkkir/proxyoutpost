@@ -1,5 +1,7 @@
 package me.darkkir3.proxyoutpost.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -64,6 +66,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.playerWeaponPk = playerWeaponPk;
     }
 
+    @JsonProperty("IsAvailable")
     public boolean isAvailable() {
         return isAvailable;
     }
@@ -72,6 +75,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         isAvailable = available;
     }
 
+    @JsonProperty("IsLocked")
     public boolean isLocked() {
         return isLocked;
     }
@@ -80,6 +84,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         isLocked = locked;
     }
 
+    @JsonProperty("WeaponId")
     public Long getWeaponId() {
         return weaponId;
     }
@@ -88,6 +93,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.weaponId = weaponId;
     }
 
+    @JsonProperty("Level")
     public int getLevel() {
         return level;
     }
@@ -96,6 +102,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.level = level;
     }
 
+    @JsonProperty("BreakLevel")
     public int getBreakLevel() {
         return breakLevel;
     }
@@ -104,6 +111,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.breakLevel = breakLevel;
     }
 
+    @JsonProperty("UpgradeLevel")
     public int getUpgradeLevel() {
         return upgradeLevel;
     }
@@ -112,6 +120,8 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.upgradeLevel = upgradeLevel;
     }
 
+    @JsonIgnore
+    @JsonProperty("Exp")
     public int getExp() {
         return exp;
     }
@@ -120,6 +130,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.exp = exp;
     }
 
+    @JsonIgnore
     public PlayerAgent getAgent() {
         return playerAgent;
     }

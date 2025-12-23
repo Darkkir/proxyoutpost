@@ -1,11 +1,18 @@
 package me.darkkir3.proxyoutpost.model.output;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import me.darkkir3.proxyoutpost.model.db.AgentRarity;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * generic non-player-specific agent info
+ */
 public class AgentOutput {
+
+    private static final String ACCENT_COLOR = "Accent";
+    private static final String MINDSCAPE_COLOR = "Mindscape";
 
     /**
      * the agent name (e.g. 'Avatar_Female_Size02_Anbi')
@@ -24,8 +31,7 @@ public class AgentOutput {
      * <br>3 = A-rank
      * <br>4 = S-rank
      */
-    @JsonProperty("Rarity")
-    public int rarity;
+    private int rarity;
 
     /**
      * agent profession type (e.g. 'Stun')
@@ -38,7 +44,7 @@ public class AgentOutput {
      * (e.g. 'AuricEther', 'Ether' for YiXuan)
      */
     @JsonProperty("ElementTypes")
-    public ArrayList<String> elementTypes;
+    public List<String> elementTypes;
 
     /**
      * url to full character display image
@@ -55,8 +61,7 @@ public class AgentOutput {
     /**
      * the id of this agents signature weapon
      */
-    @JsonProperty("WeaponId")
-    public int weaponId;
+    private int weaponId;
 
     /**
      * the color of the skill buttons for this agent
@@ -72,7 +77,44 @@ public class AgentOutput {
 
     @JsonProperty("Colors")
     public void setColors(Map<String, String> colors) {
-    this.accentColor = colors.get("Accent");
-    this.mindscapeColor = colors.get("Mindscape");
+    this.accentColor = colors.get(ACCENT_COLOR);
+    this.mindscapeColor = colors.get(MINDSCAPE_COLOR);
+    }
+
+    /**
+     * @return the id of this agents signature weapon
+     */
+    @JsonIgnore
+    public int getWeaponId() {
+        return this.weaponId;
+    }
+
+    /**
+     * set the id of this agents signature weapon
+     */
+    @JsonProperty("WeaponId")
+    public void setWeapponId(int value) {
+        this.weaponId = value;
+    }
+
+    /**
+     * set the rarity of the agent
+     * <br>3 = A-rank
+     * <br>4 = S-rank
+     */
+    @JsonProperty("Rarity")
+    public void setRarity(int value) {
+        this.rarity = value;
+    }
+
+    /**
+     * @return the translated rarity of this agent
+     */
+    @JsonProperty("Rarity")
+    public String getRarity() {
+        Optional<AgentRarity> agentRarity = Arrays.stream(AgentRarity.values()).filter(t ->
+                Objects.equals(this.rarity, t.getIndex())).findFirst();
+
+        return agentRarity.map(Enum::name).orElse(null);
     }
 }

@@ -53,7 +53,7 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
      * @return the profile
      */
     @Override
-    public PlayerProfile getProfileByUid(Long uid) {
+    public PlayerProfile getProfileByUid(String language, Long uid) {
         long currentTime = System.nanoTime();
         double elapsedTimeInSeconds = (currentTime - timeSinceLastCacheUpdate) / 1_000_000_000.0;
         if(elapsedTimeInSeconds > this.enkaAPIConfiguration.getCacheTimeInSeconds()) {
