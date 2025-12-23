@@ -54,7 +54,8 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     /**
      * the title arguments for the currently set title
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerProfile")
+    @Column(name="titleArgs")
     private List<PlayerTitleArgs> playerTitleArgs;
 
     /**
@@ -90,13 +91,15 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     /**
      * a list with all agents associated with this profile
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerProfile")
+    @Column(name="agentsList")
     private List<PlayerAgent> agentsList;
 
     /**
      * a list with all medals associated with this profile
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerProfile")
+    @Column(name="medalsList")
     private List<PlayerMedal> playerMedalList;
 
     public PlayerProfile() {

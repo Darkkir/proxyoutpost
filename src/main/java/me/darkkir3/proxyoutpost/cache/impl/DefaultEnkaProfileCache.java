@@ -44,7 +44,7 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
-                .defaultHeader("User-PlayerAgent", this.enkaAPIConfiguration.getUserAgent()).build();
+                .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
         profileCache = new HashMap<>();
     }
 

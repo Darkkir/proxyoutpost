@@ -1,5 +1,8 @@
 package me.darkkir3.proxyoutpost.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,7 +11,11 @@ import java.util.List;
 import java.util.TimeZone;
 
 public final class DBUtils {
+
     private static final String FIELD_DELIMITER = ",";
+    private static final Logger log = LoggerFactory.getLogger(DBUtils.class);
+
+
     private DBUtils(){}
 
     /**
@@ -24,7 +31,7 @@ public final class DBUtils {
                 Boolean b = Boolean.parseBoolean(t);
                 result.add(b);
             } catch (NumberFormatException e) {
-                throw new RuntimeException(e);
+                log.error("Failed to parse {} to boolean list", value, e);
             }
         });
 
@@ -44,7 +51,7 @@ public final class DBUtils {
                 Integer i = Integer.parseInt(t);
                 result.add(i);
             } catch (NumberFormatException e) {
-                throw new RuntimeException(e);
+                log.error("Failed to parse {} to integer list", value, e);
             }
         });
 

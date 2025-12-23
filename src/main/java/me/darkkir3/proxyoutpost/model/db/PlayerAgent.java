@@ -105,13 +105,14 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
     /**
      * list of skills with their associated level for this agent
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerAgent")
+    @Column(name="skillLevelList")
     private List<PlayerSkillLevel> playerSkillLevelList;
 
     /**
      * the currently equipped playerWeapon on this agent
      */
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "agent")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "playerAgent")
     private PlayerWeapon playerWeapon;
 
     public PlayerAgent() {}
