@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
+import me.darkkir3.proxyoutpost.model.output.PropertyOutput;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
+import me.darkkir3.proxyoutpost.utils.CSharpFormatConverter;
 
 @Entity
 @Table(name="weapons")
@@ -59,10 +61,28 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
     private int exp;
 
     /**
+     * the main stat value of this w-engine
+     */
+    @Column(name="mainStat")
+    private double mainStat;
+
+    /**
+     * the secondary stat value of this w-engine
+     */
+    @Column(name="secondaryStat")
+    private double secondaryStat;
+
+    /**
      * the generic weapon data to include with this agent
      */
     @Transient
     private WeaponOutput weaponOutput;
+
+    @Transient
+    private PropertyOutput mainStatProperty;
+
+    @Transient
+    private PropertyOutput secondaryStatProperty;
 
     @OneToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
@@ -152,6 +172,56 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
 
     public void setWeaponOutput(WeaponOutput weaponOutput) {
         this.weaponOutput = weaponOutput;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped(prefix="MainStat")
+    public PropertyOutput getMainStatProperty() {
+        return mainStatProperty;
+    }
+
+    public void setMainStatProperty(PropertyOutput mainStatProperty) {
+        this.mainStatProperty = mainStatProperty;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped(prefix="SecondaryStat")
+    public PropertyOutput getSecondaryStatProperty() {
+        return secondaryStatProperty;
+    }
+
+    public void setSecondaryStatProperty(PropertyOutput secondaryStatProperty) {
+        this.secondaryStatProperty = secondaryStatProperty;
+    }
+
+    @JsonProperty("MainStatValue")
+    public String getMainStat() {
+        if(this.mainStatProperty != null) {
+            String format = this.mainStatProperty.getFormat();
+            if(format != null)  {
+                return CSharpFormatConverter.format(format, mainStat);
+            }
+        }
+        return String.valueOf(mainStat);
+    }
+
+    public void setMainStat(double mainStat) {
+        this.mainStat = mainStat;
+    }
+
+    @JsonProperty("SecondaryStatValue")
+    public String getSecondaryStat() {
+        if(this.secondaryStatProperty != null) {
+            String format = this.secondaryStatProperty.getFormat();
+            if(format != null)  {
+                return CSharpFormatConverter.format(format, secondaryStat);
+            }
+        }
+        return String.valueOf(secondaryStat);
+    }
+
+    public void setSecondaryStat(double secondaryStat) {
+        this.secondaryStat = secondaryStat;
     }
 
     @Override

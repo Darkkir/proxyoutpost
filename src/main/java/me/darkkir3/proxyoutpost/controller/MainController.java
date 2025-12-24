@@ -1,9 +1,6 @@
 package me.darkkir3.proxyoutpost.controller;
 
-import me.darkkir3.proxyoutpost.cache.EnkaAgentCache;
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaWeaponCache;
+import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
@@ -23,13 +20,20 @@ public class MainController {
     private final EnkaLocalizationCache enkaLocalizationCache;
     private final EnkaAgentCache enkaAgentCache;
     private final EnkaWeaponCache enkaWeaponCache;
+    private final EnkaPropertyCache enkaPropertyCache;
     private final EnkaAPIConfiguration enkaAPIConfiguration;
 
-    public MainController(EnkaProfileCache enkaProfileCache, EnkaLocalizationCache enkaLocalizationCache, EnkaAgentCache enkaAgentCache, EnkaWeaponCache enkaWeaponCache, EnkaAPIConfiguration enkaAPIConfiguration) {
+    public MainController(EnkaProfileCache enkaProfileCache,
+                          EnkaLocalizationCache enkaLocalizationCache,
+                          EnkaAgentCache enkaAgentCache,
+                          EnkaWeaponCache enkaWeaponCache,
+                          EnkaPropertyCache enkaPropertyCache,
+                          EnkaAPIConfiguration enkaAPIConfiguration) {
         this.enkaProfileCache = enkaProfileCache;
         this.enkaLocalizationCache = enkaLocalizationCache;
         this.enkaAgentCache = enkaAgentCache;
         this.enkaWeaponCache = enkaWeaponCache;
+        this.enkaPropertyCache = enkaPropertyCache;
         this.enkaAPIConfiguration = enkaAPIConfiguration;
     }
 
@@ -45,7 +49,15 @@ public class MainController {
                             AgentOutput agentOutput = enkaAgentCache.getAgentById(languageToUse, t.getAgentPk().getAgentId());
                             if(t.getWeapon() != null) {
                                 WeaponOutput weaponOutput = enkaWeaponCache.getWeaponById(languageToUse, t.getWeapon().getWeaponId());
-                                t.getWeapon().setWeaponOutput(weaponOutput);
+                                enkaWeaponCache.updatePlayerWeaponStats(t.getWeapon(), weaponOutput);
+                                if(weaponOutput.getMainStat() != null) {
+                                    t.getWeapon().setMainStatProperty(
+                                            enkaPropertyCache.getPropertyById(languageToUse, weaponOutput.getMainStat().propertyId));
+                                }
+                                if(weaponOutput.getSecondaryStat() != null) {
+                                    t.getWeapon().setSecondaryStatProperty(
+                                            enkaPropertyCache.getPropertyById(languageToUse, weaponOutput.getSecondaryStat().propertyId));
+                                }
                             }
                             t.setAgentOutput(agentOutput);
                         });

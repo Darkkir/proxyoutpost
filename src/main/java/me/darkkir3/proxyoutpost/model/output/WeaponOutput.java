@@ -1,5 +1,6 @@
 package me.darkkir3.proxyoutpost.model.output;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import me.darkkir3.proxyoutpost.model.db.WeaponRarity;
 
@@ -59,6 +60,22 @@ public class WeaponOutput {
     }
 
     /**
+     * @return the untranslated main stat values
+     */
+    @JsonIgnore
+    public WeaponProperty getMainStat() {
+        return this.mainStat;
+    }
+
+    /**
+     * @return the untranslated secondery stat values
+     */
+    @JsonIgnore
+    public WeaponProperty getSecondaryStat() {
+        return this.secondaryStat;
+    }
+
+    /**
      * set the rarity of this weapon
      * <br>2 = B-rank
      * <br>3 = A-rank
@@ -78,5 +95,13 @@ public class WeaponOutput {
                 Objects.equals(this.rarity, t.getIndex())).findFirst();
 
         return weaponRarity.map(Enum::name).orElse(null);
+    }
+
+    /**
+     * @return the rarity as untranslated integer for mapping purposes
+     */
+    @JsonIgnore
+    public int getRarityAsInt() {
+        return this.rarity;
     }
 }

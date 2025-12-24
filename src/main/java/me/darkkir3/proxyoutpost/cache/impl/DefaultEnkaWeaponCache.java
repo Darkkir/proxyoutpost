@@ -6,7 +6,10 @@ import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
 import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
 import me.darkkir3.proxyoutpost.cache.EnkaWeaponCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
+import me.darkkir3.proxyoutpost.configuration.WeaponsConfiguration;
+import me.darkkir3.proxyoutpost.model.db.PlayerWeapon;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
+import me.darkkir3.proxyoutpost.utils.WeaponPropertyTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -22,10 +25,12 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaWeaponCache.class);
 
     private final EnkaLocalizationCache enkaLocalizationCache;
+    private final WeaponsConfiguration weaponsConfiguration;
 
-    public DefaultEnkaWeaponCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaLocalizationCache enkaLocalizationCache) {
+    public DefaultEnkaWeaponCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaLocalizationCache enkaLocalizationCache, WeaponsConfiguration weaponsConfiguration) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaLocalizationCache = enkaLocalizationCache;
+        this.weaponsConfiguration = weaponsConfiguration;
     }
 
     @Override
@@ -68,11 +73,22 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
         return null;
     }
 
+    @Override
+    public void updatePlayerWeaponStats(PlayerWeapon playerWeapon, WeaponOutput weaponOutput) {
+        if(playerWeapon != null && weaponOutput != null) {
+            playerWeapon.setWeaponOutput(weaponOutput);
+            //only update when the value isn't already set
+            if(playerWeapon.getMainStatProperty() == null || playerWeapon.getSecondaryStatProperty() == null) {
+                WeaponPropertyTranslator.translateWeaponProperties(this.weaponsConfiguration, playerWeapon);
+            }
+        }
+    }
+
     /**
      * modifies the passed weapon pojo by translating fields
      * and setting ids
      * @param weaponOutput the weapon to transform
-     * @return the transformed agent instance
+     * @return the transformed weapon instance
      */
     private WeaponOutput transformWeaponFields(WeaponOutput weaponOutput, String language, Long id) {
         if(weaponOutput != null) {

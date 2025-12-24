@@ -1,5 +1,6 @@
 package me.darkkir3.proxyoutpost.cache;
 
+import me.darkkir3.proxyoutpost.model.db.PlayerWeapon;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
 
 /**
@@ -13,4 +14,12 @@ public interface EnkaWeaponCache {
      * @return an WeaponOutput instance
      */
     public WeaponOutput getWeaponById(String language, Long id);
+
+    /**
+     * Update the mainStat and secondaryStat of the specific player weapon based
+     * on the information gathered from the general weapon
+     * @param playerWeapon the actual player weapon
+     * @param weaponOutput the generic weapon information
+     */
+    public void updatePlayerWeaponStats(PlayerWeapon playerWeapon, WeaponOutput weaponOutput);
 }

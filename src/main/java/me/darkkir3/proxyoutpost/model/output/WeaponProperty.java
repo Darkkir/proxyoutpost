@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WeaponProperty {
     @JsonProperty("PropertyId")
-    public int propertyId;
+    public Long propertyId;
     @JsonProperty("PropertyValue")
-    public int propertyValue;
+    public Long propertyValue;
 }
