@@ -1,8 +1,11 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
+import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
 
 @Entity
 @Table(name="weapons")
@@ -54,6 +57,12 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
      */
     @Column(name="exp")
     private int exp;
+
+    /**
+     * the generic weapon data to include with this agent
+     */
+    @Transient
+    private WeaponOutput weaponOutput;
 
     @OneToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
@@ -133,6 +142,16 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
     @JsonIgnore
     public PlayerAgent getAgent() {
         return playerAgent;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped
+    public WeaponOutput getWeaponOutput() {
+        return weaponOutput;
+    }
+
+    public void setWeaponOutput(WeaponOutput weaponOutput) {
+        this.weaponOutput = weaponOutput;
     }
 
     @Override

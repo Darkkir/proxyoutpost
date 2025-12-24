@@ -1,5 +1,6 @@
 package me.darkkir3.proxyoutpost.cache.impl;
 
+import io.micrometer.common.util.StringUtils;
 import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
 import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
 import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
@@ -52,7 +53,7 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
                 ObjectMapper objectMapper = new ObjectMapper();
                 WeaponOutput weaponOutput = objectMapper.treeToValue(weaponNode, WeaponOutput.class);
                 if(weaponOutput != null) {
-                    return this.transformWeaponFields(weaponOutput, id, language);
+                    return this.transformWeaponFields(weaponOutput, language, id);
                 }
                 else {
                     log.error("Failed to parse {} for weapon id {}", this.getStoreName(), id);
@@ -73,9 +74,15 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
      * @param weaponOutput the weapon to transform
      * @return the transformed agent instance
      */
-    private WeaponOutput transformWeaponFields(WeaponOutput weaponOutput, Long id, String language) {
+    private WeaponOutput transformWeaponFields(WeaponOutput weaponOutput, String language, Long id) {
         if(weaponOutput != null) {
+            if(!StringUtils.isBlank(weaponOutput.itemName)) {
+                weaponOutput.itemName = this.enkaLocalizationCache.translate(language, weaponOutput.itemName);
+            }
 
+            if(!StringUtils.isBlank(weaponOutput.imagePath)) {
+                weaponOutput.imagePath = this.enkaAPIConfiguration.getBaseUrl() + weaponOutput.imagePath;
+            }
         }
         return weaponOutput;
     }

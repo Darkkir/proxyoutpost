@@ -3,10 +3,12 @@ package me.darkkir3.proxyoutpost.controller;
 import me.darkkir3.proxyoutpost.cache.EnkaAgentCache;
 import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
+import me.darkkir3.proxyoutpost.cache.EnkaWeaponCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
+import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,12 +22,14 @@ public class MainController {
     private final EnkaProfileCache enkaProfileCache;
     private final EnkaLocalizationCache enkaLocalizationCache;
     private final EnkaAgentCache enkaAgentCache;
+    private final EnkaWeaponCache enkaWeaponCache;
     private final EnkaAPIConfiguration enkaAPIConfiguration;
 
-    public MainController(EnkaProfileCache enkaProfileCache, EnkaLocalizationCache enkaLocalizationCache, EnkaAgentCache enkaAgentCache, EnkaAPIConfiguration enkaAPIConfiguration) {
+    public MainController(EnkaProfileCache enkaProfileCache, EnkaLocalizationCache enkaLocalizationCache, EnkaAgentCache enkaAgentCache, EnkaWeaponCache enkaWeaponCache, EnkaAPIConfiguration enkaAPIConfiguration) {
         this.enkaProfileCache = enkaProfileCache;
         this.enkaLocalizationCache = enkaLocalizationCache;
         this.enkaAgentCache = enkaAgentCache;
+        this.enkaWeaponCache = enkaWeaponCache;
         this.enkaAPIConfiguration = enkaAPIConfiguration;
     }
 
@@ -38,8 +42,12 @@ public class MainController {
             List<PlayerAgent> agentsOfProfile = playerProfile.getAgentsList();
             if(agentsOfProfile != null) {
                 agentsOfProfile.forEach(t -> {
-                            AgentOutput output = enkaAgentCache.getAgentById(languageToUse, t.getAgentPk().getAgentId());
-                            t.setAgentOutput(output);
+                            AgentOutput agentOutput = enkaAgentCache.getAgentById(languageToUse, t.getAgentPk().getAgentId());
+                            if(t.getWeapon() != null) {
+                                WeaponOutput weaponOutput = enkaWeaponCache.getWeaponById(languageToUse, t.getWeapon().getWeaponId());
+                                t.getWeapon().setWeaponOutput(weaponOutput);
+                            }
+                            t.setAgentOutput(agentOutput);
                         });
                 return agentsOfProfile;
             }

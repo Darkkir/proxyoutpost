@@ -123,8 +123,6 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
     /**
      * the generic agent data to include with this agent
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonUnwrapped
     @Transient
     private AgentOutput agentOutput;
 
@@ -284,6 +282,8 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         return playerProfile;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped
     public AgentOutput getAgentOutput() {
         return agentOutput;
     }
