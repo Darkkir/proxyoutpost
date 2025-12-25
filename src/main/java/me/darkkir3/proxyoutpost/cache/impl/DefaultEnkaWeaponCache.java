@@ -5,7 +5,7 @@ import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.configuration.WeaponsConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerWeapon;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
-import me.darkkir3.proxyoutpost.utils.WeaponPropertyTranslator;
+import me.darkkir3.proxyoutpost.utils.ItemPropertyTranslator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +84,7 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
             playerWeapon.setWeaponOutput(weaponOutput);
             //only update when the value isn't already set
             if(!playerWeapon.isMainStatSet() || !playerWeapon.isSecondaryStatSet()) {
-                WeaponPropertyTranslator.translateWeaponProperties(this.weaponsConfiguration, playerWeapon);
+                ItemPropertyTranslator.translateWeaponProperties(this.weaponsConfiguration, playerWeapon);
             }
         }
     }

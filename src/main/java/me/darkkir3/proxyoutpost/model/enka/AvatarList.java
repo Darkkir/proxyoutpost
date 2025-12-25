@@ -25,8 +25,6 @@ public class AvatarList implements EnkaData {
    public int level;
    @JsonProperty("PromotionLevel")
    public int promotionLevel;
-   @JsonProperty("Exp")
-   public int exp;
    @JsonProperty("SkinId")
    public long skinId;
    @JsonProperty("TalentLevel")

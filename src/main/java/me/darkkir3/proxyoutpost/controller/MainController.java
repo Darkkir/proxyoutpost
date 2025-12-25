@@ -40,10 +40,9 @@ public class MainController {
     }
 
     @Tag(name = "showProfile", description = "Display all profile data based on the user id")
-    @GetMapping("/profile/{id}")
+    @GetMapping("/{language}/profile/{id}")
     @Transactional
-    public List<PlayerAgent> showProfile(@PathVariable("id") Long userId) {
-        String languageToUse = enkaLocalizationCache.getDefaultLanguage();
+    public List<PlayerAgent> showProfile(@PathVariable("language") String languageToUse, @PathVariable("id") Long userId) {
         //https://enka.network/api/zzz/uid/1501331084
         PlayerProfile playerProfile = enkaProfileCache.getProfileByUid(languageToUse, userId);
         if(playerProfile != null) {
@@ -56,7 +55,7 @@ public class MainController {
                                 enkaWeaponCache.updatePlayerWeaponStats(t.getWeapon(), weaponOutput);
                             }
                             t.setAgentOutput(agentOutput);
-                            enkaAgentCache.updatePlayerAgentStats(t, agentOutput);
+                            enkaAgentCache.updatePlayerAgentStats(languageToUse, t, agentOutput);
                         });
                 return agentsOfProfile;
             }

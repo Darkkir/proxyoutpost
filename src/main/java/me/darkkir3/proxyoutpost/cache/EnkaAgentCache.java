@@ -17,8 +17,9 @@ public interface EnkaAgentCache {
 
     /**
      * Update the agent stats based on the generic data gathered in avatars.json
+     * @param language the language to translate in
      * @param playerAgent the actual player agent
      * @param agentOutput the generic agent information
      */
-    public void updatePlayerAgentStats(PlayerAgent playerAgent, AgentOutput agentOutput);
+    public void updatePlayerAgentStats(String language, PlayerAgent playerAgent, AgentOutput agentOutput);
 }

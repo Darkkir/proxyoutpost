@@ -3,7 +3,7 @@ package me.darkkir3.proxyoutpost.utils;
 import me.darkkir3.proxyoutpost.configuration.WeaponsConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerWeapon;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
-import me.darkkir3.proxyoutpost.model.output.WeaponProperty;
+import me.darkkir3.proxyoutpost.model.output.ItemProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -13,13 +13,13 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Optional;
 
-public final class WeaponPropertyTranslator {
+public final class ItemPropertyTranslator {
 
-    private static final Logger log = LoggerFactory.getLogger(WeaponPropertyTranslator.class);
+    private static final Logger log = LoggerFactory.getLogger(ItemPropertyTranslator.class);
     private static JsonNode levelRootNode = null;
     private static JsonNode starRootNode = null;
 
-    private WeaponPropertyTranslator() {}
+    private ItemPropertyTranslator() {}
 
     public static void translateWeaponProperties(WeaponsConfiguration weaponsConfiguration, PlayerWeapon playerWeapon) {
         if(playerWeapon.getWeaponOutput() == null) {
@@ -29,8 +29,8 @@ public final class WeaponPropertyTranslator {
         }
 
         WeaponOutput weaponOutput = playerWeapon.getWeaponOutput();
-        WeaponProperty mainStat = weaponOutput.getMainStat();
-        WeaponProperty secondaryStat = weaponOutput.getSecondaryStat();
+        ItemProperty mainStat = weaponOutput.getMainStat();
+        ItemProperty secondaryStat = weaponOutput.getSecondaryStat();
 
         if(mainStat == null || secondaryStat == null) {
             log.error("Weapon with id {} did not specify a main or secondary stat in weapons.json",

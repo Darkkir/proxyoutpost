@@ -2,9 +2,9 @@ package me.darkkir3.proxyoutpost.model.enka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RandomPropertyList implements EnkaData {
+public class PropertyEntry implements EnkaData {
    @JsonProperty("PropertyId")
-   public int propertyId;
+   public long propertyId;
    @JsonProperty("PropertyLevel")
    public int propertyLevel;
    @JsonProperty("PropertyValue")

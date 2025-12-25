@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
+import me.darkkir3.proxyoutpost.model.db.SkillType;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +101,26 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
 
         PlayerProfile dbPlayerProfile = new PlayerProfile();
         dbPlayerProfile.mapEnkaDataToDB(jsonProfile);
+
+        //update skill levels based on mindscape level of the agent
+        if(dbPlayerProfile.getAgentsList() != null) {
+            dbPlayerProfile.getAgentsList().forEach(t -> {
+                int mindscapeLevel = t.getMindscapeLevel();
+                if(mindscapeLevel >= 0 && mindscapeLevel < enkaAPIConfiguration.getMindScapeSkillLevelOffset().size()) {
+                    int offset = enkaAPIConfiguration.getMindScapeSkillLevelOffset().get(mindscapeLevel);
+                    if(t.getSkillLevelList() != null) {
+                        t.getSkillLevelList().forEach(s -> {
+                            //increase every skill except core
+                            if(s.getSkillLevelPk() != null
+                                    && s.getSkillLevelPk().getSkillIndex() != SkillType.CORE_SKILL.getIndex()) {
+                                s.setLevel(s.getLevel() + offset);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
         entityManager.persist(dbPlayerProfile);
         log.info("Saving profile with uid {} to db", uid);
 

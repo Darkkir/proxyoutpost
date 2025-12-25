@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -28,6 +29,8 @@ public class EnkaAPIConfiguration {
     private String configurationPath;
     @Value("#{${enka.config.stores}}")
     private Map<String, String> storesMap;
+    @Value("#{${enka.mindscape.offset}}")
+    private List<Integer> mindScapeSkillLevelOffset;
 
     /**
      * @return the user-agent to use when making api calls to enka
@@ -90,5 +93,13 @@ public class EnkaAPIConfiguration {
      */
     public Map<String, String> getStoresMap() {
         return storesMap;
+    }
+
+    /**
+     * @return list of integers containing the value to increase all skill levels (except core)
+     * by based on the mindscape level
+     */
+    public List<Integer> getMindScapeSkillLevelOffset() {
+        return mindScapeSkillLevelOffset;
     }
 }

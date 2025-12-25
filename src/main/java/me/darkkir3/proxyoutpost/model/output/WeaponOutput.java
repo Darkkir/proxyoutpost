@@ -39,12 +39,12 @@ public class WeaponOutput {
     /**
      * the untranslated main stat property of this weapon
      */
-    private WeaponProperty mainStat;
+    private ItemProperty mainStat;
 
     /**
      * the untranslated secondary stat property of this weapon
      */
-    private WeaponProperty secondaryStat;
+    private ItemProperty secondaryStat;
 
     /**
      * the translated main stat property of this weapon
@@ -62,7 +62,7 @@ public class WeaponOutput {
      * set the untranslated main stat value of this weapon
      */
     @JsonProperty("MainStat")
-    public void setMainStat(WeaponProperty mainStat) {
+    public void setMainStat(ItemProperty mainStat) {
         this.mainStat = mainStat;
     }
 
@@ -70,7 +70,7 @@ public class WeaponOutput {
      * set the untranslated secondary stat value of this weapon
      */
     @JsonProperty("SecondaryStat")
-    public void setSecondaryStat(WeaponProperty secondaryStat) {
+    public void setSecondaryStat(ItemProperty secondaryStat) {
         this.secondaryStat = secondaryStat;
     }
 
@@ -78,7 +78,7 @@ public class WeaponOutput {
      * @return the untranslated main stat values
      */
     @JsonIgnore
-    public WeaponProperty getMainStat() {
+    public ItemProperty getMainStat() {
         return this.mainStat;
     }
 
@@ -86,7 +86,7 @@ public class WeaponOutput {
      * @return the untranslated secondary stat values
      */
     @JsonIgnore
-    public WeaponProperty getSecondaryStat() {
+    public ItemProperty getSecondaryStat() {
         return this.secondaryStat;
     }
 

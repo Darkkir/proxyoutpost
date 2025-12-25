@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Equipment implements EnkaData {
     @JsonProperty("RandomPropertyList")
-    public List<RandomPropertyList> randomPropertyList;
+    public List<PropertyEntry> secondaryPropertyList;
     @JsonProperty("MainPropertyList")
-    public List<MainPropertyList> mainPropertyList;
+    public List<PropertyEntry> mainPropertyList;
     @JsonProperty("IsAvailable")
     public boolean isAvailable;
     @JsonProperty("IsLocked")

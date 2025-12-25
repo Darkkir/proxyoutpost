@@ -3,6 +3,8 @@ package me.darkkir3.proxyoutpost.cache.impl;
 import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
+import me.darkkir3.proxyoutpost.model.db.PlayerAgentProperty;
+import me.darkkir3.proxyoutpost.model.db.PlayerAgentPropertyPk;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -72,7 +76,7 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
     }
 
     @Override
-    public void updatePlayerAgentStats(PlayerAgent playerAgent, AgentOutput agentOutput) {
+    public void updatePlayerAgentStats(String language, PlayerAgent playerAgent, AgentOutput agentOutput) {
         if(playerAgent != null && agentOutput != null) {
             playerAgent.setAgentOutput(agentOutput);
 
@@ -80,7 +84,7 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
             HashMap<String, Double> basePropertyMap = new HashMap<>();
             if(agentOutput.getBaseProperties() != null) {
                 agentOutput.getBaseProperties().forEach((k, v) -> {
-                    if(StringUtils.isNumeric(v)) {
+                    if(StringUtils.isNumeric(k) && StringUtils.isNumeric(v)) {
                         basePropertyMap.put(k, Double.parseDouble(v));
                     }
                 });
@@ -127,7 +131,50 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
                 }
             }
 
-            playerAgent.setBaseProperties(basePropertyMap);
+            //then set the values to the actual player agent instance
+            Map<Integer, PlayerAgentProperty> existingPropertyList = playerAgent.getPropertyMap();
+            if(existingPropertyList == null) {
+                existingPropertyList = new HashMap<>();
+            }
+
+            final List<PlayerAgentProperty> newProperties = new ArrayList<>();
+            basePropertyMap.forEach((k, v) -> {
+                PlayerAgentProperty playerAgentProperty = new PlayerAgentProperty(
+                        new PlayerAgentPropertyPk(
+                                playerAgent.getAgentPk().getProfileUid(),
+                                playerAgent.getAgentPk().getAgentId(),
+                                Integer.parseInt(k)));
+
+                playerAgentProperty.setBaseValue(v);
+                newProperties.add(playerAgentProperty);
+            });
+
+            //insert or update existing values
+            for(PlayerAgentProperty p : newProperties) {
+                int key = p.getPlayerAgentPropertyPk().getPropertyId();
+                PlayerAgentProperty existingProperty = existingPropertyList.get(key);
+                if(existingProperty != null) {
+                    existingProperty.setBaseValue(p.getBaseValue());
+                }
+                else {
+                    existingPropertyList.put(key, p);
+                }
+            }
+
+            playerAgent.setPropertyMap(existingPropertyList);
+
+            //set property translations from cache for drive disc properties too
+            if(playerAgent.getPlayerDriveDiscs() != null && !playerAgent.getPlayerDriveDiscs().isEmpty()) {
+                playerAgent.getPlayerDriveDiscs().forEach(t -> {
+                    t.setSetName(enkaLocalizationCache.translate(language, String.valueOf(t.getSetId())));
+
+                    if(t.getDriveDiscProperties() != null && !t.getDriveDiscProperties().isEmpty()) {
+                        t.getDriveDiscProperties().forEach(p -> {
+                            p.setPropertyOutput(this.enkaPropertyCache.getPropertyById(language, p.getPlayerDriveDiscPropertyPk().getPropertyId()));
+                        });
+                    }
+                });
+            }
         }
     }
 
