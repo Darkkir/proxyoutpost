@@ -1,12 +1,10 @@
 package me.darkkir3.proxyoutpost.cache.impl;
 
-import io.micrometer.common.util.StringUtils;
-import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaAgentCache;
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
+import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
+import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -15,16 +13,21 @@ import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements EnkaAgentCache {
 
     private static final String AGENT_CACHE = "AGENT_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaAgentCache.class);
 
+    private final EnkaPropertyCache enkaPropertyCache;
     private final EnkaLocalizationCache enkaLocalizationCache;
 
-    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaLocalizationCache enkaLocalizationCache) {
+    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, EnkaLocalizationCache enkaLocalizationCache) {
         super(enkaAPIConfiguration, cacheManager);
+        this.enkaPropertyCache = enkaPropertyCache;
         this.enkaLocalizationCache = enkaLocalizationCache;
     }
 
@@ -66,6 +69,66 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
         }
 
         return null;
+    }
+
+    @Override
+    public void updatePlayerAgentStats(PlayerAgent playerAgent, AgentOutput agentOutput) {
+        if(playerAgent != null && agentOutput != null) {
+            playerAgent.setAgentOutput(agentOutput);
+
+            //first, list all base stats of this agent
+            HashMap<String, Double> basePropertyMap = new HashMap<>();
+            if(agentOutput.getBaseProperties() != null) {
+                agentOutput.getBaseProperties().forEach((k, v) -> {
+                    if(StringUtils.isNumeric(v)) {
+                        basePropertyMap.put(k, Double.parseDouble(v));
+                    }
+                });
+            }
+
+            //increase those stats by growth properties based on the agent level
+            if(agentOutput.getGrowthProperties() != null) {
+                basePropertyMap.forEach((k, v) -> {
+                    String growthValue = agentOutput.getGrowthProperties().get(k);
+                    if(StringUtils.isNumeric(growthValue)) {
+                        v += (Double.parseDouble(growthValue) * ((double)playerAgent.getAgentLevel() - 1)) / 10_000d;
+                        basePropertyMap.put(k, Math.floor(v));
+                    }
+                });
+            }
+
+            //increase those stats by promotion properties based on the promotion level of the agent
+            if(agentOutput.getPromotionProperties() != null) {
+                Map<String, String> promotionProperties =
+                        agentOutput.getPromotionProperties().get(playerAgent.getAgentPromotionLevel() - 1);
+                if(promotionProperties != null) {
+                    basePropertyMap.forEach((k, v) -> {
+                        String promotionValue = promotionProperties.get(k);
+                        if(StringUtils.isNumeric(promotionValue)) {
+                            v += Double.parseDouble(promotionValue);
+                            basePropertyMap.put(k, Math.floor(v));
+                        }
+                    });
+                }
+            }
+
+            //finally, increase those stats by the core enhancement properties based on the level of the core skill
+            if(agentOutput.getCoreEnhancementProperties() != null) {
+                Map<String, String> coreEnhancementProperties =
+                        agentOutput.getCoreEnhancementProperties().get(playerAgent.getCoreSkillEnhancement());
+                if(coreEnhancementProperties != null) {
+                    basePropertyMap.forEach((k, v) -> {
+                        String coreEnhancementValue = coreEnhancementProperties.get(k);
+                        if(StringUtils.isNumeric(coreEnhancementValue)) {
+                            v += Double.parseDouble(coreEnhancementValue);
+                            basePropertyMap.put(k, Math.floor(v));
+                        }
+                    });
+                }
+            }
+
+            playerAgent.setBaseProperties(basePropertyMap);
+        }
     }
 
     /**

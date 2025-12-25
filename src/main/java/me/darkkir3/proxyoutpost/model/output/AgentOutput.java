@@ -31,6 +31,7 @@ public class AgentOutput {
      * <br>3 = A-rank
      * <br>4 = S-rank
      */
+    @JsonIgnore
     private int rarity;
 
     /**
@@ -75,6 +76,30 @@ public class AgentOutput {
     @JsonProperty("MindscapeColor")
     public String mindscapeColor;
 
+    /**
+     * agent base stats at lvl 0
+     */
+    @JsonIgnore
+    private Map<String, String> baseProperties;
+
+    /**
+     * agent stat increases based on agent level
+     */
+    @JsonIgnore
+    private Map<String, String> growthProperties;
+
+    /**
+     * agent stat increases based on promotion level
+     */
+    @JsonIgnore
+    private List<Map<String, String>> promotionProperties;
+
+    /**
+     * agent stat increases based on the level of the core skill
+     */
+    @JsonIgnore
+    private List<Map<String, String>> coreEnhancementProperties;
+
     @JsonProperty("Colors")
     public void setColors(Map<String, String> colors) {
     this.accentColor = colors.get(ACCENT_COLOR);
@@ -116,5 +141,45 @@ public class AgentOutput {
                 Objects.equals(this.rarity, t.getIndex())).findFirst();
 
         return agentRarity.map(Enum::name).orElse(null);
+    }
+
+    @JsonIgnore
+    public Map<String, String> getBaseProperties() {
+        return baseProperties;
+    }
+
+    @JsonProperty("BaseProps")
+    public void setBaseProperties(Map<String, String> baseProperties) {
+        this.baseProperties = baseProperties;
+    }
+
+    @JsonIgnore
+    public Map<String, String> getGrowthProperties() {
+        return growthProperties;
+    }
+
+    @JsonProperty("GrowthProps")
+    public void setGrowthProperties(Map<String, String> growthProperties) {
+        this.growthProperties = growthProperties;
+    }
+
+    @JsonIgnore
+    public List<Map<String, String>> getPromotionProperties() {
+        return promotionProperties;
+    }
+
+    @JsonProperty("PromotionProps")
+    public void setPromotionProperties(List<Map<String, String>> promotionProperties) {
+        this.promotionProperties = promotionProperties;
+    }
+
+    @JsonIgnore
+    public List<Map<String, String>> getCoreEnhancementProperties() {
+        return coreEnhancementProperties;
+    }
+
+    @JsonProperty("CoreEnhancementProps")
+    public void setCoreEnhancementProperties(List<Map<String, String>> coreEnhancementProperties) {
+        this.coreEnhancementProperties = coreEnhancementProperties;
     }
 }

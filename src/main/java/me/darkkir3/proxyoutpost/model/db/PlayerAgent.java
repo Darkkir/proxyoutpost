@@ -12,6 +12,7 @@ import me.darkkir3.proxyoutpost.utils.DBUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name="agents")
@@ -119,6 +120,18 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
      */
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playerAgent")
     private PlayerWeapon playerWeapon;
+
+    /**
+     * the base stats of each agent
+     */
+    @ElementCollection
+    @CollectionTable(
+            name = "agent_base_properties",
+            joinColumns = {@JoinColumn(name = "agentId"), @JoinColumn(name = "profileUid")})
+    @MapKeyColumn(name="property_id")
+    @Column(name="property_value")
+    @JsonIgnore
+    private Map<String, Double> baseProperties;
 
     /**
      * the generic agent data to include with this agent
@@ -270,6 +283,14 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
 
     public void setClaimedRewardList(List<Integer> values) {
         this.claimedRewardList = DBUtils.convertListToField(values);
+    }
+
+    public Map<String, Double> getBaseProperties() {
+        return baseProperties;
+    }
+
+    public void setBaseProperties(Map<String, Double> baseProperties) {
+        this.baseProperties = baseProperties;
     }
 
     @JsonIgnore

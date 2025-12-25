@@ -1,15 +1,12 @@
 package me.darkkir3.proxyoutpost.cache.impl;
 
-import io.micrometer.common.util.StringUtils;
-import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
-import me.darkkir3.proxyoutpost.cache.EnkaWeaponCache;
+import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.configuration.WeaponsConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerWeapon;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
 import me.darkkir3.proxyoutpost.utils.WeaponPropertyTranslator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -25,11 +22,18 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaWeaponCache.class);
 
     private final EnkaLocalizationCache enkaLocalizationCache;
+    private final EnkaPropertyCache enkaPropertyCache;
     private final WeaponsConfiguration weaponsConfiguration;
 
-    public DefaultEnkaWeaponCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaLocalizationCache enkaLocalizationCache, WeaponsConfiguration weaponsConfiguration) {
+    public DefaultEnkaWeaponCache(
+            EnkaAPIConfiguration enkaAPIConfiguration,
+            CacheManager cacheManager,
+            EnkaLocalizationCache enkaLocalizationCache,
+            EnkaPropertyCache enkaPropertyCache,
+            WeaponsConfiguration weaponsConfiguration) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaLocalizationCache = enkaLocalizationCache;
+        this.enkaPropertyCache = enkaPropertyCache;
         this.weaponsConfiguration = weaponsConfiguration;
     }
 
@@ -58,7 +62,8 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
                 ObjectMapper objectMapper = new ObjectMapper();
                 WeaponOutput weaponOutput = objectMapper.treeToValue(weaponNode, WeaponOutput.class);
                 if(weaponOutput != null) {
-                    return this.transformWeaponFields(weaponOutput, language, id);
+                    this.transformWeaponFields(weaponOutput, language, id);
+                    return weaponOutput;
                 }
                 else {
                     log.error("Failed to parse {} for weapon id {}", this.getStoreName(), id);
@@ -78,7 +83,7 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
         if(playerWeapon != null && weaponOutput != null) {
             playerWeapon.setWeaponOutput(weaponOutput);
             //only update when the value isn't already set
-            if(playerWeapon.getMainStatProperty() == null || playerWeapon.getSecondaryStatProperty() == null) {
+            if(!playerWeapon.isMainStatSet() || !playerWeapon.isSecondaryStatSet()) {
                 WeaponPropertyTranslator.translateWeaponProperties(this.weaponsConfiguration, playerWeapon);
             }
         }
@@ -90,7 +95,7 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
      * @param weaponOutput the weapon to transform
      * @return the transformed weapon instance
      */
-    private WeaponOutput transformWeaponFields(WeaponOutput weaponOutput, String language, Long id) {
+    private void transformWeaponFields(WeaponOutput weaponOutput, String language, Long id) {
         if(weaponOutput != null) {
             if(!StringUtils.isBlank(weaponOutput.itemName)) {
                 weaponOutput.itemName = this.enkaLocalizationCache.translate(language, weaponOutput.itemName);
@@ -99,7 +104,16 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
             if(!StringUtils.isBlank(weaponOutput.imagePath)) {
                 weaponOutput.imagePath = this.enkaAPIConfiguration.getBaseUrl() + weaponOutput.imagePath;
             }
+
+            if(weaponOutput.getMainStat() != null) {
+                weaponOutput.setMainStatPropertyOutput(
+                        enkaPropertyCache.getPropertyById(language, weaponOutput.getMainStat().propertyId));
+            }
+
+            if(weaponOutput.getSecondaryStat() != null) {
+                weaponOutput.setSecondaryStatPropertyOutput(
+                        enkaPropertyCache.getPropertyById(language, weaponOutput.getSecondaryStat().propertyId));
+            }
         }
-        return weaponOutput;
     }
 }

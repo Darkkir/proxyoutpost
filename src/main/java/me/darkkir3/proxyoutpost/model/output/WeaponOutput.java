@@ -1,7 +1,10 @@
 package me.darkkir3.proxyoutpost.model.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import jakarta.persistence.Transient;
 import me.darkkir3.proxyoutpost.model.db.WeaponRarity;
 
 import java.util.Arrays;
@@ -34,14 +37,26 @@ public class WeaponOutput {
     public String imagePath;
 
     /**
-     * the untranslated main stat value of this weapon
+     * the untranslated main stat property of this weapon
      */
     private WeaponProperty mainStat;
 
     /**
-     * the untranslated secondary stat value of this weapon
+     * the untranslated secondary stat property of this weapon
      */
     private WeaponProperty secondaryStat;
+
+    /**
+     * the translated main stat property of this weapon
+     */
+    @Transient
+    private PropertyOutput mainStatPropertyOutput;
+
+    /**
+     * the translated secondary stat property of this weapon
+     */
+    @Transient
+    private PropertyOutput secondaryStatPropertyOutput;
 
     /**
      * set the untranslated main stat value of this weapon
@@ -68,11 +83,43 @@ public class WeaponOutput {
     }
 
     /**
-     * @return the untranslated secondery stat values
+     * @return the untranslated secondary stat values
      */
     @JsonIgnore
     public WeaponProperty getSecondaryStat() {
         return this.secondaryStat;
+    }
+
+    /**
+     * @return the translated main stat values
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped(prefix="MainStat")
+    public PropertyOutput getMainStatPropertyOutput() {
+        return mainStatPropertyOutput;
+    }
+
+    /**
+     * set the translated main stat value of this weapon
+     */
+    public void setMainStatPropertyOutput(PropertyOutput mainStatPropertyOutput) {
+        this.mainStatPropertyOutput = mainStatPropertyOutput;
+    }
+
+    /**
+     * @return the translated secondary stat values
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped(prefix="SecondaryStat")
+    public PropertyOutput getSecondaryStatPropertyOutput() {
+        return secondaryStatPropertyOutput;
+    }
+
+    /**
+     * set the translated secondary stat value of this weapon
+     */
+    public void setSecondaryStatPropertyOutput(PropertyOutput secondaryStatPropertyOutput) {
+        this.secondaryStatPropertyOutput = secondaryStatPropertyOutput;
     }
 
     /**

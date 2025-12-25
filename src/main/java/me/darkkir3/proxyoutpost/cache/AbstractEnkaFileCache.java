@@ -1,7 +1,7 @@
 package me.darkkir3.proxyoutpost.cache;
 
-import io.micrometer.common.util.StringUtils;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;

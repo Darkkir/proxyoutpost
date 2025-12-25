@@ -1,17 +1,17 @@
 package me.darkkir3.proxyoutpost.cache.impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
-import me.darkkir3.proxyoutpost.rep.ProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 @Component
 public class DefaultEnkaProfileCache implements EnkaProfileCache {
@@ -23,11 +23,6 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     private final HashMap<Long, PlayerProfile> profileCache;
 
     /**
-     * profile repository
-     */
-    private final ProfileRepository profileRepository;
-
-    /**
      * configuration class for enka properties
      */
     private final EnkaAPIConfiguration enkaAPIConfiguration;
@@ -37,10 +32,15 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
      */
     private final RestClient restClient;
 
+    /**
+     * system.nanoTime() of when we last grabbed any profile in any language
+     */
     private long timeSinceLastCacheUpdate;
 
-    public DefaultEnkaProfileCache(ProfileRepository profileRepository, EnkaAPIConfiguration enkaAPIConfiguration) {
-        this.profileRepository = profileRepository;
+    @PersistenceContext
+    EntityManager entityManager;
+
+    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
@@ -83,17 +83,16 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
      */
     private PlayerProfile fetchNewEnkaProfile(Long uid) {
         log.info("Trying to fetch a new enka profile: {}", uid);
-        Optional<PlayerProfile> existingProfile = profileRepository.findById(uid);
+        PlayerProfile existingProfile = entityManager.find(PlayerProfile.class, uid);
 
-        if(existingProfile.isPresent()) {
-            PlayerProfile p = existingProfile.get();
-            if(!p.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
+        if(existingProfile != null) {
+            if(!existingProfile.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
                 log.info("Returning enka profile with uid {} from db", uid);
-                return p;
+                return existingProfile;
             }
             else {
                 log.info("Found expired profile for uid {}, deleting from database", uid);
-                profileRepository.delete(p);
+                entityManager.remove(existingProfile);
             }
         }
 
@@ -101,7 +100,7 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
 
         PlayerProfile dbPlayerProfile = new PlayerProfile();
         dbPlayerProfile.mapEnkaDataToDB(jsonProfile);
-        profileRepository.save(dbPlayerProfile);
+        entityManager.persist(dbPlayerProfile);
         log.info("Saving profile with uid {} to db", uid);
 
         return dbPlayerProfile;

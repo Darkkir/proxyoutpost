@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
-import me.darkkir3.proxyoutpost.model.output.PropertyOutput;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
 import me.darkkir3.proxyoutpost.utils.CSharpFormatConverter;
 
@@ -77,12 +76,6 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
      */
     @Transient
     private WeaponOutput weaponOutput;
-
-    @Transient
-    private PropertyOutput mainStatProperty;
-
-    @Transient
-    private PropertyOutput secondaryStatProperty;
 
     @OneToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
@@ -174,35 +167,23 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.weaponOutput = weaponOutput;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonUnwrapped(prefix="MainStat")
-    public PropertyOutput getMainStatProperty() {
-        return mainStatProperty;
-    }
-
-    public void setMainStatProperty(PropertyOutput mainStatProperty) {
-        this.mainStatProperty = mainStatProperty;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonUnwrapped(prefix="SecondaryStat")
-    public PropertyOutput getSecondaryStatProperty() {
-        return secondaryStatProperty;
-    }
-
-    public void setSecondaryStatProperty(PropertyOutput secondaryStatProperty) {
-        this.secondaryStatProperty = secondaryStatProperty;
-    }
-
     @JsonProperty("MainStatValue")
     public String getMainStat() {
-        if(this.mainStatProperty != null) {
-            String format = this.mainStatProperty.getFormat();
+        if(this.getWeaponOutput() != null && this.getWeaponOutput().getMainStatPropertyOutput() != null) {
+            String format = this.getWeaponOutput().getMainStatPropertyOutput().getFormat();
             if(format != null)  {
                 return CSharpFormatConverter.format(format, mainStat);
             }
         }
         return String.valueOf(mainStat);
+    }
+
+    /**
+     * @return true if the value of main stat is greater than zero
+     */
+    @JsonIgnore
+    public boolean isMainStatSet() {
+        return this.mainStat > 0d;
     }
 
     public void setMainStat(double mainStat) {
@@ -211,13 +192,21 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
 
     @JsonProperty("SecondaryStatValue")
     public String getSecondaryStat() {
-        if(this.secondaryStatProperty != null) {
-            String format = this.secondaryStatProperty.getFormat();
+        if(this.getWeaponOutput() != null && this.getWeaponOutput().getSecondaryStatPropertyOutput() != null) {
+            String format = this.getWeaponOutput().getSecondaryStatPropertyOutput().getFormat();
             if(format != null)  {
                 return CSharpFormatConverter.format(format, secondaryStat);
             }
         }
         return String.valueOf(secondaryStat);
+    }
+
+    /**
+     * @return true if the value of secondary stat is greater than zero
+     */
+    @JsonIgnore
+    public boolean isSecondaryStatSet() {
+        return this.secondaryStat > 0d;
     }
 
     public void setSecondaryStat(double secondaryStat) {

@@ -1,12 +1,12 @@
 package me.darkkir3.proxyoutpost.cache.impl;
 
-import io.micrometer.common.util.StringUtils;
 import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
 import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
 import me.darkkir3.proxyoutpost.cache.EnkaPropertyCache;
 import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.output.PropertyOutput;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;

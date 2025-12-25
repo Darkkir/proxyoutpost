@@ -1,5 +1,7 @@
 package me.darkkir3.proxyoutpost.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
@@ -37,8 +39,10 @@ public class MainController {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
     }
 
+    @Tag(name = "showProfile", description = "Display all profile data based on the user id")
     @GetMapping("/profile/{id}")
-    public List<PlayerAgent> printProfile(@PathVariable("id") Long userId) {
+    @Transactional
+    public List<PlayerAgent> showProfile(@PathVariable("id") Long userId) {
         String languageToUse = enkaLocalizationCache.getDefaultLanguage();
         //https://enka.network/api/zzz/uid/1501331084
         PlayerProfile playerProfile = enkaProfileCache.getProfileByUid(languageToUse, userId);
@@ -50,16 +54,9 @@ public class MainController {
                             if(t.getWeapon() != null) {
                                 WeaponOutput weaponOutput = enkaWeaponCache.getWeaponById(languageToUse, t.getWeapon().getWeaponId());
                                 enkaWeaponCache.updatePlayerWeaponStats(t.getWeapon(), weaponOutput);
-                                if(weaponOutput.getMainStat() != null) {
-                                    t.getWeapon().setMainStatProperty(
-                                            enkaPropertyCache.getPropertyById(languageToUse, weaponOutput.getMainStat().propertyId));
-                                }
-                                if(weaponOutput.getSecondaryStat() != null) {
-                                    t.getWeapon().setSecondaryStatProperty(
-                                            enkaPropertyCache.getPropertyById(languageToUse, weaponOutput.getSecondaryStat().propertyId));
-                                }
                             }
                             t.setAgentOutput(agentOutput);
+                            enkaAgentCache.updatePlayerAgentStats(t, agentOutput);
                         });
                 return agentsOfProfile;
             }
