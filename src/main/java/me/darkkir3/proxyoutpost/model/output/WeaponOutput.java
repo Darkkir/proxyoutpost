@@ -58,6 +58,19 @@ public class WeaponOutput {
     @Transient
     private PropertyOutput secondaryStatPropertyOutput;
 
+
+    @JsonProperty("MainStatProperty")
+    public Long getMainStatProperty() {
+        return this.getMainStat() == null
+                ? null : this.getMainStat().propertyId;
+    }
+
+    @JsonProperty("SecondaryStatProperty")
+    public Long getSecondaryStatProperty() {
+        return this.getSecondaryStat() == null
+                ? null : this.getSecondaryStat().propertyId;
+    }
+
     /**
      * set the untranslated main stat value of this weapon
      */

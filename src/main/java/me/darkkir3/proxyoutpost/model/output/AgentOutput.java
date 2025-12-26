@@ -100,6 +100,9 @@ public class AgentOutput {
     @JsonIgnore
     private List<Map<String, String>> coreEnhancementProperties;
 
+    @JsonIgnore
+    private List<Long> highLightProperties;
+
     @JsonProperty("Colors")
     public void setColors(Map<String, String> colors) {
     this.accentColor = colors.get(ACCENT_COLOR);
@@ -181,5 +184,15 @@ public class AgentOutput {
     @JsonProperty("CoreEnhancementProps")
     public void setCoreEnhancementProperties(List<Map<String, String>> coreEnhancementProperties) {
         this.coreEnhancementProperties = coreEnhancementProperties;
+    }
+
+    @JsonProperty("HighlightProps")
+    public List<Long> getHighLightProperties() {
+        return highLightProperties;
+    }
+
+    @JsonProperty("HighlightProps")
+    public void setHighLightProperties(List<Long> highLightProperties) {
+        this.highLightProperties = highLightProperties;
     }
 }

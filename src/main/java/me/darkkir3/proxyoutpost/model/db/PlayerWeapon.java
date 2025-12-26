@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
-import me.darkkir3.proxyoutpost.equipment.CSharpFormatConverter;
 
 @Entity
 @Table(name="weapons")
@@ -174,12 +173,6 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
 
     @JsonProperty("MainStatValue")
     public String getMainStat() {
-        if(this.getWeaponOutput() != null && this.getWeaponOutput().getMainStatPropertyOutput() != null) {
-            String format = this.getWeaponOutput().getMainStatPropertyOutput().getFormat();
-            if(format != null)  {
-                return CSharpFormatConverter.format(format, mainStat);
-            }
-        }
         return String.valueOf(mainStat);
     }
 
@@ -202,12 +195,6 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
 
     @JsonProperty("SecondaryStatValue")
     public String getSecondaryStat() {
-        if(this.getWeaponOutput() != null && this.getWeaponOutput().getSecondaryStatPropertyOutput() != null) {
-            String format = this.getWeaponOutput().getSecondaryStatPropertyOutput().getFormat();
-            if(format != null)  {
-                return CSharpFormatConverter.format(format, secondaryStat);
-            }
-        }
         return String.valueOf(secondaryStat);
     }
 

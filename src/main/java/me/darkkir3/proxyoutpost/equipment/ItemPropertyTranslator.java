@@ -208,7 +208,7 @@ public class ItemPropertyTranslator {
         if(playerAgent.getWeapon() != null) {
             PlayerWeapon playerWeapon = playerAgent.getWeapon();
             double mainStat = playerWeapon.getMainStatAsDouble();
-            double secondaryStat = Math.floor(playerWeapon.getSecondaryStatAsDouble() * 10_000d);
+            double secondaryStat = playerWeapon.getSecondaryStatAsDouble();
 
             if(mainStat > 0d || secondaryStat > 0d) {
                 long mainStatPropertyId = playerWeapon.getWeaponOutput().getMainStat().propertyId;
@@ -275,6 +275,7 @@ public class ItemPropertyTranslator {
             existingProperty.setPropertyOutput(enkaPropertyCache.getPropertyById(language, key));
             propertyMap.put(key, existingProperty);
         });
+        playerAgent.setPropertyMap(propertyMap);
     }
 
     private void incrementTotalStatsForProperty(PlayerDriveDiscProperty driveDiscProperty, Map<Long, Integer> totalStats) {
@@ -350,9 +351,6 @@ public class ItemPropertyTranslator {
 
             double mainStatValue = Math.floor((weaponOutput.getMainStat().propertyValue) * (1d + levelMainState / 10_000d + starMainStat / 10000d));
             double secondaryStatValue = Math.floor((weaponOutput.getSecondaryStat().propertyValue) * (1d + starSecondaryStat / 10_000d));
-
-            //properly translate secondary stat percentages
-            secondaryStatValue /= 10_000d;
 
             playerWeapon.setMainStat(mainStatValue);
             playerWeapon.setSecondaryStat(secondaryStatValue);
