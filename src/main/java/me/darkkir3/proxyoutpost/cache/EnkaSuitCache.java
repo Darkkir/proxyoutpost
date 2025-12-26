@@ -1,16 +1,18 @@
 package me.darkkir3.proxyoutpost.cache;
 
-import me.darkkir3.proxyoutpost.model.output.SuitOutput;
+import me.darkkir3.proxyoutpost.equipment.DriveDiscSuit;
 
 /**
- * Caches agent json data
+ * Caches drive disc suit data
  */
 public interface EnkaSuitCache {
 
     /**
-     * fetch an AgentOutput pojo based on the agent id
+     * fetch an DriveDiscSuit pojo while translating the set name and icon url
      * @param id the id of the agent to fetch
-     * @return an AgentOutput instance
+     * @return an DriveDiscSuit instance
      */
-    public SuitOutput getSuitById(Long id);
+    public DriveDiscSuit getSuitByName(String language, String id);
+    public void registerDriveDiscSuit(DriveDiscSuit driveDiscSuit);
+    public void clearCache();
 }

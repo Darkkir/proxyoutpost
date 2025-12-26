@@ -119,7 +119,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerAgent")
     @Column(name="propertyList")
-    private Map<Integer, PlayerAgentProperty> propertyMap;
+    private Map<Long, PlayerAgentProperty> propertyMap;
 
     /**
      * the currently equipped playerWeapon on this agent
@@ -279,7 +279,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
     }
 
     @JsonIgnore
-    public Map<Integer, PlayerAgentProperty> getPropertyMap() {
+    public Map<Long, PlayerAgentProperty> getPropertyMap() {
         return propertyMap;
     }
 
@@ -295,7 +295,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
         return Collections.emptyList();
     }
 
-    public void setPropertyMap(Map<Integer, PlayerAgentProperty> propertyMap) {
+    public void setPropertyMap(Map<Long, PlayerAgentProperty> propertyMap) {
         this.propertyMap = propertyMap;
     }
 

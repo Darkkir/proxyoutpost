@@ -8,8 +8,7 @@ import me.darkkir3.proxyoutpost.model.enka.Equipment;
 import me.darkkir3.proxyoutpost.model.enka.EquippedList;
 import me.darkkir3.proxyoutpost.model.enka.PropertyEntry;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name="drive_discs")
@@ -22,16 +21,16 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
     private PlayerDriveDiscPk playerDriveDiscPk;
 
     /**
-     * the translated name of the drive disc set this belongs to
+     * the untranslated name of the drive disc set this belongs to
      */
-    @Transient
+    @Column(name="setName")
     private String setName;
 
     /**
      * the id of the drive disc set this belongs to
      */
     @Column(name="setId")
-    private int setId;
+    private long setId;
 
     /**
      * the actual level of the drive disc (max=15)
@@ -50,6 +49,12 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
      */
     @Column(name="breakLevel")
     private int breakLevel;
+
+    /**
+     * the rarity of this drive disc (4=S-RANK)
+     */
+    @Column(name="rarity")
+    private int rarity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerDriveDisc")
     @Column(name="driveDiscList")
@@ -81,15 +86,15 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
     }
 
     /**
-     * @return the translated name of the drive disc set this belongs to
+     * @return the untranslated name of the drive disc set this belongs to
      */
-    @JsonProperty("SetName")
+    @JsonIgnore
     public String getSetName() {
         return setName;
     }
 
     /**
-     * set the translated name of the drive disc set this belongs to
+     * set the untranslated name of the drive disc set this belongs to
      * @param setName
      */
     public void setSetName(String setName) {
@@ -97,11 +102,11 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
     }
 
     @JsonIgnore
-    public int getSetId() {
+    public long getSetId() {
         return setId;
     }
 
-    public void setSetId(int setId) {
+    public void setSetId(long setId) {
         this.setId = setId;
     }
 
@@ -132,11 +137,29 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
         this.uid = uid;
     }
 
+    @JsonProperty("Rarity")
+    public String getRarity() {
+        Optional<DriveDiscRarity> driveDisc = Arrays.stream(DriveDiscRarity.values()).filter(t ->
+                Objects.equals(this.rarity, t.getIndex())).findFirst();
+
+        return driveDisc.map(Enum::name).orElse(null);
+    }
+
+    @JsonIgnore
+    public int getRarityAsInt() {
+        return rarity;
+    }
+
+    @JsonIgnore
+    public void setRarity(int rarity) {
+        this.rarity = rarity;
+    }
+
     /**
      * @return all secondary stats for this drive disc
      */
     @JsonProperty("SecondaryProperties")
-    public List<PlayerDriveDiscProperty> getDriveDiscProperties() {
+    public List<PlayerDriveDiscProperty> getSecondaryProperties() {
         if(driveDiscProperties == null) {
             return null;
         }

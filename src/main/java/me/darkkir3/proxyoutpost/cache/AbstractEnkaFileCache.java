@@ -75,7 +75,8 @@ public abstract class AbstractEnkaFileCache {
      * by default clears the spring cache associated
      */
     protected void onFileStoreRefreshed() {
-        log.info("Saved new enka store file: {}", this.getStoreName());
+        log.info("Saved new enka store file: {}",
+                this.enkaAPIConfiguration.getConfigurationPath() + this.getStoreName());
         if(!StringUtils.isBlank(this.getCacheName())) {
             Cache fileCache = cacheManager.getCache(this.getCacheName());
             if(fileCache != null) {

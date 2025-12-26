@@ -16,7 +16,7 @@ public class Equipment implements EnkaData {
     @JsonProperty("IsTrash")
     public boolean isTrash;
     @JsonProperty("Id")
-    public int id;
+    public long id;
     @JsonProperty("Level")
     public int level;
     @JsonProperty("Uid")

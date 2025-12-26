@@ -1,9 +1,11 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
+import me.darkkir3.proxyoutpost.model.output.PropertyOutput;
 
 import java.util.Objects;
 
@@ -22,14 +24,14 @@ public class PlayerAgentProperty {
      * (based on agent level and core skill and promotion level)
      */
     @Column(name="baseValue")
-    private double baseValue;
+    private int baseValue;
 
     /**
      * the total value of this property
      * (based on base value + drive discs + engine)
      */
     @Column(name="totalValue")
-    private double totalValue;
+    private int totalValue;
 
     /**
      * the total number of substat rolls that went into this property
@@ -37,6 +39,12 @@ public class PlayerAgentProperty {
      */
     @Column(name="totalRolls")
     private int totalRolls;
+
+    /**
+     * the translated property name
+     */
+    @Transient
+    private PropertyOutput propertyOutput;
 
     /**
      * the playerAgent this property belongs to
@@ -65,20 +73,20 @@ public class PlayerAgentProperty {
     }
 
     @JsonProperty("BaseValue")
-    public double getBaseValue() {
+    public int getBaseValue() {
         return baseValue;
     }
 
-    public void setBaseValue(double baseValue) {
+    public void setBaseValue(int baseValue) {
         this.baseValue = baseValue;
     }
 
     @JsonProperty("TotalValue")
-    public double getTotalValue() {
+    public int getTotalValue() {
         return totalValue;
     }
 
-    public void setTotalValue(double totalValue) {
+    public void setTotalValue(int totalValue) {
         this.totalValue = totalValue;
     }
 
@@ -89,6 +97,22 @@ public class PlayerAgentProperty {
 
     public void setTotalRolls(int totalRolls) {
         this.totalRolls = totalRolls;
+    }
+
+    /**
+     * @return the translated property name
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped
+    public PropertyOutput getPropertyOutput() {
+        return this.propertyOutput;
+    }
+
+    /**
+     * set the translated property value
+     */
+    public void setPropertyOutput(PropertyOutput value) {
+        this.propertyOutput = value;
     }
 
     @Override

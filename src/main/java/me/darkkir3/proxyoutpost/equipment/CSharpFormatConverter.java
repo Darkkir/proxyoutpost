@@ -1,4 +1,4 @@
-package me.darkkir3.proxyoutpost.utils;
+package me.darkkir3.proxyoutpost.equipment;
 
 import java.text.MessageFormat;
 import java.util.regex.Matcher;

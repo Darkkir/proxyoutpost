@@ -29,11 +29,11 @@ public class PlayerAgentPropertyPk {
      */
     @JsonIgnore
     @Column(name="propertyId", nullable = false)
-    private int propertyId;
+    private Long propertyId;
 
     public PlayerAgentPropertyPk() {}
 
-    public PlayerAgentPropertyPk(Long profileUid, Long agentId, int propertyId) {
+    public PlayerAgentPropertyPk(Long profileUid, Long agentId, Long propertyId) {
         this.profileUid = profileUid;
         this.agentId = agentId;
         this.propertyId = propertyId;
@@ -50,7 +50,7 @@ public class PlayerAgentPropertyPk {
     }
 
     @JsonProperty("PropertyId")
-    public int getPropertyId() {
+    public Long getPropertyId() {
         return propertyId;
     }
 

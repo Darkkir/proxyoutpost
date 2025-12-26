@@ -14,12 +14,6 @@ public class ItemProperty {
     public long propertyId;
 
     /**
-     * the level of the property (only applies to drive discs)
-     */
-    @JsonProperty
-    public int propertyLevel;
-
-    /**
      * the value of this property
      */
     @JsonProperty("PropertyValue")

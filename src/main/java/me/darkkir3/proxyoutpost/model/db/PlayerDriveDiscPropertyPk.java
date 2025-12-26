@@ -1,6 +1,7 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -64,6 +65,7 @@ public class PlayerDriveDiscPropertyPk {
         return slot;
     }
 
+    @JsonProperty("Id")
     public long getPropertyId() {
         return propertyId;
     }

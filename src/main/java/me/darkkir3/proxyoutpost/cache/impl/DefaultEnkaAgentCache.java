@@ -2,9 +2,11 @@ package me.darkkir3.proxyoutpost.cache.impl;
 
 import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
+import me.darkkir3.proxyoutpost.equipment.ItemPropertyTranslator;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentProperty;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentPropertyPk;
+import me.darkkir3.proxyoutpost.model.db.PlayerDriveDiscProperty;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,11 +29,13 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaAgentCache.class);
 
     private final EnkaPropertyCache enkaPropertyCache;
+    private final ItemPropertyTranslator itemPropertyTranslator;
     private final EnkaLocalizationCache enkaLocalizationCache;
 
-    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, EnkaLocalizationCache enkaLocalizationCache) {
+    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, ItemPropertyTranslator itemPropertyTranslator, EnkaLocalizationCache enkaLocalizationCache) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaPropertyCache = enkaPropertyCache;
+        this.itemPropertyTranslator = itemPropertyTranslator;
         this.enkaLocalizationCache = enkaLocalizationCache;
     }
 
@@ -132,7 +136,7 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
             }
 
             //then set the values to the actual player agent instance
-            Map<Integer, PlayerAgentProperty> existingPropertyList = playerAgent.getPropertyMap();
+            Map<Long, PlayerAgentProperty> existingPropertyList = playerAgent.getPropertyMap();
             if(existingPropertyList == null) {
                 existingPropertyList = new HashMap<>();
             }
@@ -143,15 +147,15 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
                         new PlayerAgentPropertyPk(
                                 playerAgent.getAgentPk().getProfileUid(),
                                 playerAgent.getAgentPk().getAgentId(),
-                                Integer.parseInt(k)));
+                                Long.parseLong(k)));
 
-                playerAgentProperty.setBaseValue(v);
+                playerAgentProperty.setBaseValue((int)Math.floor(v));
                 newProperties.add(playerAgentProperty);
             });
 
             //insert or update existing values
             for(PlayerAgentProperty p : newProperties) {
-                int key = p.getPlayerAgentPropertyPk().getPropertyId();
+                long key = p.getPlayerAgentPropertyPk().getPropertyId();
                 PlayerAgentProperty existingProperty = existingPropertyList.get(key);
                 if(existingProperty != null) {
                     existingProperty.setBaseValue(p.getBaseValue());
@@ -166,15 +170,24 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
             //set property translations from cache for drive disc properties too
             if(playerAgent.getPlayerDriveDiscs() != null && !playerAgent.getPlayerDriveDiscs().isEmpty()) {
                 playerAgent.getPlayerDriveDiscs().forEach(t -> {
-                    t.setSetName(enkaLocalizationCache.translate(language, String.valueOf(t.getSetId())));
+                    //TODO: find the suit id
+                    itemPropertyTranslator.transformDriveDiscStats(t);
 
-                    if(t.getDriveDiscProperties() != null && !t.getDriveDiscProperties().isEmpty()) {
-                        t.getDriveDiscProperties().forEach(p -> {
+                    if(t.getSecondaryProperties() != null && !t.getSecondaryProperties().isEmpty()) {
+                        t.getSecondaryProperties().forEach(p -> {
                             p.setPropertyOutput(this.enkaPropertyCache.getPropertyById(language, p.getPlayerDriveDiscPropertyPk().getPropertyId()));
                         });
                     }
+
+                    PlayerDriveDiscProperty mainProperty = t.getMainProperty();
+                    if(mainProperty != null) {
+                        mainProperty.setPropertyOutput(this.enkaPropertyCache.getPropertyById(language, mainProperty.getPlayerDriveDiscPropertyPk().getPropertyId()));
+                    }
                 });
             }
+
+            //calculate total stats of this agent
+            itemPropertyTranslator.updatePlayerAgentTotalStats(language, playerAgent);
         }
     }
 
