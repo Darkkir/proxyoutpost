@@ -57,7 +57,7 @@ public class PlayerAgentPropertyPk {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PlayerAgentPropertyPk that)) return false;
-        return propertyId == that.propertyId
+        return Objects.equals(propertyId, that.propertyId)
                 && Objects.equals(profileUid, that.profileUid)
                 && Objects.equals(agentId, that.agentId);
     }

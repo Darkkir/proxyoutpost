@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import java.util.Objects;
+
 @Embeddable
 public class PlayerDriveDiscPropertyPk {
 
@@ -73,5 +75,20 @@ public class PlayerDriveDiscPropertyPk {
     @JsonIgnore
     public boolean isMainStat() {
         return isMainStat;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PlayerDriveDiscPropertyPk that)) return false;
+        return slot == that.slot
+                && propertyId == that.propertyId
+                && isMainStat == that.isMainStat
+                && Objects.equals(profileUid, that.profileUid)
+                && Objects.equals(agentId, that.agentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profileUid, agentId, slot, propertyId, isMainStat);
     }
 }

@@ -65,6 +65,16 @@ public class PlayerSkillLevelPk {
                 Objects.equals(this.getSkillIndex(), t.getIndex())).findFirst();
 
         return skillType.map(Enum::name).orElse(null);
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PlayerSkillLevelPk that)) return false;
+        return skillIndex == that.skillIndex && Objects.equals(profileUid, that.profileUid) && Objects.equals(agentId, that.agentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profileUid, agentId, skillIndex);
     }
 }

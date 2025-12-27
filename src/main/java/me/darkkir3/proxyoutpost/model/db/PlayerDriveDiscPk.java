@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import java.util.Objects;
+
 @Embeddable
 public class PlayerDriveDiscPk {
 
@@ -47,5 +49,30 @@ public class PlayerDriveDiscPk {
     @JsonProperty("Slot")
     public int getSlot() {
         return slot;
+    }
+
+    public void setProfileUid(Long profileUid) {
+        this.profileUid = profileUid;
+    }
+
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
+    }
+
+    public void setSlot(int slot) {
+        this.slot = slot;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PlayerDriveDiscPk that)) return false;
+        return slot == that.slot
+                && Objects.equals(profileUid, that.profileUid)
+                && Objects.equals(agentId, that.agentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profileUid, agentId, slot);
     }
 }

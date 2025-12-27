@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class PlayerAgentPk implements Serializable {
@@ -33,5 +34,17 @@ public class PlayerAgentPk implements Serializable {
 
     public Long getAgentId() {
         return agentId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PlayerAgentPk that)) return false;
+        return Objects.equals(profileUid, that.profileUid) 
+                && Objects.equals(agentId, that.agentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profileUid, agentId);
     }
 }

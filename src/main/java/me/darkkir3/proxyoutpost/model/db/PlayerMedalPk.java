@@ -3,6 +3,8 @@ package me.darkkir3.proxyoutpost.model.db;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import java.util.Objects;
+
 @Embeddable
 public class PlayerMedalPk {
 
@@ -30,5 +32,16 @@ public class PlayerMedalPk {
 
     public int getMedalIndex() {
         return medalIndex;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PlayerMedalPk that)) return false;
+        return medalIndex == that.medalIndex && Objects.equals(profileUid, that.profileUid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profileUid, medalIndex);
     }
 }
