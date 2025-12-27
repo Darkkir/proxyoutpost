@@ -19,9 +19,9 @@ jobs:
           java-version: '25'
           distribution: 'zulu'
 
-      - name: Build with maven
+      - name: Package with maven
         shell: bash
-        run: mvn clean install
+        run: mvn clean package
 
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
