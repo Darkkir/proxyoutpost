@@ -44,7 +44,7 @@ public class DefaultEnkaSuitCache implements EnkaSuitCache {
             }
 
             if(!StringUtils.isBlank(result.getIcon())) {
-                translatedResult.setIcon(enkaAPIConfiguration.getBaseUrl() + result.getName());
+                translatedResult.setIcon(enkaAPIConfiguration.getBaseUrl() + result.getIcon());
             }
 
             translatedResult.setSetBonusProps(result.getSetBonusProps());

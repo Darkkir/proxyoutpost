@@ -1,9 +1,11 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
+import me.darkkir3.proxyoutpost.equipment.DriveDiscSuit;
 import me.darkkir3.proxyoutpost.model.enka.Equipment;
 import me.darkkir3.proxyoutpost.model.enka.EquippedList;
 import me.darkkir3.proxyoutpost.model.enka.PropertyEntry;
@@ -55,6 +57,12 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
      */
     @Column(name="rarity")
     private int rarity;
+
+    /**
+     * the actual suit (set) of this drive disc
+     */
+    @Transient
+    private DriveDiscSuit driveDiscSuit;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerDriveDisc")
     @Column(name="driveDiscList")
@@ -181,6 +189,22 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
         return driveDiscProperties.stream().filter(t ->
                                 t.getPlayerDriveDiscPropertyPk().isMainStat())
                 .findAny().orElse(null);
+    }
+
+    /**
+     * @return the translated property name
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped
+    public DriveDiscSuit getDriveDiscSuit() {
+        return this.driveDiscSuit;
+    }
+
+    /**
+     * set the translated property value
+     */
+    public void setDriveDiscSuit(DriveDiscSuit value) {
+        this.driveDiscSuit = value;
     }
 
     @Override

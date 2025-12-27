@@ -192,6 +192,7 @@ public class ItemPropertyTranslator {
             if(!StringUtils.isBlank(t.getSetName())) {
                 int currentCount = suitCount.getOrDefault(t.getSetName(), 0);
                 suitCount.put(t.getSetName(), ++currentCount);
+                t.setDriveDiscSuit(this.enkaSuitCache.getSuitByName(language, t.getSetName()));
             }
         });
 
@@ -405,7 +406,7 @@ public class ItemPropertyTranslator {
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime lastFetchTime = lastFetchTimes.get(fileName);
         if (lastFetchTime == null) {
-            lastFetchTime = LocalDateTime.MIN;
+            lastFetchTime = LocalDateTime.now();
         }
 
         if (!targetFile.exists() || currentTime.isAfter(lastFetchTime.plusHours(enkaAPIConfiguration.getRefreshTimeInHours()))) {
