@@ -8,12 +8,12 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>[%date{HH:mm:ss}] [%level] [%logger{32}:%line] %msg%n</pattern>
+            <pattern>[%date{HH:mm:ss}] [%32.32logger{32}] [%3.3line] %msg%n</pattern>
         </encoder>
     </appender>
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%yellow([%date{HH:mm:ss}]) %highlight([%level]) %cyan([%logger{32}%white(:%line)]) %msg%n</pattern>
+            <pattern>[%yellow(%date{HH:mm:ss})] [%cyan(%32.32logger{32})] [%highlight(%3.3line)] %msg%n</pattern>
         </encoder>
     </appender>
     <root level="info">
