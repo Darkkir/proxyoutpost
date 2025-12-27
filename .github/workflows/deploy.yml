@@ -28,7 +28,7 @@ jobs:
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-vaz -i --delete"
-          SOURCE: "target/fat-jar"
+          SOURCE: "target/fat-jar/"
           SCRIPT_BEFORE: sudo systemctl stop proxy-outpost.service
           SCRIPT_AFTER: sudo systemctl start proxy-outpost.service
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
