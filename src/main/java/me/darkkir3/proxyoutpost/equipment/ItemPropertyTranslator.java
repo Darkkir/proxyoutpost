@@ -24,10 +24,7 @@ import java.net.URISyntaxException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * util class that helps with handling the XYZTemplate.json files from the game data
@@ -106,7 +103,6 @@ public class ItemPropertyTranslator {
         //if we refreshed the library config
         if (newDriveDiscRootNode != null) {
             this.driveDiscLibrary = objectMapper.treeToValue(newDriveDiscRootNode, DriveDiscLibrary.class);
-            this.enkaSuitCache.clearCache();
         }
 
         Long suitId = 0L;
@@ -208,8 +204,8 @@ public class ItemPropertyTranslator {
 
         if(playerAgent.getWeapon() != null) {
             PlayerWeapon playerWeapon = playerAgent.getWeapon();
-            double mainStat = playerWeapon.getMainStatAsDouble();
-            double secondaryStat = playerWeapon.getSecondaryStatAsDouble();
+            double mainStat = playerWeapon.getMainStat();
+            double secondaryStat = playerWeapon.getSecondaryStat();
 
             if(mainStat > 0d || secondaryStat > 0d) {
                 long mainStatPropertyId = playerWeapon.getWeaponOutput().getMainStat().propertyId;
@@ -353,8 +349,8 @@ public class ItemPropertyTranslator {
             double mainStatValue = Math.floor((weaponOutput.getMainStat().propertyValue) * (1d + levelMainState / 10_000d + starMainStat / 10000d));
             double secondaryStatValue = Math.floor((weaponOutput.getSecondaryStat().propertyValue) * (1d + starSecondaryStat / 10_000d));
 
-            playerWeapon.setMainStat(mainStatValue);
-            playerWeapon.setSecondaryStat(secondaryStatValue);
+            playerWeapon.setMainStat((int) mainStatValue);
+            playerWeapon.setSecondaryStat((int) secondaryStatValue);
         }
     }
 
@@ -409,21 +405,49 @@ public class ItemPropertyTranslator {
             lastFetchTime = LocalDateTime.now();
         }
 
+        boolean nodeInitialized = current != null;
+
         if (!targetFile.exists() || currentTime.isAfter(lastFetchTime.plusHours(enkaAPIConfiguration.getRefreshTimeInHours()))) {
             //try to download it from sourceUrl
-            log.info("Saving fileCfg file {} to {}", sourceUrl, targetFile.getPath());
-            try (FileOutputStream fos = new FileOutputStream(targetFile);
-                 ReadableByteChannel rbc = Channels.newChannel(new URI(sourceUrl).toURL().openStream())) {
-                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            } catch (IOException | URISyntaxException e) {
-                log.error("Failed to read and save fileCfg file {} from url {}",
-                        fileName, sourceUrl, e);
-            } finally {
-                lastFetchTimes.put(fileName, currentTime);
-                current = objectMapper.readTree(targetFile);
-            }
+            current = fetchFile(fileName, sourceUrl, objectMapper, targetFile, currentTime);
+            nodeInitialized = true;
         }
 
+        //if the config file exists locally but we don't want to download it yet
+        if(!nodeInitialized) {
+            current = objectMapper.readTree(targetFile);
+        }
+
+        return current;
+    }
+
+    /**
+     * Attempt to download the specified file into the config folder
+     * @param fileName relative name of the file
+     * @param sourceUrl the url to download it from
+     * @param objectMapper jackson objectmapper instance
+     * @param targetFile the file to write it to
+     * @param currentTime the current date time in order to update fetch times
+     * @return
+     */
+    private JsonNode fetchFile(String fileName, String sourceUrl, ObjectMapper objectMapper, File targetFile, LocalDateTime currentTime) {
+        JsonNode current = null;
+        log.info("Saving fileCfg file {} to {}", sourceUrl, targetFile.getPath());
+        try (FileOutputStream fos = new FileOutputStream(targetFile);
+             ReadableByteChannel rbc = Channels.newChannel(new URI(sourceUrl).toURL().openStream())) {
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        } catch (IOException | URISyntaxException e) {
+            log.error("Failed to read and save fileCfg file {} from url {}",
+                    fileName, sourceUrl, e);
+        } finally {
+            lastFetchTimes.put(fileName, currentTime);
+            current = objectMapper.readTree(targetFile);
+
+            //clear suit cache manually when we refresh the suit configuration
+            if(Objects.equals(fileName, this.fileCfgConfiguration.getDriveDiscFileName())) {
+                this.enkaSuitCache.clearCache();
+            }
+        }
         return current;
     }
 }

@@ -93,9 +93,18 @@ public abstract class AbstractEnkaFileCache {
     protected JsonNode getRootNode() {
         File storeFile = new File(enkaAPIConfiguration.getConfigurationPath(), this.getStoreName());
 
+        boolean rootNodeInitialized = this.rootNode != null;
+
         LocalDateTime currentTime = LocalDateTime.now();
         if(!storeFile.exists() || currentTime.isAfter(lastFetchTime.plusHours(enkaAPIConfiguration.getRefreshTimeInHours()))) {
             this.saveEnkaStoreToFile();
+            ObjectMapper objectMapper = new ObjectMapper();
+            rootNode = objectMapper.readTree(storeFile);
+            rootNodeInitialized = true;
+        }
+
+        //if the file exists locally but we don't want to download it yet
+        if(!rootNodeInitialized) {
             ObjectMapper objectMapper = new ObjectMapper();
             rootNode = objectMapper.readTree(storeFile);
         }

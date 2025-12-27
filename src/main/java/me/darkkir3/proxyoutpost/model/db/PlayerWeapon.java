@@ -62,13 +62,13 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
      * the main stat value of this w-engine
      */
     @Column(name="mainStat")
-    private double mainStat;
+    private int mainStat;
 
     /**
      * the secondary stat value of this w-engine
      */
     @Column(name="secondaryStat")
-    private double secondaryStat;
+    private int secondaryStat;
 
     /**
      * the generic weapon data to include with this agent
@@ -166,14 +166,9 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         this.weaponOutput = weaponOutput;
     }
 
-    @JsonIgnore
-    public double getMainStatAsDouble() {
-        return this.mainStat;
-    }
-
     @JsonProperty("MainStatValue")
-    public String getMainStat() {
-        return String.valueOf(mainStat);
+    public int getMainStat() {
+        return mainStat;
     }
 
     /**
@@ -184,18 +179,14 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         return this.mainStat > 0d;
     }
 
-    public void setMainStat(double mainStat) {
+    public void setMainStat(int mainStat) {
         this.mainStat = mainStat;
     }
 
-    @JsonIgnore
-    public double getSecondaryStatAsDouble() {
-        return this.secondaryStat;
-    }
 
     @JsonProperty("SecondaryStatValue")
-    public String getSecondaryStat() {
-        return String.valueOf(secondaryStat);
+    public int getSecondaryStat() {
+        return secondaryStat;
     }
 
     /**
@@ -206,7 +197,7 @@ public class PlayerWeapon implements EnkaToDBMapping<me.darkkir3.proxyoutpost.mo
         return this.secondaryStat > 0d;
     }
 
-    public void setSecondaryStat(double secondaryStat) {
+    public void setSecondaryStat(int secondaryStat) {
         this.secondaryStat = secondaryStat;
     }
 
