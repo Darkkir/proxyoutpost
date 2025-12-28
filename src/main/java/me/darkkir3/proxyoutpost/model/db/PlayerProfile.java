@@ -15,7 +15,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
 
     @Id
     @Column(name="profileUid", nullable = false)
-    private Long profileUid;
+    private long profileUid;
 
     /**
      * the ingame description of this profile
@@ -33,7 +33,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
      * id of the main character of this profile (Wise or Belle)
      */
     @Column(name="avatarId")
-    private Long avatarId;
+    private long avatarId;
 
     /**
      * the inter-knot level of this profile
@@ -45,13 +45,13 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
      * title id
      */
     @Column(name="title")
-    private Long title;
+    private long title;
 
     /**
      * full title id used to specify title variants
      */
     @Column(name="fullTitle")
-    private Long fullTitle;
+    private long fullTitle;
 
     /**
      * the title arguments for the currently set title
@@ -60,17 +60,20 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     @Column(name="titleArgs")
     private List<PlayerTitleArgs> playerTitleArgs;
 
+    @Transient
+    private String profilePictureUrl;
+
     /**
      * image id of the profile picture
      */
     @Column(name="profileId")
-    private Long profileId;
+    private long profileId;
 
     /**
      * image id of the profile namecard
      */
     @Column(name="callingCardId")
-    private Long callingCardId;
+    private long callingCardId;
 
     /**
      * image url of the profile namecard
@@ -94,7 +97,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
      * the time to live in seconds for this profile (fetched from api)
      */
     @Column(name="ttl")
-    private Long ttl;
+    private long ttl;
 
     /**
      * a list with all agents associated with this profile
@@ -114,13 +117,13 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.tsCreation = LocalDateTime.now();
     }
 
-    public PlayerProfile(Long profileUid) {
+    public PlayerProfile(long profileUid) {
         this.profileUid = profileUid;
         this();
     }
 
     @JsonProperty("Uid")
-    public Long getProfileUid() {
+    public long getProfileUid() {
         return profileUid;
     }
 
@@ -143,11 +146,11 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     }
 
     @JsonIgnore
-    public Long getAvatarId() {
+    public long getAvatarId() {
         return avatarId;
     }
 
-    public void setAvatarId(Long avatarId) {
+    public void setAvatarId(long avatarId) {
         this.avatarId = avatarId;
     }
 
@@ -161,20 +164,20 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     }
 
     //TODO: translate this
-    public Long getTitle() {
+    public long getTitle() {
         return title;
     }
 
-    public void setTitle(Long title) {
+    public void setTitle(long title) {
         this.title = title;
     }
 
     //TODO: translate this
-    public Long getFullTitle() {
+    public long getFullTitle() {
         return fullTitle;
     }
 
-    public void setFullTitle(Long fullTitle) {
+    public void setFullTitle(long fullTitle) {
         this.fullTitle = fullTitle;
     }
 
@@ -187,22 +190,30 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.playerTitleArgs = playerTitleArgs;
     }
 
-    //TODO: translate this field as url
     @JsonIgnore
-    public Long getProfileId() {
+    public long getProfileId() {
         return profileId;
     }
 
-    public void setProfileId(Long profileId) {
+    public void setProfileId(long profileId) {
         this.profileId = profileId;
     }
 
+    @JsonProperty("ProfilePicture")
+    public String getProfilePictureUrl() {
+        return this.profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String value) {
+        this.profilePictureUrl = value;
+    }
+
     @JsonIgnore
-    public Long getCallingCardId() {
+    public long getCallingCardId() {
         return callingCardId;
     }
 
-    public void setCallingCardId(Long callingCardId) {
+    public void setCallingCardId(long callingCardId) {
         this.callingCardId = callingCardId;
     }
 
@@ -250,11 +261,11 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     }
 
     @JsonIgnore
-    public Long getTtl() {
+    public long getTtl() {
         return ttl;
     }
 
-    public void setTtl(Long ttl) {
+    public void setTtl(long ttl) {
         this.ttl = ttl;
     }
 
@@ -273,7 +284,6 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     @JsonIgnore
     public boolean isExpired(int minTtl) {
         return this.tsCreation != null
-                && this.ttl != null
                 && LocalDateTime.now().isAfter(this.tsCreation.plusSeconds(Math.max(this.ttl, minTtl)));
     }
 

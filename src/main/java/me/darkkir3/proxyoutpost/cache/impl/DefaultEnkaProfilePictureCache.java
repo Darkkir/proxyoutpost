@@ -1,8 +1,6 @@
 package me.darkkir3.proxyoutpost.cache.impl;
 
-import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaNamecardCache;
-import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
+import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.IconResource;
 import org.slf4j.Logger;
@@ -14,13 +12,13 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 @Component
-public class DefaultEnkaNamecardCache extends AbstractEnkaFileCache implements EnkaNamecardCache {
+public class DefaultEnkaProfilePictureCache extends AbstractEnkaFileCache implements EnkaProfilePictureCache {
 
-    private static final String NAMECARD_CACHE = "NAMECARD_CACHE";
-    private static final Logger log = LoggerFactory.getLogger(DefaultEnkaNamecardCache.class);
+    private static final String PROFILE_PICTURE_CACHE = "PROFILE_PICTURE_CACHE";
+    private static final Logger log = LoggerFactory.getLogger(DefaultEnkaProfilePictureCache.class);
 
 
-    public DefaultEnkaNamecardCache(
+    public DefaultEnkaProfilePictureCache(
             EnkaAPIConfiguration enkaAPIConfiguration,
             CacheManager cacheManager) {
         super(enkaAPIConfiguration, cacheManager);
@@ -28,22 +26,22 @@ public class DefaultEnkaNamecardCache extends AbstractEnkaFileCache implements E
 
     @Override
     public EnkaStoreType getStoreType() {
-        return EnkaStoreType.NAMECARDS;
+        return EnkaStoreType.PFPS;
     }
 
     @Override
     public String getCacheName() {
-        return NAMECARD_CACHE;
+        return PROFILE_PICTURE_CACHE;
     }
 
     /**
-     * grab the namecard by id
-     * @param id the id of the namecard to fetch
-     * @return the translated namecard instance
+     * grab the profile picture by id
+     * @param id the id of the profile picture to fetch
+     * @return the translated profile picture instance
      */
-    @Cacheable(value = NAMECARD_CACHE)
+    @Cacheable(value = PROFILE_PICTURE_CACHE)
     @Override
-    public IconResource getNamecardById(Long id) {
+    public IconResource getProfilePictureById(Long id) {
         JsonNode rootNode = this.getRootNode();
         if(rootNode != null) {
             JsonNode weaponNode = rootNode.get(String.valueOf(id));
@@ -55,11 +53,11 @@ public class DefaultEnkaNamecardCache extends AbstractEnkaFileCache implements E
                     return iconResource;
                 }
                 else {
-                    log.error("Failed to parse {} for namecard id {}", this.getStoreName(), id);
+                    log.error("Failed to parse {} for profile picture id {}", this.getStoreName(), id);
                 }
             }
             else {
-                log.error("Could not find namecard with id {}", id);
+                log.error("Could not find profile picture with id {}", id);
 
             }
         }

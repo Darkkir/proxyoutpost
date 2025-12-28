@@ -41,7 +41,7 @@ public class DefaultEnkaLocalizationCache extends AbstractEnkaFileCache implemen
         return Locale.getDefault().getLanguage();
     }
 
-    @Cacheable(value=LOCALIZATION_CACHE)
+    @Cacheable(value = LOCALIZATION_CACHE)
     @Override
     public String translate(String language, String key) {
         JsonNode rootNode = this.getRootNode();

@@ -33,7 +33,7 @@ public class DefaultEnkaSuitCache implements EnkaSuitCache {
     }
 
 
-    @Cacheable(value=DRIVE_DISC_SUIT_CACHE)
+    @Cacheable(value = DRIVE_DISC_SUIT_CACHE)
     public DriveDiscSuit getSuitByName(String language, String name) {
         DriveDiscSuit result = this.driveDiscSuits.get(name);
 

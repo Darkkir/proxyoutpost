@@ -54,7 +54,7 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
      * @param id the id of the agent to fetch
      * @return the translated agent instance
      */
-    @Cacheable(value=AGENT_CACHE)
+    @Cacheable(value = AGENT_CACHE)
     @Override
     public AgentOutput getAgentById(String language, Long id) {
         JsonNode rootNode = this.getRootNode();

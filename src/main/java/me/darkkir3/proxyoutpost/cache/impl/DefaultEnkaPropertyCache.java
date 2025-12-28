@@ -43,7 +43,7 @@ public class DefaultEnkaPropertyCache extends AbstractEnkaFileCache implements E
      * @param id the id of the weapon to fetch
      * @return the translated weapon instance
      */
-    @Cacheable(value= PROPERTY_CACHE)
+    @Cacheable(value = PROPERTY_CACHE)
     @Override
     public PropertyOutput getPropertyById(String language, Long id) {
         JsonNode rootNode = this.getRootNode();

@@ -4,8 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import me.darkkir3.proxyoutpost.cache.EnkaNamecardCache;
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
+import me.darkkir3.proxyoutpost.cache.EnkaProfilePictureCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
-import me.darkkir3.proxyoutpost.equipment.Namecard;
+import me.darkkir3.proxyoutpost.equipment.IconResource;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.db.SkillType;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
@@ -36,6 +37,11 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     private final EnkaNamecardCache enkaNamecardCache;
 
     /**
+     * enka profile cache to translate profile ids into image urls
+     */
+    private final EnkaProfilePictureCache enkaProfilePictureCache;
+
+    /**
      * restClient for calls to enka api
      */
     private final RestClient restClient;
@@ -48,9 +54,10 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     @PersistenceContext
     EntityManager entityManager;
 
-    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache) {
+    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache, EnkaProfilePictureCache enkaProfilePictureCache) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.enkaNamecardCache = enkaNamecardCache;
+        this.enkaProfilePictureCache = enkaProfilePictureCache;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
@@ -77,10 +84,17 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
         }
 
         //translate the namecard url
-        if(cachedPlayerProfile.getCallingCardId() != null) {
-            Namecard namecardToDisplay = this.enkaNamecardCache.getNamecardById(
+        if(cachedPlayerProfile.getCallingCardId() > 0) {
+            IconResource iconResourceToDisplay = this.enkaNamecardCache.getNamecardById(
                     cachedPlayerProfile.getCallingCardId());
-            cachedPlayerProfile.setCallingCardUrl(namecardToDisplay.iconUrl);
+            cachedPlayerProfile.setCallingCardUrl(iconResourceToDisplay.iconUrl);
+        }
+
+        //translate the profile picture url
+        if(cachedPlayerProfile.getProfileId() > 0) {
+            IconResource profilePictureToDisplay = this.enkaProfilePictureCache.getProfilePictureById(
+                    cachedPlayerProfile.getProfileId());
+            cachedPlayerProfile.setProfilePictureUrl(profilePictureToDisplay.iconUrl);
         }
 
         return cachedPlayerProfile;

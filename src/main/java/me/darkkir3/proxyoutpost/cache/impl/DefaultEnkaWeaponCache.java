@@ -51,7 +51,7 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
      * @param id the id of the weapon to fetch
      * @return the translated weapon instance
      */
-    @Cacheable(value= WEAPON_CACHE)
+    @Cacheable(value = WEAPON_CACHE)
     @Override
     public WeaponOutput getWeaponById(String language, Long id) {
         JsonNode rootNode = this.getRootNode();
