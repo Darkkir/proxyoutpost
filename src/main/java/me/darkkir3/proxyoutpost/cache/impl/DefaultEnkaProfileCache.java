@@ -2,10 +2,7 @@ package me.darkkir3.proxyoutpost.cache.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import me.darkkir3.proxyoutpost.cache.EnkaNamecardCache;
-import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaProfilePictureCache;
-import me.darkkir3.proxyoutpost.cache.EnkaTitleCache;
+import me.darkkir3.proxyoutpost.cache.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.IconResource;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
@@ -43,7 +40,15 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
      */
     private final EnkaProfilePictureCache enkaProfilePictureCache;
 
+    /**
+     * enka title cache to translate profile title names
+     */
     private final EnkaTitleCache enkaTitleCache;
+
+    /**
+     * enka medal cache to translate medals
+     */
+    private final EnkaMedalCache enkaMedalCache;
 
     /**
      * restClient for calls to enka api
@@ -58,11 +63,12 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     @PersistenceContext
     EntityManager entityManager;
 
-    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache, EnkaProfilePictureCache enkaProfilePictureCache, EnkaTitleCache enkaTitleCache) {
+    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache, EnkaProfilePictureCache enkaProfilePictureCache, EnkaTitleCache enkaTitleCache, EnkaMedalCache enkaMedalCache) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.enkaNamecardCache = enkaNamecardCache;
         this.enkaProfilePictureCache = enkaProfilePictureCache;
         this.enkaTitleCache = enkaTitleCache;
+        this.enkaMedalCache = enkaMedalCache;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
@@ -106,6 +112,13 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
         if(cachedPlayerProfile.getTitle() > 0 || cachedPlayerProfile.getFullTitle() > 0) {
             TitleOutput titleToDisplay = this.enkaTitleCache.getTitleById(language, cachedPlayerProfile.getTitle());
             cachedPlayerProfile.setTitleOutput(titleToDisplay);
+        }
+
+        //translate profile medals
+        if(cachedPlayerProfile.getMedalList() != null) {
+            cachedPlayerProfile.getMedalList().forEach(t -> {
+                t.setMedalOutput(this.enkaMedalCache.getMedalById(language, t.getMedalIcon()));
+            });
         }
 
         return cachedPlayerProfile;

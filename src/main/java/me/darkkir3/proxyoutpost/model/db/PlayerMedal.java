@@ -1,8 +1,11 @@
 package me.darkkir3.proxyoutpost.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.model.enka.MedalList;
+import me.darkkir3.proxyoutpost.model.output.MedalOutput;
 
 @Entity
 @Table(name="medals")
@@ -30,7 +33,7 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
      * the icon id of this medal
      */
     @Column(name="medalIcon")
-    private int medalIcon;
+    private long medalIcon;
 
     /**
      * the badge type
@@ -43,6 +46,9 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
      */
     @Column(name="medalType")
     private int medalType;
+
+    @Transient
+    private MedalOutput medalOutput;
 
     @ManyToOne
     @JoinColumn(name="profileUid", referencedColumnName = "profileUid", insertable = false, updatable = false)
@@ -63,6 +69,7 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
         this.value = value;
     }
 
+    @JsonProperty("Score")
     public int getMedalScore() {
         return medalScore;
     }
@@ -71,20 +78,31 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
         this.medalScore = medalScore;
     }
 
-    public int getMedalIcon() {
+    @JsonIgnore
+    public long getMedalIcon() {
         return medalIcon;
     }
 
-    public void setMedalIcon(int medalIcon) {
+    public void setMedalIcon(long medalIcon) {
         this.medalIcon = medalIcon;
     }
 
+    @JsonProperty("Type")
     public int getMedalType() {
         return medalType;
     }
 
     public void setMedalType(int medalType) {
         this.medalType = medalType;
+    }
+
+    @JsonUnwrapped
+    public MedalOutput getMedalOutput() {
+        return medalOutput;
+    }
+
+    public void setMedalOutput(MedalOutput medalOutput) {
+        this.medalOutput = medalOutput;
     }
 
     @JsonIgnore
