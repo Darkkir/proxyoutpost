@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.model.enka.*;
+import me.darkkir3.proxyoutpost.model.output.TitleOutput;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,6 +53,12 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
      */
     @Column(name="fullTitle")
     private long fullTitle;
+
+    /**
+     * the title output object containing the translated title
+     */
+    @Transient
+    private TitleOutput titleOutput;
 
     /**
      * the title arguments for the currently set title
@@ -163,7 +170,26 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.level = level;
     }
 
-    //TODO: translate this
+    @JsonIgnore
+    public TitleOutput getTitleOutput() {
+        return titleOutput;
+    }
+
+    public void setTitleOutput(TitleOutput titleOutput) {
+        this.titleOutput = titleOutput;
+    }
+
+    @JsonProperty("Title")
+    public String getDisplayTitle() {
+        if(this.titleOutput == null) {
+            return String.valueOf(this.fullTitle > 0 ? this.fullTitle : this.title);
+        }
+
+        return this.titleOutput.getTranslatedTitleTextBasedOnProfile(
+                this.title, this.fullTitle, this.playerTitleArgs);
+    }
+
+    @JsonIgnore
     public long getTitle() {
         return title;
     }
@@ -172,7 +198,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.title = title;
     }
 
-    //TODO: translate this
+    @JsonIgnore
     public long getFullTitle() {
         return fullTitle;
     }

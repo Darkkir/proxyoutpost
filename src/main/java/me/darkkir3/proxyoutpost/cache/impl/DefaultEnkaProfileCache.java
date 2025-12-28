@@ -5,11 +5,13 @@ import jakarta.persistence.PersistenceContext;
 import me.darkkir3.proxyoutpost.cache.EnkaNamecardCache;
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
 import me.darkkir3.proxyoutpost.cache.EnkaProfilePictureCache;
+import me.darkkir3.proxyoutpost.cache.EnkaTitleCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.IconResource;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.db.SkillType;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
+import me.darkkir3.proxyoutpost.model.output.TitleOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,6 +43,8 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
      */
     private final EnkaProfilePictureCache enkaProfilePictureCache;
 
+    private final EnkaTitleCache enkaTitleCache;
+
     /**
      * restClient for calls to enka api
      */
@@ -54,10 +58,11 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     @PersistenceContext
     EntityManager entityManager;
 
-    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache, EnkaProfilePictureCache enkaProfilePictureCache) {
+    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache, EnkaProfilePictureCache enkaProfilePictureCache, EnkaTitleCache enkaTitleCache) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.enkaNamecardCache = enkaNamecardCache;
         this.enkaProfilePictureCache = enkaProfilePictureCache;
+        this.enkaTitleCache = enkaTitleCache;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
@@ -95,6 +100,12 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
             IconResource profilePictureToDisplay = this.enkaProfilePictureCache.getProfilePictureById(
                     cachedPlayerProfile.getProfileId());
             cachedPlayerProfile.setProfilePictureUrl(profilePictureToDisplay.iconUrl);
+        }
+
+        //translate the profile title
+        if(cachedPlayerProfile.getTitle() > 0 || cachedPlayerProfile.getFullTitle() > 0) {
+            TitleOutput titleToDisplay = this.enkaTitleCache.getTitleById(language, cachedPlayerProfile.getTitle());
+            cachedPlayerProfile.setTitleOutput(titleToDisplay);
         }
 
         return cachedPlayerProfile;

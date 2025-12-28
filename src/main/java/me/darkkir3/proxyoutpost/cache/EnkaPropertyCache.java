@@ -3,7 +3,7 @@ package me.darkkir3.proxyoutpost.cache;
 import me.darkkir3.proxyoutpost.model.output.PropertyOutput;
 
 /**
- * Caches agent json data
+ * Caches property.json data
  */
 public interface EnkaPropertyCache {
 

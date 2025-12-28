@@ -170,7 +170,6 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
             //set property translations from cache for drive disc properties too
             if(playerAgent.getPlayerDriveDiscs() != null && !playerAgent.getPlayerDriveDiscs().isEmpty()) {
                 playerAgent.getPlayerDriveDiscs().forEach(t -> {
-                    //TODO: find the suit id
                     itemPropertyTranslator.transformDriveDiscStats(t);
 
                     if(t.getSecondaryProperties() != null && !t.getSecondaryProperties().isEmpty()) {

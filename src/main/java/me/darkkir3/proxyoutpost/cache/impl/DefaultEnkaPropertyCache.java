@@ -40,8 +40,8 @@ public class DefaultEnkaPropertyCache extends AbstractEnkaFileCache implements E
 
     /**
      * grab the property by id while trying to translate fields like the name
-     * @param id the id of the weapon to fetch
-     * @return the translated weapon instance
+     * @param id the id of the property to fetch
+     * @return the translated property instance
      */
     @Cacheable(value = PROPERTY_CACHE)
     @Override
@@ -72,15 +72,13 @@ public class DefaultEnkaPropertyCache extends AbstractEnkaFileCache implements E
      * modifies the passed property pojo by translating fields
      * and setting ids
      * @param propertyOutput the property to transform
-     * @return the transformed agent instance
+     * @return the transformed property instance
      */
     private PropertyOutput transformPropertyFields(PropertyOutput propertyOutput, String language) {
-        if(propertyOutput != null) {
-            if(!StringUtils.isBlank(propertyOutput.getInternalName())) {
-                //TODO: translate the name of this property
+        if(propertyOutput != null && !StringUtils.isBlank(propertyOutput.getInternalName())) {
                 propertyOutput.setTranslatedName(this.enkaLocalizationCache.translate(language, propertyOutput.getInternalName()));
             }
-        }
+
         return propertyOutput;
     }
 }

@@ -48,6 +48,11 @@ public class PlayerTitleArgs implements EnkaToDBMapping<TitleInfo> {
     }
 
     @Override
+    public String toString() {
+        return this.argument;
+    }
+
+    @Override
     public void mapEnkaDataToDB(TitleInfo enkaData) {
         if(this.playerTitleArgsPk != null && enkaData != null) {
             int argsIndex = this.playerTitleArgsPk.getArgumentIndex();
