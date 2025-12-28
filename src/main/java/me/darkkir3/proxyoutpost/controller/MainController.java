@@ -1,5 +1,9 @@
 package me.darkkir3.proxyoutpost.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import me.darkkir3.proxyoutpost.cache.*;
@@ -12,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -39,11 +42,24 @@ public class MainController {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
     }
 
-    @Tag(name = "showProfile", description = "Display all profile data based on the user id")
+    @Tag(name = "Profile", description = "Profile data")
+    @Operation(summary = "Search for a profile via uid and language",
+            description = "A profile including full agent data")
     @GetMapping("/{language}/profile/{id}")
     @Transactional
-    public List<PlayerAgent> showProfile(@PathVariable("language") String languageToUse, @PathVariable("id") Long userId) {
-        //https://enka.network/api/zzz/uid/1501331084
+    public PlayerProfile showProfile(
+            @Parameter(
+                    in = ParameterIn.PATH,
+                    description = "Language to translate all fields with",
+                    required = true,
+                    schema = @Schema(type="string"))
+            @PathVariable("language") String languageToUse,
+            @Parameter(
+                    in = ParameterIn.PATH,
+                    description = "The uid of the profile to search for",
+                    required = true,
+                    schema = @Schema(type="number"))
+            @PathVariable("id") Long userId) {
         PlayerProfile playerProfile = enkaProfileCache.getProfileByUid(languageToUse, userId);
         if(playerProfile != null) {
             List<PlayerAgent> agentsOfProfile = playerProfile.getAgentsList();
@@ -57,10 +73,9 @@ public class MainController {
                             t.setAgentOutput(agentOutput);
                             enkaAgentCache.updatePlayerAgentStats(languageToUse, t, agentOutput);
                         });
-                return agentsOfProfile;
             }
         }
 
-        return Collections.emptyList();
+        return playerProfile;
     }
 }

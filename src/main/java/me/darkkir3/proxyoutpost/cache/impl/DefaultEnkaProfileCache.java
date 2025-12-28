@@ -2,8 +2,10 @@ package me.darkkir3.proxyoutpost.cache.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import me.darkkir3.proxyoutpost.cache.EnkaNamecardCache;
 import me.darkkir3.proxyoutpost.cache.EnkaProfileCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
+import me.darkkir3.proxyoutpost.equipment.Namecard;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.db.SkillType;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
@@ -29,6 +31,11 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     private final EnkaAPIConfiguration enkaAPIConfiguration;
 
     /**
+     * enka namecard cache to translate namecard ids into image urls
+     */
+    private final EnkaNamecardCache enkaNamecardCache;
+
+    /**
      * restClient for calls to enka api
      */
     private final RestClient restClient;
@@ -41,8 +48,9 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     @PersistenceContext
     EntityManager entityManager;
 
-    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration) {
+    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
+        this.enkaNamecardCache = enkaNamecardCache;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
@@ -66,6 +74,13 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
         if(cachedPlayerProfile == null || cachedPlayerProfile.isExpired(enkaAPIConfiguration.getMinTtlInSeconds())) {
             cachedPlayerProfile = this.fetchNewEnkaProfile(uid);
             this.profileCache.put(uid, cachedPlayerProfile);
+        }
+
+        //translate the namecard url
+        if(cachedPlayerProfile.getCallingCardId() != null) {
+            Namecard namecardToDisplay = this.enkaNamecardCache.getNamecardById(
+                    cachedPlayerProfile.getCallingCardId());
+            cachedPlayerProfile.setCallingCardUrl(namecardToDisplay.iconUrl);
         }
 
         return cachedPlayerProfile;

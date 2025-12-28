@@ -1,5 +1,7 @@
 package me.darkkir3.proxyoutpost.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.model.enka.*;
 
@@ -71,13 +73,19 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     private Long callingCardId;
 
     /**
+     * image url of the profile namecard
+     */
+    @Transient
+    private String callingCardUrl;
+
+    /**
      * which platform this profile is associated with (3=PC)
      */
     @Column(name="platformType")
     private int platformType;
 
     /**
-     * a timestamp of when we created this db entry
+     * a timestamp of when we read this profile from enka
      */
     @Column(name="tsCreation")
     private LocalDateTime tsCreation;
@@ -111,10 +119,12 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this();
     }
 
+    @JsonProperty("Uid")
     public Long getProfileUid() {
         return profileUid;
     }
 
+    @JsonProperty("Description")
     public String getDescription() {
         return description;
     }
@@ -123,6 +133,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.description = description;
     }
 
+    @JsonProperty("Nickname")
     public String getNickname() {
         return nickname;
     }
@@ -131,6 +142,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.nickname = nickname;
     }
 
+    @JsonIgnore
     public Long getAvatarId() {
         return avatarId;
     }
@@ -139,6 +151,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.avatarId = avatarId;
     }
 
+    @JsonProperty("Level")
     public int getLevel() {
         return level;
     }
@@ -147,6 +160,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.level = level;
     }
 
+    //TODO: translate this
     public Long getTitle() {
         return title;
     }
@@ -155,6 +169,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.title = title;
     }
 
+    //TODO: translate this
     public Long getFullTitle() {
         return fullTitle;
     }
@@ -163,6 +178,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.fullTitle = fullTitle;
     }
 
+    @JsonIgnore
     public List<PlayerTitleArgs> getTitleArgs() {
         return playerTitleArgs;
     }
@@ -171,6 +187,8 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.playerTitleArgs = playerTitleArgs;
     }
 
+    //TODO: translate this field as url
+    @JsonIgnore
     public Long getProfileId() {
         return profileId;
     }
@@ -179,6 +197,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.profileId = profileId;
     }
 
+    @JsonIgnore
     public Long getCallingCardId() {
         return callingCardId;
     }
@@ -187,6 +206,16 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.callingCardId = callingCardId;
     }
 
+    @JsonProperty("CallingCard")
+    public String getCallingCardUrl() {
+        return callingCardUrl;
+    }
+
+    public void setCallingCardUrl(String callingCardUrl) {
+        this.callingCardUrl = callingCardUrl;
+    }
+
+    @JsonIgnore
     public int getPlatformType() {
         return platformType;
     }
@@ -211,6 +240,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.playerMedalList = playerMedalList;
     }
 
+    @JsonProperty("FetchTime")
     public LocalDateTime getTsCreation() {
         return tsCreation;
     }
@@ -219,6 +249,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.tsCreation = tsCreation;
     }
 
+    @JsonIgnore
     public Long getTtl() {
         return ttl;
     }
@@ -230,6 +261,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
     /**
      * @return a flag that indicates whether this object exceeded the ttl
      */
+    @JsonIgnore
     public boolean isExpired() {
         return this.isExpired(0);
     }
@@ -238,6 +270,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
      * @param minTtl the minimum amount of time in seconds this object is considered not expired
      * @return a flag that indicates whether this object exceeded the ttl
      */
+    @JsonIgnore
     public boolean isExpired(int minTtl) {
         return this.tsCreation != null
                 && this.ttl != null

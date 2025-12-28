@@ -1,5 +1,6 @@
 package me.darkkir3.proxyoutpost.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import me.darkkir3.proxyoutpost.model.enka.MedalList;
 
@@ -53,6 +54,7 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
         this.playerMedalPk = playerMedalPk;
     }
 
+    @JsonIgnore
     public int getValue() {
         return value;
     }
@@ -85,10 +87,12 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
         this.medalType = medalType;
     }
 
+    @JsonIgnore
     public PlayerMedalPk getMedalPk() {
         return playerMedalPk;
     }
 
+    @JsonIgnore
     public PlayerProfile getProfile() {
         return playerProfile;
     }
