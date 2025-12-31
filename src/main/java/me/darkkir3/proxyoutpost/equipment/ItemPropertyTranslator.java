@@ -356,16 +356,29 @@ public class ItemPropertyTranslator {
 
     private JsonNode findItemNode(JsonNode rootNode, String firstField, String secondField, int firstValue, int secondValue, String fileName) {
         if (rootNode != null && !rootNode.isEmpty()) {
-            //fetch the first child in the json, it will contain all the child entries
+            //fetch the first child in the JSON, it will contain all the child entries
             Optional<JsonNode> arrayRoot = rootNode.values().stream().findFirst();
             if (arrayRoot.isPresent() && arrayRoot.get().isArray()) {
                 Optional<JsonNode> weaponNode = arrayRoot.get().valueStream().filter(t -> {
-                    return t.get(firstField).asInt(-1) == firstValue
-                            && t.get(secondField).asInt(-1) == secondValue;
+                    JsonNode firstNode = t.get(firstField);
+                    JsonNode secondNode = t.get(secondField);
+
+                    if(firstNode == null) {
+                        log.error("Can not find field of name {} in children of {}", firstField, fileName);
+                        return false;
+                    }
+
+                    if(secondNode == null) {
+                        log.error("Can not find field of name {} in children of {}", secondField, fileName);
+                        return false;
+                    }
+
+                    return firstNode.asInt(-1) == firstValue
+                            && secondNode.asInt(-1) == secondValue;
                 }).findAny();
 
                 if (weaponNode.isEmpty()) {
-                    log.error("Could not find item data with {} = {} and {} = {} in {}",
+                    log.error("Can not find item data with {} = {} and {} = {} in {}",
                             firstField, firstValue, secondField, secondValue, fileName);
                     return null;
                 }
