@@ -78,4 +78,26 @@ public class MainController {
 
         return playerProfile;
     }
+
+    @Tag(name = "Profile", description = "Profile data")
+    @Operation(summary = "Search for only the agents of a profile via uid and language",
+            description = "List of agents for that profile")
+    @GetMapping("/{language}/agents/{id}")
+    @Transactional
+    public List<PlayerAgent> showAgents(
+            @Parameter(
+                    in = ParameterIn.PATH,
+                    description = "Language to translate all fields with",
+                    required = true,
+                    schema = @Schema(type="string"))
+            @PathVariable("language") String languageToUse,
+            @Parameter(
+                    in = ParameterIn.PATH,
+                    description = "The uid of the profile to search for",
+                    required = true,
+                    schema = @Schema(type="number"))
+            @PathVariable("id") Long userId) {
+        PlayerProfile playerProfile = this.showProfile(languageToUse, userId);
+        return playerProfile.getAgentsList();
+    }
 }
