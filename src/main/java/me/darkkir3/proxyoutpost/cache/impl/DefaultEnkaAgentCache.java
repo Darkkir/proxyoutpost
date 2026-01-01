@@ -8,6 +8,7 @@ import me.darkkir3.proxyoutpost.model.db.PlayerAgentProperty;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentPropertyPk;
 import me.darkkir3.proxyoutpost.model.db.PlayerDriveDiscProperty;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
+import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +31,14 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
 
     private final EnkaPropertyCache enkaPropertyCache;
     private final ItemPropertyTranslator itemPropertyTranslator;
+    private final ImageUrlTransformer imageUrlTransformer;
     private final EnkaLocalizationCache enkaLocalizationCache;
 
-    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, ItemPropertyTranslator itemPropertyTranslator, EnkaLocalizationCache enkaLocalizationCache) {
+    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, ItemPropertyTranslator itemPropertyTranslator, ImageUrlTransformer imageUrlTransformer, EnkaLocalizationCache enkaLocalizationCache) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaPropertyCache = enkaPropertyCache;
         this.itemPropertyTranslator = itemPropertyTranslator;
+        this.imageUrlTransformer = imageUrlTransformer;
         this.enkaLocalizationCache = enkaLocalizationCache;
     }
 
@@ -205,10 +208,16 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
             agentOutput.agentId = id;
             //prefix all image URLs with the base URL of enka
             if(!StringUtils.isBlank(agentOutput.circleIcon)) {
-                agentOutput.circleIcon = this.enkaAPIConfiguration.getBaseUrl() + agentOutput.circleIcon;
+                agentOutput.circleIcon =
+                        this.imageUrlTransformer.transformAgentCircleIcon(
+                                id,
+                                this.enkaAPIConfiguration.getBaseUrl() + agentOutput.circleIcon);
             }
             if(!StringUtils.isBlank(agentOutput.image)) {
-                agentOutput.image = this.enkaAPIConfiguration.getBaseUrl() + agentOutput.image;
+                agentOutput.image =
+                        this.imageUrlTransformer.transformAgentImage(
+                                id,
+                                this.enkaAPIConfiguration.getBaseUrl() + agentOutput.image);
             }
         }
         return agentOutput;

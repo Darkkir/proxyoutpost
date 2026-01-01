@@ -4,6 +4,7 @@ import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
 import me.darkkir3.proxyoutpost.cache.EnkaSuitCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.DriveDiscSuit;
+import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,8 +17,8 @@ public class DefaultEnkaSuitCache implements EnkaSuitCache {
 
     private static final String DRIVE_DISC_SUIT_CACHE = "DRIVE_DISC_SUIT_CACHE";
 
-
     private final EnkaLocalizationCache enkaLocalizationCache;
+    private final ImageUrlTransformer imageUrlTransformer;
     private final EnkaAPIConfiguration enkaAPIConfiguration;
 
     /**
@@ -25,8 +26,9 @@ public class DefaultEnkaSuitCache implements EnkaSuitCache {
      */
     private final HashMap<String, DriveDiscSuit> driveDiscSuits;
 
-    public DefaultEnkaSuitCache(EnkaLocalizationCache enkaLocalizationCache, EnkaAPIConfiguration enkaAPIConfiguration) {
+    public DefaultEnkaSuitCache(EnkaLocalizationCache enkaLocalizationCache, ImageUrlTransformer imageUrlTransformer, EnkaAPIConfiguration enkaAPIConfiguration) {
         this.enkaLocalizationCache = enkaLocalizationCache;
+        this.imageUrlTransformer = imageUrlTransformer;
         this.enkaAPIConfiguration = enkaAPIConfiguration;
 
         this.driveDiscSuits = new HashMap<>();
@@ -56,7 +58,10 @@ public class DefaultEnkaSuitCache implements EnkaSuitCache {
 
     @Override
     public void registerDriveDiscSuit(DriveDiscSuit driveDiscSuit) {
-        this.driveDiscSuits.put(driveDiscSuit.getName(), driveDiscSuit);
+        if(driveDiscSuit != null) {
+            driveDiscSuit.setIcon(imageUrlTransformer.transformSuitIcon(driveDiscSuit.getIcon()));
+            this.driveDiscSuits.put(driveDiscSuit.getName(), driveDiscSuit);
+        }
     }
 
 

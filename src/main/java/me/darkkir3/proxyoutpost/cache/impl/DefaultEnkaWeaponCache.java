@@ -5,6 +5,7 @@ import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerWeapon;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
 import me.darkkir3.proxyoutpost.equipment.ItemPropertyTranslator;
+import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,17 +24,20 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
     private final EnkaLocalizationCache enkaLocalizationCache;
     private final EnkaPropertyCache enkaPropertyCache;
     private final ItemPropertyTranslator itemPropertyTranslator;
+    private final ImageUrlTransformer imageUrlTransformer;
 
     public DefaultEnkaWeaponCache(
             EnkaAPIConfiguration enkaAPIConfiguration,
             CacheManager cacheManager,
             EnkaLocalizationCache enkaLocalizationCache,
             EnkaPropertyCache enkaPropertyCache,
-            ItemPropertyTranslator itemPropertyTranslator) {
+            ItemPropertyTranslator itemPropertyTranslator,
+            ImageUrlTransformer imageUrlTransformer) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaLocalizationCache = enkaLocalizationCache;
         this.enkaPropertyCache = enkaPropertyCache;
         this.itemPropertyTranslator = itemPropertyTranslator;
+        this.imageUrlTransformer = imageUrlTransformer;
     }
 
     @Override
@@ -101,7 +105,8 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
             }
 
             if(!StringUtils.isBlank(weaponOutput.imagePath)) {
-                weaponOutput.imagePath = this.enkaAPIConfiguration.getBaseUrl() + weaponOutput.imagePath;
+                weaponOutput.imagePath = imageUrlTransformer.transformWeaponImage(
+                        this.enkaAPIConfiguration.getBaseUrl() + weaponOutput.imagePath);
             }
 
             if(weaponOutput.getMainStat() != null) {

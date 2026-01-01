@@ -31,6 +31,10 @@ public class EnkaAPIConfiguration {
     private Map<String, String> storesMap;
     @Value("#{${enka.mindscape.offset}}")
     private List<Integer> mindScapeSkillLevelOffset;
+    @Value("${enka.icon-role.prefix}")
+    private String iconRolePrefix;
+    @Value("${enka.icon-role.suffix}")
+    private String iconRoleSuffix;
 
     /**
      * @return the user-agent to use when making api calls to enka
@@ -101,5 +105,19 @@ public class EnkaAPIConfiguration {
      */
     public List<Integer> getMindScapeSkillLevelOffset() {
         return mindScapeSkillLevelOffset;
+    }
+
+    /**
+     * @return the prefix of the icon role url for agents
+     */
+    public String getIconRolePrefix() {
+        return iconRolePrefix;
+    }
+
+    /**
+     * @return #the suffix of the icon role url for agents
+     */
+    public String getIconRoleSuffix() {
+        return iconRoleSuffix;
     }
 }

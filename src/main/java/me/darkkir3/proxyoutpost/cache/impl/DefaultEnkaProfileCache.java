@@ -9,6 +9,7 @@ import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.db.SkillType;
 import me.darkkir3.proxyoutpost.model.enka.ZZZProfile;
 import me.darkkir3.proxyoutpost.model.output.TitleOutput;
+import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -51,6 +52,11 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     private final EnkaMedalCache enkaMedalCache;
 
     /**
+     * image url transformer for profile URLs
+     */
+    private final ImageUrlTransformer imageUrlTransformer;
+
+    /**
      * restClient for calls to enka api
      */
     private final RestClient restClient;
@@ -63,12 +69,13 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     @PersistenceContext
     EntityManager entityManager;
 
-    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache, EnkaProfilePictureCache enkaProfilePictureCache, EnkaTitleCache enkaTitleCache, EnkaMedalCache enkaMedalCache) {
+    public DefaultEnkaProfileCache(EnkaAPIConfiguration enkaAPIConfiguration, EnkaNamecardCache enkaNamecardCache, EnkaProfilePictureCache enkaProfilePictureCache, EnkaTitleCache enkaTitleCache, EnkaMedalCache enkaMedalCache, ImageUrlTransformer imageUrlTransformer) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.enkaNamecardCache = enkaNamecardCache;
         this.enkaProfilePictureCache = enkaProfilePictureCache;
         this.enkaTitleCache = enkaTitleCache;
         this.enkaMedalCache = enkaMedalCache;
+        this.imageUrlTransformer = imageUrlTransformer;
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
@@ -98,14 +105,18 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
         if(cachedPlayerProfile.getCallingCardId() > 0) {
             IconResource iconResourceToDisplay = this.enkaNamecardCache.getNamecardById(
                     cachedPlayerProfile.getCallingCardId());
-            cachedPlayerProfile.setCallingCardUrl(iconResourceToDisplay.iconUrl);
+            cachedPlayerProfile.setCallingCardUrl(
+                    imageUrlTransformer.transformCallingCardUrl(
+                            iconResourceToDisplay.iconUrl));
         }
 
         //translate the profile picture url
         if(cachedPlayerProfile.getProfileId() > 0) {
             IconResource profilePictureToDisplay = this.enkaProfilePictureCache.getProfilePictureById(
                     cachedPlayerProfile.getProfileId());
-            cachedPlayerProfile.setProfilePictureUrl(profilePictureToDisplay.iconUrl);
+            cachedPlayerProfile.setProfilePictureUrl(
+                    imageUrlTransformer.transformProfilePicture(
+                            profilePictureToDisplay.iconUrl));
         }
 
         //translate the profile title
