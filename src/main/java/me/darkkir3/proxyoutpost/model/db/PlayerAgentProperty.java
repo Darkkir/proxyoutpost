@@ -24,21 +24,21 @@ public class PlayerAgentProperty {
      * (based on agent level and core skill and promotion level)
      */
     @Column(name="baseValue")
-    private int baseValue;
+    private Integer baseValue;
 
     /**
      * the total value of this property
      * (based on base value + drive discs + engine)
      */
     @Column(name="totalValue")
-    private int totalValue;
+    private Integer totalValue;
 
     /**
      * the total number of substat rolls that went into this property
      * (based on equipped drive discs)
      */
     @Column(name="totalRolls")
-    private int totalRolls;
+    private Integer totalRolls;
 
     /**
      * the translated property name
@@ -73,7 +73,8 @@ public class PlayerAgentProperty {
     }
 
     @JsonProperty("BaseValue")
-    public int getBaseValue() {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Integer getBaseValue() {
         return baseValue;
     }
 
@@ -81,8 +82,9 @@ public class PlayerAgentProperty {
         this.baseValue = baseValue;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("TotalValue")
-    public int getTotalValue() {
+    public Integer getTotalValue() {
         return totalValue;
     }
 
@@ -90,8 +92,9 @@ public class PlayerAgentProperty {
         this.totalValue = totalValue;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("TotalRolls")
-    public int getTotalRolls() {
+    public Integer getTotalRolls() {
         return totalRolls;
     }
 

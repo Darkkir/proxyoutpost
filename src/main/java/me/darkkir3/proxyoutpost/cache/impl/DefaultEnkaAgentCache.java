@@ -168,6 +168,20 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
                 }
             }
 
+            //always include certain properties in the output
+            if(enkaAPIConfiguration.getPropertiesToInclude() != null) {
+                Map<Long, PlayerAgentProperty> finalExistingPropertyList = existingPropertyList;
+                enkaAPIConfiguration.getPropertiesToInclude().forEach(t -> {
+                    PlayerAgentProperty p = finalExistingPropertyList.get(t);
+                    if(p == null) {
+                        p = new PlayerAgentProperty(new PlayerAgentPropertyPk(playerAgent.getAgentPk().getProfileUid(),
+                                playerAgent.getAgentPk().getAgentId(), t));
+                        p.setPropertyOutput(this.enkaPropertyCache.getPropertyById(language, t));
+                        finalExistingPropertyList.put(t, p);
+                    }
+                });
+            }
+
             playerAgent.setPropertyMap(existingPropertyList);
 
             //set property translations from cache for drive disc properties too

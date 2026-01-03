@@ -31,6 +31,8 @@ public class EnkaAPIConfiguration {
     private Map<String, String> storesMap;
     @Value("#{${enka.mindscape.offset}}")
     private List<Integer> mindScapeSkillLevelOffset;
+    @Value("#{${enka.properties-to-include}}")
+    private List<Long> propertiesToInclude;
     @Value("${enka.icon-role.prefix}")
     private String iconRolePrefix;
     @Value("${enka.icon-role.suffix}")
@@ -115,9 +117,16 @@ public class EnkaAPIConfiguration {
     }
 
     /**
-     * @return #the suffix of the icon role url for agents
+     * @return the suffix of the icon role url for agents
      */
     public String getIconRoleSuffix() {
         return iconRoleSuffix;
+    }
+
+    /**
+     * @return list of all properties to include with every agent for translation purposes
+     */
+    public List<Long> getPropertiesToInclude() {
+        return propertiesToInclude;
     }
 }

@@ -200,7 +200,7 @@ public class ItemPropertyTranslator {
 
         //first, add base stats from the agent
         propertyMap.forEach((key, value) ->
-                totalStats.put(key, value.getBaseValue()));
+                totalStats.put(key, value.getBaseValue() == null ? 0 : value.getBaseValue()));
 
         if(playerAgent.getWeapon() != null) {
             PlayerWeapon playerWeapon = playerAgent.getWeapon();
@@ -267,8 +267,13 @@ public class ItemPropertyTranslator {
                 existingProperty.setBaseValue(0);
             }
 
-            existingProperty.setTotalValue(value);
-            existingProperty.setTotalRolls(totalRolls.getOrDefault(key, 0));
+            if(value != null && value > 0) {
+                existingProperty.setTotalValue(value);
+            }
+            Integer rollsOfProperty = totalRolls.get(key);
+            if(rollsOfProperty != null && rollsOfProperty > 0) {
+                existingProperty.setTotalRolls(rollsOfProperty);
+            }
             existingProperty.setPropertyOutput(enkaPropertyCache.getPropertyById(language, key));
             propertyMap.put(key, existingProperty);
         });
