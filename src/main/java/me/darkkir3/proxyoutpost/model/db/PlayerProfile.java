@@ -65,7 +65,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerProfile")
     @Column(name="titleArgs")
-    private List<PlayerTitleArgs> playerTitleArgs;
+    private List<PlayerTitleArgs> playerTitleArgs = new ArrayList<>();
 
     @Transient
     private String profilePictureUrl;
@@ -111,14 +111,14 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerProfile")
     @Column(name="agentsList")
-    private List<PlayerAgent> agentsList;
+    private List<PlayerAgent> agentsList = new ArrayList<>();
 
     /**
      * a list with all medals associated with this profile
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerProfile")
     @Column(name="medalsList")
-    private List<PlayerMedal> playerMedalList;
+    private List<PlayerMedal> playerMedalList = new ArrayList<>();
 
     public PlayerProfile() {
         this.tsCreation = LocalDateTime.now();
