@@ -1,10 +1,11 @@
 # Proxy-Outpost
 
-This is the backend for proxy-outpost. It exposes endpoints related to player data.
+This is the backend for the web-application proxy-outpost.  
+proxy-outpost is a companion app that displays outpost and player related data for the video game 'Zenless Zone Zero' (ZZZ).
 
 ## OpenAPI Documentation
 
-To look at the endpoints available, check out https://api.proxy-outpost.com/endpoints.
+To look at the available endpoints, check out https://api.proxy-outpost.com/endpoints.
 
 ## Acknowledgments
 
