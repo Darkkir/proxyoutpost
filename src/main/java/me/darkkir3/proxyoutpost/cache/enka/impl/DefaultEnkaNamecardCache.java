@@ -1,8 +1,8 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaNamecardCache;
-import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
+import me.darkkir3.proxyoutpost.cache.enka.AbstractEnkaFileCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaNamecardCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaStoreType;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.IconResource;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class DefaultEnkaNamecardCache extends AbstractEnkaFileCache implements EnkaNamecardCache {
 
-    private static final String NAMECARD_CACHE = "NAMECARD_CACHE";
+    private static final String NAMECARD_CACHE = "ENKA_NAMECARD_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaNamecardCache.class);
 
 

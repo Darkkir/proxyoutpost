@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
-import me.darkkir3.proxyoutpost.cache.*;
+import me.darkkir3.proxyoutpost.cache.enka.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;

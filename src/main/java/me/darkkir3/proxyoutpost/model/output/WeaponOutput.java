@@ -62,13 +62,13 @@ public class WeaponOutput {
     @JsonProperty("MainStatProperty")
     public Long getMainStatProperty() {
         return this.getMainStat() == null
-                ? null : this.getMainStat().propertyId;
+                ? null : this.getMainStat().getPropertyId();
     }
 
     @JsonProperty("SecondaryStatProperty")
     public Long getSecondaryStatProperty() {
         return this.getSecondaryStat() == null
-                ? null : this.getSecondaryStat().propertyId;
+                ? null : this.getSecondaryStat().getPropertyId();
     }
 
     /**

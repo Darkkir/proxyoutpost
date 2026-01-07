@@ -1,8 +1,8 @@
 package me.darkkir3.proxyoutpost.equipment;
 
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaPropertyCache;
-import me.darkkir3.proxyoutpost.cache.EnkaSuitCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaLocalizationCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaPropertyCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaSuitCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.configuration.FileCfgConfiguration;
 import me.darkkir3.proxyoutpost.model.db.*;
@@ -208,8 +208,8 @@ public class ItemPropertyTranslator {
             double secondaryStat = playerWeapon.getSecondaryStat();
 
             if(mainStat > 0d || secondaryStat > 0d) {
-                long mainStatPropertyId = playerWeapon.getWeaponOutput().getMainStat().propertyId;
-                long secondaryStatPropertyId = playerWeapon.getWeaponOutput().getSecondaryStat().propertyId;
+                long mainStatPropertyId = playerWeapon.getWeaponOutput().getMainStat().getPropertyId();
+                long secondaryStatPropertyId = playerWeapon.getWeaponOutput().getSecondaryStat().getPropertyId();
                 totalStats.put(mainStatPropertyId, totalStats.getOrDefault(mainStatPropertyId, 0) + (int)mainStat);
                 totalStats.put(secondaryStatPropertyId, totalStats.getOrDefault(secondaryStatPropertyId, 0) + (int)secondaryStat);
             }
@@ -351,8 +351,8 @@ public class ItemPropertyTranslator {
 
             double levelMainState = levelWeaponNode.get(fileCfgConfiguration.getLevelMainStat()).asInt(0);
 
-            double mainStatValue = Math.floor((weaponOutput.getMainStat().propertyValue) * (1d + levelMainState / 10_000d + starMainStat / 10000d));
-            double secondaryStatValue = Math.floor((weaponOutput.getSecondaryStat().propertyValue) * (1d + starSecondaryStat / 10_000d));
+            double mainStatValue = Math.floor((weaponOutput.getMainStat().getPropertyValue()) * (1d + levelMainState / 10_000d + starMainStat / 10000d));
+            double secondaryStatValue = Math.floor((weaponOutput.getSecondaryStat().getPropertyValue()) * (1d + starSecondaryStat / 10_000d));
 
             playerWeapon.setMainStat((int) mainStatValue);
             playerWeapon.setSecondaryStat((int) secondaryStatValue);

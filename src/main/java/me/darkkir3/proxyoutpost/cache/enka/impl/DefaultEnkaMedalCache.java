@@ -1,9 +1,9 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaMedalCache;
-import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
+import me.darkkir3.proxyoutpost.cache.enka.AbstractEnkaFileCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaLocalizationCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaMedalCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaStoreType;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.output.MedalOutput;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class DefaultEnkaMedalCache extends AbstractEnkaFileCache implements EnkaMedalCache {
 
-    private static final String MEDAL_CACHE = "MEDAL_CACHE";
+    private static final String MEDAL_CACHE = "ENKA_MEDAL_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaMedalCache.class);
 
     private final EnkaLocalizationCache enkaLocalizationCache;

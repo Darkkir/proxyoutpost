@@ -1,9 +1,9 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaPropertyCache;
-import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
+import me.darkkir3.proxyoutpost.cache.enka.AbstractEnkaFileCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaLocalizationCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaPropertyCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaStoreType;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.output.PropertyOutput;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class DefaultEnkaPropertyCache extends AbstractEnkaFileCache implements EnkaPropertyCache {
 
-    private static final String PROPERTY_CACHE = "PROPERTY_CACHE";
+    private static final String PROPERTY_CACHE = "ENKA_PROPERTY_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaPropertyCache.class);
 
     private final EnkaLocalizationCache enkaLocalizationCache;

@@ -1,6 +1,8 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.*;
+import me.darkkir3.proxyoutpost.cache.enka.AbstractEnkaFileCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaProfilePictureCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaStoreType;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.IconResource;
 import org.slf4j.Logger;
@@ -14,7 +16,7 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class DefaultEnkaProfilePictureCache extends AbstractEnkaFileCache implements EnkaProfilePictureCache {
 
-    private static final String PROFILE_PICTURE_CACHE = "PROFILE_PICTURE_CACHE";
+    private static final String PROFILE_PICTURE_CACHE = "ENKA_PROFILE_PICTURE_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaProfilePictureCache.class);
 
 
@@ -44,10 +46,10 @@ public class DefaultEnkaProfilePictureCache extends AbstractEnkaFileCache implem
     public IconResource getProfilePictureById(Long id) {
         JsonNode rootNode = this.getRootNode();
         if(rootNode != null) {
-            JsonNode weaponNode = rootNode.get(String.valueOf(id));
-            if(weaponNode != null) {
+            JsonNode profileNode = rootNode.get(String.valueOf(id));
+            if(profileNode != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                IconResource iconResource = objectMapper.treeToValue(weaponNode, IconResource.class);
+                IconResource iconResource = objectMapper.treeToValue(profileNode, IconResource.class);
                 if(iconResource != null) {
                     iconResource.iconUrl = enkaAPIConfiguration.getBaseUrl() + iconResource.iconUrl;
                     return iconResource;

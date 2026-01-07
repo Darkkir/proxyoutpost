@@ -1,6 +1,6 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.*;
+import me.darkkir3.proxyoutpost.cache.enka.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.ItemPropertyTranslator;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
@@ -26,7 +26,7 @@ import java.util.Map;
 @Component
 public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements EnkaAgentCache {
 
-    private static final String AGENT_CACHE = "AGENT_CACHE";
+    private static final String AGENT_CACHE = "ENKA_AGENT_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaAgentCache.class);
 
     private final EnkaPropertyCache enkaPropertyCache;

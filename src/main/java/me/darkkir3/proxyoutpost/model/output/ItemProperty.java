@@ -10,12 +10,43 @@ public class ItemProperty {
     /**
      * the id of this property in property.json
      */
-    @JsonProperty("PropertyId")
-    public long propertyId;
+    private long propertyId;
 
     /**
      * the value of this property
      */
+    private int propertyValue;
+
+    /**
+     * the name of this property
+     */
+    private String propertyName;
+
+    @JsonProperty("PropertyId")
+    public long getPropertyId() {
+        return propertyId;
+    }
+
+    @JsonProperty("PropertyId")
+    public void setPropertyId(long propertyId) {
+        this.propertyId = propertyId;
+    }
+
     @JsonProperty("PropertyValue")
-    public int propertyValue;
+    public int getPropertyValue() {
+        return propertyValue;
+    }
+
+    @JsonProperty("PropertyValue")
+    public void setPropertyValue(int propertyValue) {
+        this.propertyValue = propertyValue;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
 }

@@ -1,4 +1,4 @@
-package me.darkkir3.proxyoutpost.cache;
+package me.darkkir3.proxyoutpost.cache.enka;
 
 /**
  * Caches enka localization data (translations)

@@ -1,7 +1,7 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaSuitCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaLocalizationCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaSuitCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.DriveDiscSuit;
 import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 @Component
 public class DefaultEnkaSuitCache implements EnkaSuitCache {
 
-    private static final String DRIVE_DISC_SUIT_CACHE = "DRIVE_DISC_SUIT_CACHE";
+    private static final String DRIVE_DISC_SUIT_CACHE = "ENKA_DRIVE_DISC_SUIT_CACHE";
 
     private final EnkaLocalizationCache enkaLocalizationCache;
     private final ImageUrlTransformer imageUrlTransformer;

@@ -1,8 +1,8 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.AbstractEnkaFileCache;
-import me.darkkir3.proxyoutpost.cache.EnkaLocalizationCache;
-import me.darkkir3.proxyoutpost.cache.EnkaStoreType;
+import me.darkkir3.proxyoutpost.cache.enka.AbstractEnkaFileCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaLocalizationCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaStoreType;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import java.util.Locale;
 @Component
 public class DefaultEnkaLocalizationCache extends AbstractEnkaFileCache implements EnkaLocalizationCache {
 
-    private static final String LOCALIZATION_CACHE = "LOCALIZATION_CACHE";
+    private static final String LOCALIZATION_CACHE = "ENKA_LOCALIZATION_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaLocalizationCache.class);
 
     public DefaultEnkaLocalizationCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager) {

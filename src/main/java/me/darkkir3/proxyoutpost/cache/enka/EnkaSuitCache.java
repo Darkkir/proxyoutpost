@@ -1,4 +1,4 @@
-package me.darkkir3.proxyoutpost.cache;
+package me.darkkir3.proxyoutpost.cache.enka;
 
 import me.darkkir3.proxyoutpost.equipment.DriveDiscSuit;
 

@@ -1,4 +1,4 @@
-# Proxy-Outpost
+# Proxy Outpost
 
 This is the backend for the web-application proxy-outpost.  
 proxy-outpost is a companion app that displays outpost and player related data  

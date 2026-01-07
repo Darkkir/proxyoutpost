@@ -1,8 +1,9 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import me.darkkir3.proxyoutpost.cache.*;
+import me.darkkir3.proxyoutpost.cache.enka.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.IconResource;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
@@ -12,6 +13,7 @@ import me.darkkir3.proxyoutpost.model.output.TitleOutput;
 import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -59,7 +61,7 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
     /**
      * restClient for calls to enka api
      */
-    private final RestClient restClient;
+    private RestClient restClient;
 
     /**
      * system.nanoTime() of when we last grabbed any profile in any language
@@ -76,10 +78,14 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
         this.enkaTitleCache = enkaTitleCache;
         this.enkaMedalCache = enkaMedalCache;
         this.imageUrlTransformer = imageUrlTransformer;
+        profileCache = new HashMap<>();
+    }
+
+    @PostConstruct
+    private void setUpRestClient() {
         this.restClient = RestClient.builder()
                 .baseUrl(this.enkaAPIConfiguration.getApiUrl() + this.enkaAPIConfiguration.getUidEndpoint())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
-        profileCache = new HashMap<>();
     }
 
     /**Try to get an entity either from cache/db or directly from api
@@ -161,7 +167,11 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
             }
         }
 
-        ZZZProfile jsonProfile = restClient.get().uri(String.valueOf(uid)).retrieve().body(ZZZProfile.class);
+        ZZZProfile jsonProfile = restClient.get()
+                .uri(String.valueOf(uid))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(ZZZProfile.class);
 
         PlayerProfile dbPlayerProfile = new PlayerProfile();
         dbPlayerProfile.mapEnkaDataToDB(jsonProfile);

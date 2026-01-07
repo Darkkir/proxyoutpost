@@ -1,6 +1,6 @@
-package me.darkkir3.proxyoutpost.cache.impl;
+package me.darkkir3.proxyoutpost.cache.enka.impl;
 
-import me.darkkir3.proxyoutpost.cache.*;
+import me.darkkir3.proxyoutpost.cache.enka.*;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.db.PlayerWeapon;
 import me.darkkir3.proxyoutpost.model.output.WeaponOutput;
@@ -18,7 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements EnkaWeaponCache {
 
-    private static final String WEAPON_CACHE = "WEAPON_CACHE";
+    private static final String WEAPON_CACHE = "ENKA_WEAPON_CACHE";
     private static final Logger log = LoggerFactory.getLogger(DefaultEnkaWeaponCache.class);
 
     private final EnkaLocalizationCache enkaLocalizationCache;
@@ -111,12 +111,12 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
 
             if(weaponOutput.getMainStat() != null) {
                 weaponOutput.setMainStatPropertyOutput(
-                        enkaPropertyCache.getPropertyById(language, weaponOutput.getMainStat().propertyId));
+                        enkaPropertyCache.getPropertyById(language, weaponOutput.getMainStat().getPropertyId()));
             }
 
             if(weaponOutput.getSecondaryStat() != null) {
                 weaponOutput.setSecondaryStatPropertyOutput(
-                        enkaPropertyCache.getPropertyById(language, weaponOutput.getSecondaryStat().propertyId));
+                        enkaPropertyCache.getPropertyById(language, weaponOutput.getSecondaryStat().getPropertyId()));
             }
         }
     }
