@@ -65,7 +65,7 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
                 ObjectMapper objectMapper = new ObjectMapper();
                 WeaponOutput weaponOutput = objectMapper.treeToValue(weaponNode, WeaponOutput.class);
                 if(weaponOutput != null) {
-                    this.transformWeaponFields(weaponOutput, language, id);
+                    this.transformWeaponFields(weaponOutput, language);
                     return weaponOutput;
                 }
                 else {
@@ -98,7 +98,7 @@ public class DefaultEnkaWeaponCache extends AbstractEnkaFileCache implements Enk
      * @param weaponOutput the weapon to transform
      * @return the transformed weapon instance
      */
-    private void transformWeaponFields(WeaponOutput weaponOutput, String language, Long id) {
+    private void transformWeaponFields(WeaponOutput weaponOutput, String language) {
         if(weaponOutput != null) {
             if(!StringUtils.isBlank(weaponOutput.itemName)) {
                 weaponOutput.itemName = this.enkaLocalizationCache.translate(language, weaponOutput.itemName);

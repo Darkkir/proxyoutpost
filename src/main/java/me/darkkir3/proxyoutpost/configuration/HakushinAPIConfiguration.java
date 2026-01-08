@@ -1,56 +1,49 @@
 package me.darkkir3.proxyoutpost.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 
-@Configuration
+/**
+ * @param basePath the base url for fetching data in hakushin api
+ * @param characterPath the endpoint for fetching character data in hakushin
+ * @param character character endpont related data
+ */
 @PropertySource("classpath:hakushin.properties")
-public class HakushinAPIConfiguration {
-
-    @Value("${hakushin.base-path}")
-    private String basePath;
-    @Value("${hakushin.character}")
-    private String characterPath;
-    @Value("${hakushin.character.camp}")
-    private String characterCamp;
-    @Value("${hakushin.character.camp.icon-prefix}")
-    private String characterCampIconPrefix;
-    @Value("${hakushin.character.camp.icon-suffix}")
-    private String characterCampIconSuffix;
+@ConfigurationProperties(prefix = "hakushin")
+public record HakushinAPIConfiguration (
+        String basePath,
+        String characterPath,
+        Character character) {
 
     /**
-     * @return the base url for fetching data in hakushin api
+     * @param campKey the key for fetching the camp in hakushin character responses
+     * @param campIconPrefix the prefix of the camp icon url in hakushin character responses
+     * @param campIconSuffix the suffix of the camp icon url in hakushin character responses
+     * @param coreBonus core-bonus related data
      */
-    public String getBasePath() {
-        return basePath;
-    }
+    public record Character (
+            String campKey,
+            String campIconPrefix,
+            String campIconSuffix,
+            CoreBonus coreBonus) {
 
-    /**
-     * @return the endpoint for fetching character data in hakushin
-     */
-    public String getCharacterPath() {
-        return characterPath;
-    }
+        /**
+         * @param key the key of the core bonus property in the hakushin character response
+         * @param property the key to the actual stat property of the core bonus in the hakushin character response
+         * @param maxLevel the maximum core skill bonus level in the hakushin character response
+         * @param propertyId the key of the property id in the property stat node
+         * @param propertyName the key of the property name in the property stat node
+         * @param propertyFormat the key of the property format in the property stat node
+         * @param propertyValue the key of the property value in the property stat node
+         */
+        public record CoreBonus(
+                String key,
+                String property,
+                int maxLevel,
+                String propertyId,
+                String propertyName,
+                String propertyFormat,
 
-    /**
-     * @return the key for fetching the camp in hakushin character responses
-     */
-    public String getCharacterCamp() {
-        return characterCamp;
-    }
-
-    /**
-     * @return the prefix of the camp icon url in hakushin character responses
-     */
-    public String getCharacterCampIconPrefix() {
-        return characterCampIconPrefix;
-    }
-
-    /**
-     * @return the suffix of the camp icon url in hakushin character responses
-     */
-    public String getCharacterCampIconSuffix() {
-        return characterCampIconSuffix;
+                String propertyValue) {}
     }
 }

@@ -77,12 +77,10 @@ public class DefaultEnkaTitleCache extends AbstractEnkaFileCache implements Enka
      * @return the transformed title instance
      */
     private TitleOutput transformTitleFields(TitleOutput titleOutput, String language) {
-        if(titleOutput != null) {
-            if(!StringUtils.isBlank(titleOutput.titleText)) {
-                titleOutput.titleText = this.enkaLocalizationCache.translate(language, titleOutput.titleText);
-                if(titleOutput.variants != null) {
-                    titleOutput.variants.replaceAll((k, v) -> this.enkaLocalizationCache.translate(language, v));
-                }
+        if(titleOutput != null && !StringUtils.isBlank(titleOutput.titleText)) {
+            titleOutput.titleText = this.enkaLocalizationCache.translate(language, titleOutput.titleText);
+            if(titleOutput.variants != null) {
+                titleOutput.variants.replaceAll((k, v) -> this.enkaLocalizationCache.translate(language, v));
             }
         }
 

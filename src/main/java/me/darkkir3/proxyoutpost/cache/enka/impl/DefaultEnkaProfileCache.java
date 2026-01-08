@@ -133,9 +133,8 @@ public class DefaultEnkaProfileCache implements EnkaProfileCache {
 
         //translate profile medals
         if(cachedPlayerProfile.getMedalList() != null) {
-            cachedPlayerProfile.getMedalList().forEach(t -> {
-                t.setMedalOutput(this.enkaMedalCache.getMedalById(language, t.getMedalIcon()));
-            });
+            cachedPlayerProfile.getMedalList().forEach(t ->
+                t.setMedalOutput(this.enkaMedalCache.getMedalById(language, t.getMedalIcon())));
         }
 
         return cachedPlayerProfile;

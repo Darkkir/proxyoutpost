@@ -169,7 +169,7 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
     @JsonProperty("SecondaryProperties")
     public List<PlayerDriveDiscProperty> getSecondaryProperties() {
         if(driveDiscProperties == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         return driveDiscProperties.stream().filter(t ->

@@ -6,8 +6,9 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
-import me.darkkir3.proxyoutpost.cache.enka.*;
-import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaAgentCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaProfileCache;
+import me.darkkir3.proxyoutpost.cache.enka.EnkaWeaponCache;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.db.PlayerProfile;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
@@ -24,24 +25,15 @@ import java.util.List;
 public class MainController {
 
     private final EnkaProfileCache enkaProfileCache;
-    private final EnkaLocalizationCache enkaLocalizationCache;
     private final EnkaAgentCache enkaAgentCache;
     private final EnkaWeaponCache enkaWeaponCache;
-    private final EnkaPropertyCache enkaPropertyCache;
-    private final EnkaAPIConfiguration enkaAPIConfiguration;
 
     public MainController(EnkaProfileCache enkaProfileCache,
-                          EnkaLocalizationCache enkaLocalizationCache,
                           EnkaAgentCache enkaAgentCache,
-                          EnkaWeaponCache enkaWeaponCache,
-                          EnkaPropertyCache enkaPropertyCache,
-                          EnkaAPIConfiguration enkaAPIConfiguration) {
+                          EnkaWeaponCache enkaWeaponCache) {
         this.enkaProfileCache = enkaProfileCache;
-        this.enkaLocalizationCache = enkaLocalizationCache;
         this.enkaAgentCache = enkaAgentCache;
         this.enkaWeaponCache = enkaWeaponCache;
-        this.enkaPropertyCache = enkaPropertyCache;
-        this.enkaAPIConfiguration = enkaAPIConfiguration;
     }
 
     @Tag(name = "Profile", description = "Profile data")

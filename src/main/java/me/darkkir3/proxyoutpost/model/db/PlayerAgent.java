@@ -361,7 +361,7 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
             }
 
             if(enkaData.equippedList != null) {
-                List<PlayerDriveDisc> playerDriveDiscs = new ArrayList<>();
+                List<PlayerDriveDisc> driveDiscsToEquip = new ArrayList<>();
                 enkaData.equippedList.forEach(t -> {
                     PlayerDriveDisc driveDisc = new PlayerDriveDisc(
                             new PlayerDriveDiscPk(
@@ -370,9 +370,9 @@ public class PlayerAgent implements EnkaToDBMapping<AvatarList> {
                                     t.slot));
                     driveDisc.mapEnkaDataToDB(t);
 
-                    playerDriveDiscs.add(driveDisc);
+                    driveDiscsToEquip.add(driveDisc);
                 });
-                this.setPlayerDriveDiscs(playerDriveDiscs);
+                this.setPlayerDriveDiscs(driveDiscsToEquip);
             }
         }
     }

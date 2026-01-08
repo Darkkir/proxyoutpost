@@ -28,7 +28,7 @@ public class DefaultHakushinAgentCache implements HakushinAgentCache {
     @PostConstruct
     private void setUpRestClient() {
         this.restClient = RestClient.builder()
-                .baseUrl(this.hakushinAPIConfiguration.getBasePath())
+                .baseUrl(this.hakushinAPIConfiguration.basePath())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
     }
 
@@ -39,7 +39,7 @@ public class DefaultHakushinAgentCache implements HakushinAgentCache {
         }
 
         String endpointUrl = languageToUse +
-                hakushinAPIConfiguration.getCharacterPath();
+                hakushinAPIConfiguration.characterPath();
 
         HakushinAgent result = this.restClient.get()
                 .uri(endpointUrl, agentId)

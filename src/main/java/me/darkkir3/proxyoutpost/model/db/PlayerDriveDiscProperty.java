@@ -95,7 +95,7 @@ public class PlayerDriveDiscProperty implements EnkaToDBMapping<PropertyEntry> {
     @Override
     public void mapEnkaDataToDB(PropertyEntry enkaData) {
         if(enkaData != null) {
-            this.propertyLevel = enkaData.propertyLevel;;
+            this.propertyLevel = enkaData.propertyLevel;
             this.propertyValue = enkaData.propertyValue;
         }
     }
