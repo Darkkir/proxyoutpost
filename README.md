@@ -13,3 +13,4 @@ To look at the available endpoints, check out https://api.proxy-outpost.com/endp
 Special thanks to:
 * [[EnkaNetwork](https://github.com/EnkaNetwork)]   for providing profile data and guides on fetching said data
 * [[Dimbreath](https://github.com/dimbreath)]       for providing general game data in his data repositories
+* [[Hakushin](https://github.com/hakush-in)]        for providing up-to-date data on items, characters and game modes 
