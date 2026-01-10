@@ -20,7 +20,8 @@ public class DefaultHakushinAgentCache implements HakushinAgentCache {
     private RestClient restClient;
 
 
-    public DefaultHakushinAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, HakushinAPIConfiguration hakushinAPIConfiguration) {
+    public DefaultHakushinAgentCache(EnkaAPIConfiguration enkaAPIConfiguration,
+                                     HakushinAPIConfiguration hakushinAPIConfiguration) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.hakushinAPIConfiguration = hakushinAPIConfiguration;
     }
@@ -28,7 +29,7 @@ public class DefaultHakushinAgentCache implements HakushinAgentCache {
     @PostConstruct
     private void setUpRestClient() {
         this.restClient = RestClient.builder()
-                .baseUrl(this.hakushinAPIConfiguration.basePath())
+                .baseUrl(this.hakushinAPIConfiguration.getProperties().basePath())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
     }
 
@@ -39,16 +40,12 @@ public class DefaultHakushinAgentCache implements HakushinAgentCache {
         }
 
         String endpointUrl = languageToUse +
-                hakushinAPIConfiguration.characterPath();
+                hakushinAPIConfiguration.getProperties().characterPath();
 
-        HakushinAgent result = this.restClient.get()
+        return this.restClient.get()
                 .uri(endpointUrl, agentId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(HakushinAgent.class);
-
-        //TODO: cache the result
-
-        return result;
     }
 }

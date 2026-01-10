@@ -1,12 +1,14 @@
 package me.darkkir3.proxyoutpost.cache.enka.impl;
 
 import me.darkkir3.proxyoutpost.cache.enka.*;
+import me.darkkir3.proxyoutpost.cache.hakushin.HakushinAgentCache;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.ItemPropertyTranslator;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentProperty;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentPropertyPk;
 import me.darkkir3.proxyoutpost.model.db.PlayerDriveDiscProperty;
+import me.darkkir3.proxyoutpost.model.hakushin.HakushinAgent;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
 import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.apache.commons.lang3.StringUtils;
@@ -33,13 +35,15 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
     private final ItemPropertyTranslator itemPropertyTranslator;
     private final ImageUrlTransformer imageUrlTransformer;
     private final EnkaLocalizationCache enkaLocalizationCache;
+    private final HakushinAgentCache hakushinAgentCache;
 
-    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, ItemPropertyTranslator itemPropertyTranslator, ImageUrlTransformer imageUrlTransformer, EnkaLocalizationCache enkaLocalizationCache) {
+    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, ItemPropertyTranslator itemPropertyTranslator, ImageUrlTransformer imageUrlTransformer, EnkaLocalizationCache enkaLocalizationCache, HakushinAgentCache hakushinAgentCache) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaPropertyCache = enkaPropertyCache;
         this.itemPropertyTranslator = itemPropertyTranslator;
         this.imageUrlTransformer = imageUrlTransformer;
         this.enkaLocalizationCache = enkaLocalizationCache;
+        this.hakushinAgentCache = hakushinAgentCache;
     }
 
     @Override
@@ -67,7 +71,10 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
                 ObjectMapper objectMapper = new ObjectMapper();
                 AgentOutput agentOutput = objectMapper.treeToValue(agentNode, AgentOutput.class);
                 if(agentOutput != null) {
-                    return this.transformAgentFields(agentOutput, id, language);
+                    this.transformAgentFields(agentOutput, id, language);
+                    HakushinAgent hakushinAgent = hakushinAgentCache.fetchHakushinAgentById(language, id);
+                    agentOutput.setHakushinAgent(hakushinAgent);
+                    return agentOutput;
                 }
                 else {
                     log.error("Failed to parse {} for agent id {}", this.getStoreName(), id);

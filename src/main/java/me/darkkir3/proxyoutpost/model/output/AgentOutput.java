@@ -1,8 +1,11 @@
 package me.darkkir3.proxyoutpost.model.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import me.darkkir3.proxyoutpost.model.db.AgentRarity;
+import me.darkkir3.proxyoutpost.model.hakushin.HakushinAgent;
 
 import java.util.*;
 
@@ -62,6 +65,7 @@ public class AgentOutput {
     /**
      * the id of this agents signature weapon
      */
+    @JsonIgnore
     private int weaponId;
 
     /**
@@ -102,6 +106,12 @@ public class AgentOutput {
 
     @JsonIgnore
     private List<Long> highLightProperties;
+
+    /**
+     * Additional agent information like faction name and mindscapes fetched from hakushin api
+     */
+    @JsonIgnore
+    private HakushinAgent hakushinAgent;
 
     @JsonProperty("Colors")
     public void setColors(Map<String, String> colors) {
@@ -194,5 +204,17 @@ public class AgentOutput {
     @JsonProperty("HighlightProps")
     public void setHighLightProperties(List<Long> highLightProperties) {
         this.highLightProperties = highLightProperties;
+    }
+
+    @JsonUnwrapped
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("HakushinAgent")
+    public HakushinAgent getHakushinAgent() {
+        return hakushinAgent;
+    }
+
+    @JsonIgnore
+    public void setHakushinAgent(HakushinAgent hakushinAgent) {
+        this.hakushinAgent = hakushinAgent;
     }
 }

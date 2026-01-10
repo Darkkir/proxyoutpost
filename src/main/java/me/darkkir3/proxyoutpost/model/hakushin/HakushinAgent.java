@@ -36,6 +36,11 @@ public class HakushinAgent {
      */
     private Map<SkillType, List<HakushinAgentSkill>> skillDescriptions;
 
+    /**
+     * Description of mindscape text (range of 1 to 6)
+     */
+    private Map<Integer, HakushinMindscape> mindscapeDescriptions;
+
     public HakushinAgent() {}
 
     public HakushinAgent(String factionName,
@@ -43,12 +48,14 @@ public class HakushinAgent {
                          Map<Integer, List<ItemProperty>> coreSkillBonus,
                          Map<Integer, HakushinCoreSkill> coreSkillDescriptions,
                          Map<SkillType,
-                                 List<HakushinAgentSkill>> skillDescriptions) {
+                                 List<HakushinAgentSkill>> skillDescriptions,
+                         Map<Integer, HakushinMindscape> mindscapeDescriptions) {
         this.factionName = factionName;
         this.factionIcon = factionIcon;
         this.coreSkillBonus = coreSkillBonus;
         this.coreSkillDescriptions = coreSkillDescriptions;
         this.skillDescriptions = skillDescriptions;
+        this.mindscapeDescriptions = mindscapeDescriptions;
     }
 
     public String getFactionName() {
@@ -89,5 +96,13 @@ public class HakushinAgent {
 
     public void setSkillDescriptions(Map<SkillType, List<HakushinAgentSkill>> skillDescriptions) {
         this.skillDescriptions = skillDescriptions;
+    }
+
+    public Map<Integer, HakushinMindscape> getMindscapeDescriptions() {
+        return mindscapeDescriptions;
+    }
+
+    public void setMindscapeDescriptions(Map<Integer, HakushinMindscape> mindscapeDescriptions) {
+        this.mindscapeDescriptions = mindscapeDescriptions;
     }
 }
