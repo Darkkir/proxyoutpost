@@ -1,7 +1,7 @@
 package me.darkkir3.proxyoutpost.cache.hakushin.impl;
 
 import jakarta.annotation.PostConstruct;
-import me.darkkir3.proxyoutpost.cache.hakushin.HakushinAgentCache;
+import me.darkkir3.proxyoutpost.cache.hakushin.HakushinHelper;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.configuration.HakushinAPIConfiguration;
 import me.darkkir3.proxyoutpost.model.hakushin.HakushinAgent;
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-public class DefaultHakushinAgentCache implements HakushinAgentCache {
+public class DefaultHakushinHelper implements HakushinHelper {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultHakushinAgentCache.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultHakushinHelper.class);
     private final EnkaAPIConfiguration enkaAPIConfiguration;
     private final HakushinAPIConfiguration hakushinAPIConfiguration;
     private RestClient restClient;
 
-
-    public DefaultHakushinAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, HakushinAPIConfiguration hakushinAPIConfiguration) {
+    public DefaultHakushinHelper(EnkaAPIConfiguration enkaAPIConfiguration,
+                                 HakushinAPIConfiguration hakushinAPIConfiguration) {
         this.enkaAPIConfiguration = enkaAPIConfiguration;
         this.hakushinAPIConfiguration = hakushinAPIConfiguration;
     }
@@ -28,7 +28,7 @@ public class DefaultHakushinAgentCache implements HakushinAgentCache {
     @PostConstruct
     private void setUpRestClient() {
         this.restClient = RestClient.builder()
-                .baseUrl(this.hakushinAPIConfiguration.basePath())
+                .baseUrl(this.hakushinAPIConfiguration.getProperties().basePath())
                 .defaultHeader("User-Agent", this.enkaAPIConfiguration.getUserAgent()).build();
     }
 
@@ -39,16 +39,12 @@ public class DefaultHakushinAgentCache implements HakushinAgentCache {
         }
 
         String endpointUrl = languageToUse +
-                hakushinAPIConfiguration.characterPath();
+                hakushinAPIConfiguration.getProperties().characterPath();
 
-        HakushinAgent result = this.restClient.get()
+        return this.restClient.get()
                 .uri(endpointUrl, agentId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(HakushinAgent.class);
-
-        //TODO: cache the result
-
-        return result;
     }
 }

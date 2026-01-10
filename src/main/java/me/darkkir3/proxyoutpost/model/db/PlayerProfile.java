@@ -129,12 +129,12 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this();
     }
 
-    @JsonProperty("Uid")
+    @JsonProperty("uid")
     public long getProfileUid() {
         return profileUid;
     }
 
-    @JsonProperty("Description")
+    @JsonProperty("description")
     public String getDescription() {
         return description;
     }
@@ -143,7 +143,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.description = description;
     }
 
-    @JsonProperty("Nickname")
+    @JsonProperty("nickname")
     public String getNickname() {
         return nickname;
     }
@@ -161,7 +161,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.avatarId = avatarId;
     }
 
-    @JsonProperty("Level")
+    @JsonProperty("level")
     public int getLevel() {
         return level;
     }
@@ -179,7 +179,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.titleOutput = titleOutput;
     }
 
-    @JsonProperty("Title")
+    @JsonProperty("title")
     public String getDisplayTitle() {
         if(this.titleOutput == null) {
             return String.valueOf(this.fullTitle > 0 ? this.fullTitle : this.title);
@@ -225,7 +225,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.profileId = profileId;
     }
 
-    @JsonProperty("ProfilePicture")
+    @JsonProperty("profilePicture")
     public String getProfilePictureUrl() {
         return this.profilePictureUrl;
     }
@@ -243,7 +243,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.callingCardId = callingCardId;
     }
 
-    @JsonProperty("CallingCard")
+    @JsonProperty("callingCard")
     public String getCallingCardUrl() {
         return callingCardUrl;
     }
@@ -277,7 +277,7 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
         this.playerMedalList = playerMedalList;
     }
 
-    @JsonProperty("FetchTime")
+    @JsonProperty("fetchTime")
     public LocalDateTime getTsCreation() {
         return tsCreation;
     }

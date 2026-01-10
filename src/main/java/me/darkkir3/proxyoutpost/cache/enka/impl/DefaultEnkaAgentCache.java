@@ -1,12 +1,14 @@
 package me.darkkir3.proxyoutpost.cache.enka.impl;
 
 import me.darkkir3.proxyoutpost.cache.enka.*;
+import me.darkkir3.proxyoutpost.cache.hakushin.HakushinHelper;
 import me.darkkir3.proxyoutpost.configuration.EnkaAPIConfiguration;
 import me.darkkir3.proxyoutpost.equipment.ItemPropertyTranslator;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgent;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentProperty;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentPropertyPk;
 import me.darkkir3.proxyoutpost.model.db.PlayerDriveDiscProperty;
+import me.darkkir3.proxyoutpost.model.hakushin.HakushinAgent;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
 import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.apache.commons.lang3.StringUtils;
@@ -33,13 +35,15 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
     private final ItemPropertyTranslator itemPropertyTranslator;
     private final ImageUrlTransformer imageUrlTransformer;
     private final EnkaLocalizationCache enkaLocalizationCache;
+    private final HakushinHelper hakushinHelper;
 
-    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, ItemPropertyTranslator itemPropertyTranslator, ImageUrlTransformer imageUrlTransformer, EnkaLocalizationCache enkaLocalizationCache) {
+    public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration, CacheManager cacheManager, EnkaPropertyCache enkaPropertyCache, ItemPropertyTranslator itemPropertyTranslator, ImageUrlTransformer imageUrlTransformer, EnkaLocalizationCache enkaLocalizationCache, HakushinHelper hakushinHelper) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaPropertyCache = enkaPropertyCache;
         this.itemPropertyTranslator = itemPropertyTranslator;
         this.imageUrlTransformer = imageUrlTransformer;
         this.enkaLocalizationCache = enkaLocalizationCache;
+        this.hakushinHelper = hakushinHelper;
     }
 
     @Override
@@ -67,7 +71,10 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
                 ObjectMapper objectMapper = new ObjectMapper();
                 AgentOutput agentOutput = objectMapper.treeToValue(agentNode, AgentOutput.class);
                 if(agentOutput != null) {
-                    return this.transformAgentFields(agentOutput, id, language);
+                    this.transformAgentFields(agentOutput, id, language);
+                    HakushinAgent hakushinAgent = hakushinHelper.fetchHakushinAgentById(language, id);
+                    agentOutput.setHakushinAgent(hakushinAgent);
+                    return agentOutput;
                 }
                 else {
                     log.error("Failed to parse {} for agent id {}", this.getStoreName(), id);
@@ -216,22 +223,23 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
     private AgentOutput transformAgentFields(AgentOutput agentOutput, Long id, String language) {
         if(agentOutput != null) {
             //translate the name
-            String internalAgentName = agentOutput.name;
-            agentOutput.name = this.enkaLocalizationCache.translate(language, internalAgentName);
+            String internalAgentName = agentOutput.getName();
+            agentOutput.setName(this.enkaLocalizationCache.translate(language, internalAgentName));
             //set the agent id
-            agentOutput.agentId = id;
+            agentOutput.setAgentId(id);
             //prefix all image URLs with the base URL of enka
-            if(!StringUtils.isBlank(agentOutput.circleIcon)) {
-                agentOutput.circleIcon =
+            if(!StringUtils.isBlank(agentOutput.getCircleIcon())) {
+                agentOutput.setCircleIcon(
                         this.imageUrlTransformer.transformAgentCircleIcon(
                                 id,
-                                this.enkaAPIConfiguration.getBaseUrl() + agentOutput.circleIcon);
+                                this.enkaAPIConfiguration.getBaseUrl() + agentOutput.getCircleIcon()));
             }
-            if(!StringUtils.isBlank(agentOutput.image)) {
-                agentOutput.image =
+
+            if(!StringUtils.isBlank(agentOutput.getImage())) {
+                agentOutput.setImage(
                         this.imageUrlTransformer.transformAgentImage(
                                 id,
-                                this.enkaAPIConfiguration.getBaseUrl() + agentOutput.image);
+                                this.enkaAPIConfiguration.getBaseUrl() + agentOutput.getImage()));
             }
         }
         return agentOutput;

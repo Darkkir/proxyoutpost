@@ -46,7 +46,7 @@ public class PlayerDriveDiscPk {
         return agentId;
     }
 
-    @JsonProperty("Slot")
+    @JsonProperty("slot")
     public int getSlot() {
         return slot;
     }

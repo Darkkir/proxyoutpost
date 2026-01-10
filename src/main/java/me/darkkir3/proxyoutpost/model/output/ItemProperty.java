@@ -1,5 +1,6 @@
 package me.darkkir3.proxyoutpost.model.output;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,22 +12,27 @@ public class ItemProperty {
     /**
      * the id of this property in property.json
      */
+    @JsonIgnore
     private long propertyId;
 
     /**
      * the value of this property
      */
+    @JsonIgnore
     private int propertyValue;
 
     /**
      * the name of this property
      */
+    @JsonIgnore
     private String propertyName;
 
+    @JsonIgnore
     private String propertyFormat;
 
     public ItemProperty() {}
 
+    @JsonIgnore
     public ItemProperty(long propertyId, int propertyValue, String propertyName, String propertyFormat) {
         this.propertyId = propertyId;
         this.propertyValue = propertyValue;
@@ -34,7 +40,7 @@ public class ItemProperty {
         this.propertyFormat = propertyFormat;
     }
 
-    @JsonProperty("PropertyId")
+    @JsonProperty("propertyId")
     public long getPropertyId() {
         return propertyId;
     }
@@ -44,7 +50,7 @@ public class ItemProperty {
         this.propertyId = propertyId;
     }
 
-    @JsonProperty("PropertyValue")
+    @JsonProperty("propertyValue")
     public int getPropertyValue() {
         return propertyValue;
     }
@@ -54,20 +60,23 @@ public class ItemProperty {
         this.propertyValue = propertyValue;
     }
 
+    @JsonProperty("propertyName")
     public String getPropertyName() {
         return propertyName;
     }
 
+    @JsonProperty("PropertyName")
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("PropertyFormat")
+    @JsonProperty("propertyFormat")
     public String getPropertyFormat() {
         return propertyFormat;
     }
 
+    @JsonProperty("PropertyFormat")
     public void setPropertyFormat(String propertyFormat) {
         this.propertyFormat = propertyFormat;
     }

@@ -40,7 +40,7 @@ public class PropertyOutput {
         return this.format;
     }
 
-    @JsonProperty("Name")
+    @JsonProperty("name")
     public String getTranslatedName() {
         return this.translatedName;
     }

@@ -1,24 +1,12 @@
 package me.darkkir3.proxyoutpost.model.hakushin;
 
-import java.util.List;
-
 public class HakushinMindscape {
-    private int level;
     private String name;
-    private List<String> descriptions;
+    private String description;
 
-    public HakushinMindscape(int level, String name, List<String> descriptions) {
-        this.level = level;
+    public HakushinMindscape(String name, String description) {
         this.name = name;
-        this.descriptions = descriptions;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
+        this.description = description;
     }
 
     public String getName() {
@@ -29,11 +17,11 @@ public class HakushinMindscape {
         this.name = name;
     }
 
-    public List<String> getDescriptions() {
-        return descriptions;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescriptions(List<String> descriptions) {
-        this.descriptions = descriptions;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -22,7 +22,7 @@ public class DriveDiscSuit {
      */
     private Map<Long, Integer> setBonusProps;
 
-    @JsonProperty("Icon")
+    @JsonProperty("icon")
     public String getIcon() {
         return this.icon;
     }
@@ -32,7 +32,7 @@ public class DriveDiscSuit {
         this.icon = icon;
     }
 
-    @JsonProperty("SetName")
+    @JsonProperty("setName")
     public String getName() {
         return this.name;
     }

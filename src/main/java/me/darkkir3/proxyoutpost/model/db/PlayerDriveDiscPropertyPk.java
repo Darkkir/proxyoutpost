@@ -67,7 +67,7 @@ public class PlayerDriveDiscPropertyPk {
         return slot;
     }
 
-    @JsonProperty("Id")
+    @JsonProperty("id")
     public long getPropertyId() {
         return propertyId;
     }

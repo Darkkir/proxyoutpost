@@ -118,7 +118,7 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
         this.setId = setId;
     }
 
-    @JsonProperty("Level")
+    @JsonProperty("level")
     public int getLevel() {
         return level;
     }
@@ -127,7 +127,7 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
         this.level = level;
     }
 
-    @JsonProperty("BreakLevel")
+    @JsonProperty("breakLevel")
     public int getBreakLevel() {
         return breakLevel;
     }
@@ -136,7 +136,7 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
         this.breakLevel = breakLevel;
     }
 
-    @JsonProperty("Uid")
+    @JsonProperty("uid")
     public int getUid() {
         return uid;
     }
@@ -145,7 +145,7 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
         this.uid = uid;
     }
 
-    @JsonProperty("Rarity")
+    @JsonProperty("rarity")
     public String getRarity() {
         Optional<DriveDiscRarity> driveDisc = Arrays.stream(DriveDiscRarity.values()).filter(t ->
                 Objects.equals(this.rarity, t.getIndex())).findFirst();
@@ -166,7 +166,7 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
     /**
      * @return all secondary stats for this drive disc
      */
-    @JsonProperty("SecondaryProperties")
+    @JsonProperty("secondaryProperties")
     public List<PlayerDriveDiscProperty> getSecondaryProperties() {
         if(driveDiscProperties == null) {
             return Collections.emptyList();
@@ -180,7 +180,7 @@ public class PlayerDriveDisc implements EnkaToDBMapping<EquippedList> {
     /**
      * @return the main stat property for this drive disc if it has been set
      */
-    @JsonProperty("MainProperty")
+    @JsonProperty("mainProperty")
     public PlayerDriveDiscProperty getMainProperty() {
         if(driveDiscProperties == null) {
             return null;

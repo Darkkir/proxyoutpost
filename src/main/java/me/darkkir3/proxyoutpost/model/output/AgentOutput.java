@@ -1,8 +1,11 @@
 package me.darkkir3.proxyoutpost.model.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import me.darkkir3.proxyoutpost.model.db.AgentRarity;
+import me.darkkir3.proxyoutpost.model.hakushin.HakushinAgent;
 
 import java.util.*;
 
@@ -17,14 +20,14 @@ public class AgentOutput {
     /**
      * the agent name (e.g. 'Avatar_Female_Size02_Anbi')
      */
-    @JsonProperty("Name")
-    public String name;
+    @JsonIgnore
+    private String name;
 
     /**
      *  the agent id
      */
-    @JsonProperty("AgentId")
-    public Long agentId;
+    @JsonIgnore
+    private Long agentId;
 
     /**
      * the rarity of the agent
@@ -37,44 +40,45 @@ public class AgentOutput {
     /**
      * agent profession type (e.g. 'Stun')
      */
-    @JsonProperty("ProfessionType")
-    public String professionType;
+    @JsonIgnore
+    private String professionType;
 
     /**
      * list of elements this agent belongs to
      * (e.g. 'AuricEther', 'Ether' for YiXuan)
      */
-    @JsonProperty("ElementTypes")
-    public List<String> elementTypes;
+    @JsonIgnore
+    private List<String> elementTypes;
 
     /**
      * url to full character display image
      */
-    @JsonProperty("Image")
-    public String image;
+    @JsonIgnore
+    private String image;
 
     /**
      * url to character circle image
      */
-    @JsonProperty("CircleIcon")
-    public String circleIcon;
+    @JsonIgnore
+    private String circleIcon;
 
     /**
      * the id of this agents signature weapon
      */
+    @JsonIgnore
     private int weaponId;
 
     /**
      * the color of the skill buttons for this agent
      */
-    @JsonProperty("AccentColor")
-    public String accentColor;
+    @JsonIgnore
+    private String accentColor;
 
     /**
      *  the color of the mindscape toggle for this agent
      */
-    @JsonProperty("MindscapeColor")
-    public String mindscapeColor;
+    @JsonIgnore
+    private String mindscapeColor;
 
     /**
      * agent base stats at lvl 0
@@ -102,6 +106,32 @@ public class AgentOutput {
 
     @JsonIgnore
     private List<Long> highLightProperties;
+
+    /**
+     * Additional agent information like faction name and mindscapes fetched from hakushin api
+     */
+    @JsonIgnore
+    private HakushinAgent hakushinAgent;
+
+    @JsonProperty("agentId")
+    public Long getAgentId() {
+        return agentId;
+    }
+
+    @JsonProperty("AgentId")
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
+    }
+
+    @JsonProperty("elementTypes")
+    public List<String> getElementTypes() {
+        return elementTypes;
+    }
+
+    @JsonProperty("ElementTypes")
+    public void setElementTypes(List<String> elementTypes) {
+        this.elementTypes = elementTypes;
+    }
 
     @JsonProperty("Colors")
     public void setColors(Map<String, String> colors) {
@@ -138,7 +168,7 @@ public class AgentOutput {
     /**
      * @return the translated rarity of this agent
      */
-    @JsonProperty("Rarity")
+    @JsonProperty("rarity")
     public String getRarity() {
         Optional<AgentRarity> agentRarity = Arrays.stream(AgentRarity.values()).filter(t ->
                 Objects.equals(this.rarity, t.getIndex())).findFirst();
@@ -186,7 +216,7 @@ public class AgentOutput {
         this.coreEnhancementProperties = coreEnhancementProperties;
     }
 
-    @JsonProperty("HighlightProps")
+    @JsonProperty("highlightProps")
     public List<Long> getHighLightProperties() {
         return highLightProperties;
     }
@@ -194,5 +224,77 @@ public class AgentOutput {
     @JsonProperty("HighlightProps")
     public void setHighLightProperties(List<Long> highLightProperties) {
         this.highLightProperties = highLightProperties;
+    }
+
+    @JsonProperty("name")
+    public String getName() {
+        return name;
+    }
+
+    @JsonProperty("Name")
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonProperty("professionType")
+    public String getProfessionType() {
+        return professionType;
+    }
+
+    @JsonProperty("ProfessionType")
+    public void setProfessionType(String professionType) {
+        this.professionType = professionType;
+    }
+
+    @JsonProperty("image")
+    public String getImage() {
+        return image;
+    }
+
+    @JsonProperty("Image")
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @JsonProperty("circleIcon")
+    public String getCircleIcon() {
+        return circleIcon;
+    }
+
+    @JsonProperty("CircleIcon")
+    public void setCircleIcon(String circleIcon) {
+        this.circleIcon = circleIcon;
+    }
+
+    @JsonProperty("mindscapeColor")
+    public String getMindscapeColor() {
+        return mindscapeColor;
+    }
+
+    @JsonProperty("MindscapeColor")
+    public void setMindscapeColor(String mindscapeColor) {
+        this.mindscapeColor = mindscapeColor;
+    }
+
+    @JsonProperty("accentColor")
+    public String getAccentColor() {
+        return accentColor;
+    }
+
+    @JsonProperty("AccentColor")
+    public void setAccentColor(String accentColor) {
+        this.accentColor = accentColor;
+    }
+
+    @JsonUnwrapped
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("HakushinAgent")
+    public HakushinAgent getHakushinAgent() {
+        return hakushinAgent;
+    }
+
+    @JsonIgnore
+    public void setHakushinAgent(HakushinAgent hakushinAgent) {
+        this.hakushinAgent = hakushinAgent;
     }
 }

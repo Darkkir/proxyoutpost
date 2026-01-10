@@ -49,6 +49,7 @@ public class PlayerDriveDiscProperty implements EnkaToDBMapping<PropertyEntry> {
 
     public PlayerDriveDiscProperty() {}
 
+    @JsonIgnore
     public PlayerDriveDiscProperty(PlayerDriveDiscPropertyPk playerDriveDiscPropertyPk) {
         this.playerDriveDiscPropertyPk = playerDriveDiscPropertyPk;
     }
@@ -58,7 +59,7 @@ public class PlayerDriveDiscProperty implements EnkaToDBMapping<PropertyEntry> {
         return playerDriveDiscPropertyPk;
     }
 
-    @JsonProperty("Level")
+    @JsonProperty("level")
     public int getPropertyLevel() {
         return propertyLevel;
     }
@@ -67,7 +68,7 @@ public class PlayerDriveDiscProperty implements EnkaToDBMapping<PropertyEntry> {
         this.propertyLevel = propertyLevel;
     }
 
-    @JsonProperty("Value")
+    @JsonProperty("value")
     public int getPropertyValue() {
         return propertyValue;
     }

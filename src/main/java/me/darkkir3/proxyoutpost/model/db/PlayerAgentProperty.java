@@ -72,7 +72,7 @@ public class PlayerAgentProperty {
         return playerAgent;
     }
 
-    @JsonProperty("BaseValue")
+    @JsonProperty("baseValue")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public Integer getBaseValue() {
         return baseValue;
@@ -83,7 +83,7 @@ public class PlayerAgentProperty {
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("TotalValue")
+    @JsonProperty("totalValue")
     public Integer getTotalValue() {
         return totalValue;
     }
@@ -93,7 +93,7 @@ public class PlayerAgentProperty {
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("TotalRolls")
+    @JsonProperty("totalRolls")
     public Integer getTotalRolls() {
         return totalRolls;
     }

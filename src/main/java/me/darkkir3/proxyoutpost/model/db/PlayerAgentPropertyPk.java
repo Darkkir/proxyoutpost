@@ -49,7 +49,7 @@ public class PlayerAgentPropertyPk {
         return agentId;
     }
 
-    @JsonProperty("PropertyId")
+    @JsonProperty("propertyId")
     public Long getPropertyId() {
         return propertyId;
     }
