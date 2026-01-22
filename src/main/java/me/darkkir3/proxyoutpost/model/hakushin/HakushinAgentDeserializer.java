@@ -87,10 +87,14 @@ public class HakushinAgentDeserializer extends ValueDeserializer<HakushinAgent> 
                 String factionName = v.asString();
                 if (!StringUtils.isBlank(factionName)) {
                     agent.setFactionName(factionName);
-                    agent.setFactionIcon(
-                            hakushinAPIConfiguration.getProperties().character().campIconPrefix() +
-                                    StringUtils.deleteWhitespace(factionName) +
-                                    hakushinAPIConfiguration.getProperties().character().campIconSuffix());
+                    agent.setFactionIcon(StringUtils.deleteWhitespace(factionName).replace("\\.", ""));
+
+                    //map it to the real url, sometimes the name and the icon url differs
+                    String actualUrl =
+                            hakushinAPIConfiguration.getProperties().campIconMap().get(agent.getFactionIcon());
+                    if(!StringUtils.isBlank(actualUrl)) {
+                        agent.setFactionIcon(actualUrl);
+                    }
                 }
             });
         }

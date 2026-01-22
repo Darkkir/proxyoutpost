@@ -2,15 +2,19 @@ package me.darkkir3.proxyoutpost.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Map;
+
 /**
  * @param basePath      the base url for fetching data in hakushin api
  * @param characterPath the endpoint for fetching character data in hakushin
+ * @param campIconMap   mapping of camp icons according to the camp name and the actual icon url on hakushin
  * @param character     character endpoint related data
  */
 @ConfigurationProperties(prefix = "hakushin")
 public record HakushinAPIProperties(
         String basePath,
         String characterPath,
+        Map<String, String> campIconMap,
         Character character) {
 
     /**
