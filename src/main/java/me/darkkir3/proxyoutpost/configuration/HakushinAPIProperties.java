@@ -25,10 +25,20 @@ public record HakushinAPIProperties(
             String campKey,
             String campIconPrefix,
             String campIconSuffix,
+            PartnerInfo partnerInfo,
             CoreBonus coreBonus,
             Passive passive,
             Skill skill,
             Talent talent) {
+
+        /**
+         * @param key the key of the partner info property in the hakushin character response
+         * @param name the key of the full name of the character in the PartnerInfo node
+         */
+        public record PartnerInfo(
+                String key,
+                String name
+        ) {}
 
         /**
          * describes the keys needed to read the bonus stats of a core skill

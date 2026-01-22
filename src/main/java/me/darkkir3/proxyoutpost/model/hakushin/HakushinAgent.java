@@ -21,6 +21,11 @@ public class HakushinAgent {
     private String factionIcon;
 
     /**
+     * the full name of the agent, e.g. Ukinami Yuzuha
+     */
+    private String fullName;
+
+    /**
      * Core skill bonus properties in the range of level 1 (core skill A learned) to level 6 (core skill F learned)
      */
     private Map<Integer, List<ItemProperty>> coreSkillBonus;
@@ -45,6 +50,7 @@ public class HakushinAgent {
 
     public HakushinAgent(String factionName,
                          String factionIcon,
+                         String fullName,
                          Map<Integer, List<ItemProperty>> coreSkillBonus,
                          Map<Integer, HakushinCoreSkill> coreSkillDescriptions,
                          Map<SkillType,
@@ -52,6 +58,7 @@ public class HakushinAgent {
                          Map<Integer, HakushinMindscape> mindscapeDescriptions) {
         this.factionName = factionName;
         this.factionIcon = factionIcon;
+        this.fullName = fullName;
         this.coreSkillBonus = coreSkillBonus;
         this.coreSkillDescriptions = coreSkillDescriptions;
         this.skillDescriptions = skillDescriptions;
@@ -72,6 +79,14 @@ public class HakushinAgent {
 
     public void setFactionIcon(String factionIcon) {
         this.factionIcon = factionIcon;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Map<Integer, List<ItemProperty>> getCoreSkillBonus() {

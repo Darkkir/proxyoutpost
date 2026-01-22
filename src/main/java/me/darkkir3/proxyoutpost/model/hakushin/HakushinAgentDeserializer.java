@@ -42,6 +42,7 @@ public class HakushinAgentDeserializer extends ValueDeserializer<HakushinAgent> 
         JsonNode root = p.readValueAs(JsonNode.class);
 
         HakushinAgent result = new HakushinAgent();
+        this.readPartnerInfo(result, root);
         this.readAgentCamp(result, root);
         this.readCoreSkillBonus(result, root);
         this.readCoreSkillDescriptions(result, root);
@@ -49,6 +50,25 @@ public class HakushinAgentDeserializer extends ValueDeserializer<HakushinAgent> 
         this.readTalentDescriptions(result, root);
 
         return result;
+    }
+
+    @SuppressWarnings("java:S125")
+    private void readPartnerInfo(HakushinAgent agent, JsonNode root) {
+
+        /*
+         * "PartnerInfo": {
+         *     "Birthday": "JAN 5",
+         *     "FullName": "Komano Manato",
+         */
+
+        JsonNode partnerNode = root.get(hakushinAPIConfiguration.getProperties().character().partnerInfo().key());
+        if (partnerNode != null) {
+            JsonNode name = partnerNode.get(hakushinAPIConfiguration.getProperties().character().partnerInfo().name());
+            if(name != null) {
+                agent.setFullName(name.asString(UNDEFINED_VALUE));
+            }
+        }
+
     }
 
     @SuppressWarnings("java:S125")
