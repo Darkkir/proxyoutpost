@@ -1,5 +1,6 @@
 package me.darkkir3.proxyoutpost.model.output;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import me.darkkir3.proxyoutpost.model.db.PlayerTitleArgs;
 import org.apache.commons.lang3.StringUtils;
@@ -71,5 +72,15 @@ public class TitleOutput {
         }
 
         return  titleToUse;
+    }
+
+    @JsonIgnore
+    public String getColorA() {
+        return colorA;
+    }
+
+    @JsonIgnore
+    public String getColorB() {
+        return colorB;
     }
 }

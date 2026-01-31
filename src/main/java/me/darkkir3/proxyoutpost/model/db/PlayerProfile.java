@@ -189,6 +189,24 @@ public class PlayerProfile implements EnkaToDBMapping<ZZZProfile> {
                 this.title, this.fullTitle, this.playerTitleArgs);
     }
 
+    @JsonProperty("titleColorA")
+    public String getTitleColorA() {
+        if(this.titleOutput == null) {
+            return null;
+        }
+
+        return this.titleOutput.getColorA();
+    }
+
+    @JsonProperty("titleColorB")
+    public String getTitleColorB() {
+        if(this.titleOutput == null) {
+            return null;
+        }
+
+        return this.titleOutput.getColorB();
+    }
+
     @JsonIgnore
     public long getTitle() {
         return title;
