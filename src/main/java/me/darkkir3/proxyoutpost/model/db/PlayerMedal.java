@@ -69,7 +69,7 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
         this.value = value;
     }
 
-    @JsonProperty("Score")
+    @JsonProperty("score")
     public int getMedalScore() {
         return medalScore;
     }
@@ -87,7 +87,7 @@ public class PlayerMedal implements EnkaToDBMapping<MedalList> {
         this.medalIcon = medalIcon;
     }
 
-    @JsonProperty("Type")
+    @JsonProperty("type")
     public int getMedalType() {
         return medalType;
     }

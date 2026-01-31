@@ -25,7 +25,7 @@ public class MedalOutput {
      */
     private String prefixIcon;
 
-    @JsonProperty("Name")
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -35,7 +35,7 @@ public class MedalOutput {
         this.name = name;
     }
 
-    @JsonProperty("Icon")
+    @JsonProperty("icon")
     public String getIcon() {
         return icon;
     }
@@ -55,7 +55,7 @@ public class MedalOutput {
         this.tipNum = tipNum;
     }
 
-    @JsonProperty("PrefixIcon")
+    @JsonProperty("prefixIcon")
     public String getPrefixIcon() {
         return prefixIcon;
     }
