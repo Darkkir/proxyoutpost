@@ -1,11 +1,8 @@
 package me.darkkir3.proxyoutpost.model.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import me.darkkir3.proxyoutpost.model.db.AgentRarity;
-import me.darkkir3.proxyoutpost.model.hakushin.HakushinAgent;
 
 import java.util.*;
 
@@ -106,12 +103,6 @@ public class AgentOutput {
 
     @JsonIgnore
     private List<Long> highLightProperties;
-
-    /**
-     * Additional agent information like faction name and mindscapes fetched from hakushin api
-     */
-    @JsonIgnore
-    private HakushinAgent hakushinAgent;
 
     @JsonProperty("agentId")
     public Long getAgentId() {
@@ -284,17 +275,5 @@ public class AgentOutput {
     @JsonProperty("AccentColor")
     public void setAccentColor(String accentColor) {
         this.accentColor = accentColor;
-    }
-
-    @JsonUnwrapped
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("HakushinAgent")
-    public HakushinAgent getHakushinAgent() {
-        return hakushinAgent;
-    }
-
-    @JsonIgnore
-    public void setHakushinAgent(HakushinAgent hakushinAgent) {
-        this.hakushinAgent = hakushinAgent;
     }
 }
