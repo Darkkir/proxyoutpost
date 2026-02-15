@@ -1,8 +1,11 @@
 package me.darkkir3.proxyoutpost.model.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import me.darkkir3.proxyoutpost.model.db.AgentRarity;
+import me.darkkir3.proxyoutpost.model.hoyowiki.HoyoWikiAgent;
 
 import java.util.*;
 
@@ -17,13 +20,11 @@ public class AgentOutput {
     /**
      * the agent name (e.g. 'Avatar_Female_Size02_Anbi')
      */
-    @JsonIgnore
     private String name;
 
     /**
      *  the agent id
      */
-    @JsonIgnore
     private Long agentId;
 
     /**
@@ -31,78 +32,73 @@ public class AgentOutput {
      * <br>3 = A-rank
      * <br>4 = S-rank
      */
-    @JsonIgnore
     private int rarity;
 
     /**
      * agent profession type (e.g. 'Stun')
      */
-    @JsonIgnore
     private String professionType;
 
     /**
      * list of elements this agent belongs to
      * (e.g. 'AuricEther', 'Ether' for YiXuan)
      */
-    @JsonIgnore
     private List<String> elementTypes;
 
     /**
      * url to full character display image
      */
-    @JsonIgnore
     private String image;
 
     /**
      * url to character circle image
      */
-    @JsonIgnore
     private String circleIcon;
 
     /**
      * the id of this agents signature weapon
      */
-    @JsonIgnore
     private int weaponId;
 
     /**
      * the color of the skill buttons for this agent
      */
-    @JsonIgnore
     private String accentColor;
 
     /**
      *  the color of the mindscape toggle for this agent
      */
-    @JsonIgnore
     private String mindscapeColor;
 
     /**
      * agent base stats at lvl 0
      */
-    @JsonIgnore
     private Map<String, String> baseProperties;
 
     /**
      * agent stat increases based on agent level
      */
-    @JsonIgnore
     private Map<String, String> growthProperties;
 
     /**
      * agent stat increases based on promotion level
      */
-    @JsonIgnore
     private List<Map<String, String>> promotionProperties;
 
     /**
      * agent stat increases based on the level of the core skill
      */
-    @JsonIgnore
     private List<Map<String, String>> coreEnhancementProperties;
 
-    @JsonIgnore
+    /**
+     * list of property ids that should be highlighted when displaying this agent
+     */
     private List<Long> highLightProperties;
+
+    /**
+     * additional agent data provided by hoyowiki (e.g. mindscape descriptions, faction icon, ...)
+     */
+    private HoyoWikiAgent hoyoWikiAgent;
 
     @JsonProperty("agentId")
     public Long getAgentId() {
@@ -126,8 +122,8 @@ public class AgentOutput {
 
     @JsonProperty("Colors")
     public void setColors(Map<String, String> colors) {
-    this.accentColor = colors.get(ACCENT_COLOR);
-    this.mindscapeColor = colors.get(MINDSCAPE_COLOR);
+        this.accentColor = colors.get(ACCENT_COLOR);
+        this.mindscapeColor = colors.get(MINDSCAPE_COLOR);
     }
 
     /**
@@ -275,5 +271,16 @@ public class AgentOutput {
     @JsonProperty("AccentColor")
     public void setAccentColor(String accentColor) {
         this.accentColor = accentColor;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonUnwrapped
+    public HoyoWikiAgent getHoyoWikiAgent() {
+        return hoyoWikiAgent;
+    }
+
+    @JsonIgnore
+    public void setHoyoWikiAgent(HoyoWikiAgent hoyoWikiAgent) {
+        this.hoyoWikiAgent = hoyoWikiAgent;
     }
 }

@@ -8,6 +8,7 @@ import me.darkkir3.proxyoutpost.model.db.PlayerAgentProperty;
 import me.darkkir3.proxyoutpost.model.db.PlayerAgentPropertyPk;
 import me.darkkir3.proxyoutpost.model.db.PlayerDriveDiscProperty;
 import me.darkkir3.proxyoutpost.model.output.AgentOutput;
+import me.darkkir3.proxyoutpost.utils.HoyoWikiScraper;
 import me.darkkir3.proxyoutpost.utils.transformer.ImageUrlTransformer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,17 +34,20 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
     private final ItemPropertyTranslator itemPropertyTranslator;
     private final ImageUrlTransformer imageUrlTransformer;
     private final EnkaLocalizationCache enkaLocalizationCache;
+    private final HoyoWikiScraper hoyoWikiScraper;
 
     public DefaultEnkaAgentCache(EnkaAPIConfiguration enkaAPIConfiguration,
                                  CacheManager cacheManager,
                                  EnkaPropertyCache enkaPropertyCache,
                                  ItemPropertyTranslator itemPropertyTranslator,
                                  ImageUrlTransformer imageUrlTransformer,
+                                 HoyoWikiScraper hoyoWikiScraper,
                                  EnkaLocalizationCache enkaLocalizationCache) {
         super(enkaAPIConfiguration, cacheManager);
         this.enkaPropertyCache = enkaPropertyCache;
         this.itemPropertyTranslator = itemPropertyTranslator;
         this.imageUrlTransformer = imageUrlTransformer;
+        this.hoyoWikiScraper = hoyoWikiScraper;
         this.enkaLocalizationCache = enkaLocalizationCache;
     }
 
@@ -55,6 +59,12 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
     @Override
     public String getCacheName() {
         return AGENT_CACHE;
+    }
+
+    @Override
+    protected void onFileStoreRefreshed() {
+        super.onFileStoreRefreshed();
+        this.hoyoWikiScraper.clearAgenListCache();
     }
 
     /**
@@ -73,6 +83,7 @@ public class DefaultEnkaAgentCache extends AbstractEnkaFileCache implements Enka
                 AgentOutput agentOutput = objectMapper.treeToValue(agentNode, AgentOutput.class);
                 if(agentOutput != null) {
                     this.transformAgentFields(agentOutput, id, language);
+                    agentOutput.setHoyoWikiAgent(this.hoyoWikiScraper.scrapeAgentById(agentOutput.getName()));
                 }
                 else {
                     log.error("Failed to parse {} for agent id {}", this.getStoreName(), id);

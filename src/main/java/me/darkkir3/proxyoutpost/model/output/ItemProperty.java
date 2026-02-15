@@ -12,22 +12,18 @@ public class ItemProperty {
     /**
      * the id of this property in property.json
      */
-    @JsonIgnore
     private long propertyId;
 
     /**
      * the value of this property
      */
-    @JsonIgnore
     private int propertyValue;
 
     /**
      * the name of this property
      */
-    @JsonIgnore
     private String propertyName;
 
-    @JsonIgnore
     private String propertyFormat;
 
     public ItemProperty() {}
