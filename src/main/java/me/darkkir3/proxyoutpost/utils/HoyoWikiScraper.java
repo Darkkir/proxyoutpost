@@ -173,7 +173,7 @@ public class HoyoWikiScraper {
 
 
         JsonNode root = restClient.get()
-                .uri(pageUri, 538)
+                .uri(pageUri, agentId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(JsonNode.class);
